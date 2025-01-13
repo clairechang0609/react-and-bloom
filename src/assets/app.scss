@@ -10,6 +10,11 @@ $light: #D9C5B2;
 $light-gray: #b7b7b7;
 $info: #E9C46A;
 $min-contrast-ratio: 3.5;
+$pagination-focus-bg: rgba($secondary, 0.5);
+$pagination-hover-bg: rgba($secondary, 0.5);
+$pagination-active-bg: $secondary;
+$pagination-disabled-bg: transparent;
+$pagination-disabled-color: $light-gray;
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "bootstrap/scss/variables";
@@ -34,6 +39,7 @@ $min-contrast-ratio: 3.5;
 @import "bootstrap/scss/carousel";
 @import "bootstrap/scss/card";
 @import "bootstrap/scss/containers";
+@import "bootstrap/scss/pagination";
 @import "bootstrap/scss/grid";
 @import "bootstrap/scss/toasts";
 @import "bootstrap/scss/close";
@@ -43,3 +49,9 @@ $min-contrast-ratio: 3.5;
 @import "bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+.page-link {
+  cursor: pointer;
+}
+.page-link-prev, .page-link-next {
+  background-color: transparent !important;
+}
