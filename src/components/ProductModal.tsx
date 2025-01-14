@@ -1,13 +1,20 @@
-import { useEffect, FC, ChangeEvent } from 'react';
+import { useEffect, FC, ChangeEvent, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import Field from './Form/Field';
 import FormTextarea from './Form/FormTextarea';
 import FormInput from './Form/FormInput';
 import Button from './Button';
 import type { ProductModalProps } from '../types/product';
-import { useForm, FieldValues } from 'react-hook-form';
+import { useForm, FieldValues, useWatch } from 'react-hook-form';
+import styled from 'styled-components';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+
+const DeleteBtn = styled("div")`
+  right: 5px;
+  top: 0;
+  cursor: pointer;
+`;
 
 // 設定 Authorization
 const setAuthorization = () => {
@@ -15,7 +22,7 @@ const setAuthorization = () => {
   axios.defaults.headers.common.Authorization = token;
 }
 
-const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
+const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, setToastText, getProducts }) => {
   const {
     register,
     handleSubmit,
@@ -37,11 +44,19 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
       content: '',
       is_enabled: '1',
       imageUrl: '',
-      imagesUrl: [],
+      imagesUrl: []
     }
   });
 
-  const uploadImage = async (e: ChangeEvent<HTMLInputElement>, type: 'imageUrl' | 'imagesUrl') => {
+  const [loading, setLoading] = useState('');
+
+  const [imageUrl, imagesUrl] = useWatch({
+    control,
+    name: ['imageUrl', 'imagesUrl'], // 同時監聽多個欄位
+  });
+
+  // 上傳圖片
+  const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>, type: 'imageUrl' | 'imagesUrl') => {
     const file = e.target.files?.[0];
     const formData = new FormData();
     if (!file) {
@@ -50,6 +65,7 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
     formData.append('file-to-upload', file);
     e.target.files = new DataTransfer().files;
     try {
+      setLoading(type);
       setAuthorization();
       const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/upload`, formData, {
         headers: {
@@ -59,15 +75,44 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
       if (type === 'imageUrl') {
         setValue('imageUrl', res.data.imageUrl);
       } else {
-        setValue('imagesUrl', [...getValues('imagesUrl'), res.data.imageUrl]);
+        setValue('imagesUrl', [...imagesUrl, res.data.imageUrl]);
       }
+      setLoading('');
     } catch (err) {
-      console.error('文件上傳失敗:', err);
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+        setToastText(err?.response?.data.message);
+        toast.current?.show();
+      }
+      setLoading('');
     }
   }
 
-  const onSubmit = (data: unknown) => {
-    console.log(data);
+  // 移除圖片
+  const handleRemoveImage = (index: number) => {
+    const updatedImagesUrl = [...imagesUrl];
+    updatedImagesUrl.splice(index, 1);
+    setValue('imagesUrl', updatedImagesUrl);
+  }
+
+  // 送出表單
+  const onSubmit = async (data: unknown) => {
+    try {
+      setLoading('full');
+      setAuthorization();
+      await axios[isNewProduct ? 'post' : 'put'](`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product`, {
+        data
+      });
+      getProducts();
+      setLoading('');
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+        setToastText(err?.response?.data.message);
+        toast.current?.show();
+      }
+      setLoading('');
+    }
   }
 
   useEffect(() => {
@@ -136,7 +181,7 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
                 </div>
                 <div className="mb-3">
                   <Field id="is_enabled" label="是否啟用" isRequired={true} errors={errors}>
-                    <div className={`btn-group btn-group-sm d-block ${errors.is_enabled && "is-invalid"}`} role="group">
+                    <div className={`btn-group d-block ${errors.is_enabled && "is-invalid"}`} role="group">
                       <input type="radio" className="btn-check" id="enabled" value={1} {...register('is_enabled', {
                       required: '請選擇是否啟用'
                     })} />
@@ -150,22 +195,56 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct }) => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <Field id="imageUrl" label="主圖" isRequired={true} errors={errors}>
-                  <input
-                    type="file"
-                    id="imageUrl"
-                    className="form-control"
-                    onChange={(e) => uploadImage(e, 'imageUrl')}
-                  />
-                  <img src={getValues().imageUrl} alt="主圖" className="img-fluid mt-3" />
-                  <input
-                    type="input"
-                    id="imageUrl"
-                    className="form-control-sm form-control-plaintext"
-                    readOnly
-                    {...register('imageUrl', {
-                      required: '請上傳主圖'
-                    })}
-                  />
+                    <div>
+                      <input
+                        id="mainImage"
+                        type="file"
+                        className="form-control d-none"
+                        disabled={!!loading}
+                        onChange={(e) => handleUploadImage(e, 'imageUrl')}
+                      />
+                      <label className={`btn btn-primary ${loading && 'opacity-50'}`} htmlFor="mainImage" >
+                        {loading === 'imageUrl' && <span className="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>}
+                        上傳圖片
+                      </label>
+                    </div>
+                    {imageUrl && <img src={imageUrl} alt="主圖" className="img-fluid mt-3" />}
+                    <input
+                      id="imageUrl"
+                      className={`form-control-sm form-control-plaintext ${imageUrl ? '' : 'd-none'}`}
+                      readOnly
+                      {...register('imageUrl', {
+                        required: '請上傳主圖'
+                      })}
+                    />
+                  </Field>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <Field id="imagesUrl" label="副圖（最多三張）" errors={errors}>
+                    <div>
+                      <input
+                        id="subImages"
+                        type="file"
+                        className="form-control d-none"
+                        disabled={imagesUrl.length >= 3 || !!loading}
+                        onChange={(e) => handleUploadImage(e, 'imagesUrl')}
+                      />
+                      <label className={`btn btn-primary ${(imagesUrl.length >= 3 || !!loading) && 'opacity-50'}`} htmlFor="subImages" >
+                        {loading === 'imagesUrl' && <span className="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>}
+                        上傳圖片
+                      </label>
+                    </div>
+                    {imagesUrl.length > 0 &&
+                      imagesUrl.map((item: string, index: number) => {
+                        return (
+                          <div className="position-relative mt-3 mb-2" key={index}>
+                            <img src={item} alt="副圖" className="img-fluid" />
+                            <input type="text" className="form-control-sm form-control-plaintext" value={item} />
+                            <DeleteBtn className="position-absolute bi bi-x fs-2" onClick={() => handleRemoveImage(index)} />
+                          </div>
+                        )
+                      })
+                    }
                   </Field>
                 </div>
               </div>

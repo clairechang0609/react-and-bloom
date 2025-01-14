@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC, ReactNode, RefObject } from 'react';
+import { useState, useRef, useEffect, FC, ReactNode, RefObject, useCallback } from 'react';
 import axios, { AxiosError } from 'axios';
 import './assets/home.scss';
 import { Toast, Modal } from 'bootstrap';
@@ -7,6 +7,7 @@ import Notification from './components/Notification';
 import ProductListItem from './components/ProductListItem';
 import Pagination from './components/Pagination';
 import ProductModal from './components/ProductModal';
+import Button from './components/Button';
 import type { Product } from './types/product';
 import 'bootstrap';
 
@@ -58,22 +59,25 @@ const App = () => {
     })();
   }, []);
 
+  // 取得產品資料
+  const getProducts = useCallback(async () => {
+    try {
+      setAuthorization();
+      const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products?page=${currentPage}`);
+      setProducts(res.data.products);
+      setTotalPages(res.data.pagination?.total_pages);
+      setCurrentPage(res.data.pagination?.current_page);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [currentPage])
+
   // 取得商品列表
   useEffect(() => {
     if (isLogin) {
-      (async () => {
-        try {
-          setAuthorization();
-          const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products?page=${currentPage}`);
-          setProducts(res.data.products);
-          setTotalPages(res.data.pagination?.total_pages);
-          setCurrentPage(res.data.pagination?.current_page);
-        } catch (err) {
-          console.log(err);
-        }
-      })();
+      getProducts();
     }
-  }, [currentPage, isLogin]);
+  }, [getProducts, isLogin]);
 
   // toast
   useEffect(() => {
@@ -90,10 +94,7 @@ const App = () => {
               <div className="container my-5">
                 <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
                   <h3 className="mb-0">產品列表</h3>
-                  <button type="button" className="btn btn-secondary btn-sm rounded-pill px-3"
-                    onClick={OpenModal}>
-                    新增
-                  </button>
+                  <Button btnStyle="btn-sm btn-secondary" handleClick={OpenModal}>新增</Button>
                 </div>
                 {
                   products.length
@@ -112,7 +113,7 @@ const App = () => {
             </>
           : isLogin !== null && <LoginForm setIsLogin={setIsLogin} toast={toastInstance} setToastText={setToastText} />
       }
-      <ProductModal modalRef={modalRef} isNewProduct={isNewProduct} />
+      <ProductModal modalRef={modalRef} isNewProduct={isNewProduct} toast={toastInstance} setToastText={setToastText} getProducts={getProducts} />
       <Notification toastRef={toastRef} toastText={toastText} />
     </>
   )

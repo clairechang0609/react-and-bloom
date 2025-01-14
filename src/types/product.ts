@@ -1,5 +1,6 @@
-import { RefObject } from "react";
+import { SetStateAction, Dispatch, RefObject, MutableRefObject } from "react";
 import { Modal } from 'bootstrap';
+import type { Toast } from 'bootstrap';
 
 export interface Product {
   id?: string;
@@ -24,5 +25,8 @@ export interface ProductListItemProps {
 
 export interface ProductModalProps {
   modalRef: RefObject<HTMLDivElement>;
+  toast: MutableRefObject<Toast | null>;
   isNewProduct: boolean;
+  setToastText: Dispatch<SetStateAction<string>>;
+  getProducts: () => void;
 }

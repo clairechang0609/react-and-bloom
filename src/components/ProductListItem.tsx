@@ -48,9 +48,9 @@ const ProductListItem: FC<ProductListItemProps> = ({ product, modalInstance, set
             <StatusIcon isEnabled={is_enabled} />
           </div>
           <div className="col-auto d-flex align-items-center justify-content-end">
-            <Button handleClick={editForm}>編輯</Button>
-            <Button btnStyle="btn-outline-secondary ms-2">預覽</Button>
-            <Button btnStyle="btn-outline-primary ms-2">刪除</Button>
+            <Button btnStyle="btn-sm btn-secondary" handleClick={editForm}>編輯</Button>
+            <Button btnStyle="btn-sm btn-outline-secondary ms-2">預覽</Button>
+            <Button btnStyle="btn-sm btn-outline-primary ms-2">刪除</Button>
           </div>
         </div>
       </div>
