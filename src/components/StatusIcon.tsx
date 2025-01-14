@@ -1,15 +1,16 @@
 import { FC } from 'react';
 
 // 狀態圖示
-const StatusIcon: FC<{isEnabled: 0|1}> = ({ isEnabled }) => {
+const StatusIcon: FC<{isEnabled: '0' | '1'}> = ({ isEnabled }) => {
   const status = isEnabled
-    ? { icon: 'bi-check', label: '啟用', class: 'text-bg-success' }
-    : { icon: 'bi-x', label: '停用', class: 'text-bg-danger' };
+    ? { icon: 'bi-check-circle-fill', label: '啟用', class: 'text-success' }
+    : { icon: 'bi-x-circle-fill', label: '停用', class: 'text-danger' };
 
   return (
-    <div className={`badge rounded-pill ${status.class}`}>
-      <i className={`bi ${status.icon}`}></i> {status.label}
-    </div>
+    <small className={`d-flex align-items-center ${status.class}`}>
+      <i className={`me-2 bi ${status.icon}`}></i>
+      {status.label}
+    </small>
   );
 };
 

@@ -16,6 +16,13 @@ $pagination-active-bg: $secondary;
 $pagination-disabled-bg: transparent;
 $pagination-disabled-color: $light-gray;
 
+:root {
+  --bg-success: rgba(66, 185, 131, 0.1);
+  --bg-danger: rgba(229, 62, 62, 0.1);
+  --hover-bg-success: rgba(66, 185, 131, 0.2);
+  --hover-bg-danger: rgba(229, 62, 62, 0.2);
+}
+
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
@@ -33,6 +40,7 @@ $pagination-disabled-color: $light-gray;
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
 @import "bootstrap/scss/buttons";
+@import "bootstrap/scss/button-group";
 @import "bootstrap/scss/badge";
 @import "bootstrap/scss/forms";
 @import "bootstrap/scss/list-group";
@@ -42,13 +50,18 @@ $pagination-disabled-color: $light-gray;
 @import "bootstrap/scss/pagination";
 @import "bootstrap/scss/grid";
 @import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
 @import "bootstrap/scss/close";
+@import "bootstrap/scss/transitions";
 @import "bootstrap/scss/helpers";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+.container {
+  max-width: 1000px;
+}
 .page-link {
   cursor: pointer;
 }

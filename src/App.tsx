@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect, SetStateAction, Dispatch, FC, ChangeEvent, MutableRefObject } from 'react';
+import { useState, useRef, useEffect, FC, ReactNode, RefObject } from 'react';
 import axios, { AxiosError } from 'axios';
 import './assets/home.scss';
-import { Toast } from 'bootstrap';
+import { Toast, Modal } from 'bootstrap';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import ProductListItem from './components/ProductListItem';
-import TempProductCard from './components/TempProductCard';
 import Pagination from './components/Pagination';
+import ProductModal from './components/ProductModal';
 import type { Product } from './types/product';
+import 'bootstrap';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -20,12 +21,25 @@ const setAuthorization = () => {
 const App = () => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [tempProduct, setTempProduct] = useState<Product | null>(null);
   const toastRef = useRef<HTMLDivElement | null>(null);
   const toastInstance = useRef<Toast | null>(null);
   const [toastText, setToastText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modalInstance = useRef<Modal | null>(null);
+  const [isNewProduct, setIsNewProduct] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      modalInstance.current = new Modal(modalRef.current);
+    }
+  }, [])
+
+  const OpenModal = () => {
+    modalInstance.current?.show();
+  }
 
   // 檢查登入是否過期
   useEffect(() => {
@@ -72,26 +86,33 @@ const App = () => {
     <>
       {
         isLogin
-          ? <div className="container mt-5 mb-5">
-              <h3 className="pb-3 mb-3 border-bottom">產品列表</h3>
-              <div className="row gx-3 gx-lg-4 mt-5">
-                <div className="col-md-4 mb-3 mb-md-0">
-                  <ul className="list-group">
-                    {products.map((item) => (
-                      <ProductListItem product={item} setTempProduct={setTempProduct} key={item.id} />
-                    ))}
-                  </ul>
+          ? <>
+              <div className="container my-5">
+                <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                  <h3 className="mb-0">產品列表</h3>
+                  <button type="button" className="btn btn-secondary btn-sm rounded-pill px-3"
+                    onClick={OpenModal}>
+                    新增
+                  </button>
                 </div>
-                <div className="col-md-8">
-                  <TempProductCard tempProduct={tempProduct} />
-                </div>
+                {
+                  products.length
+                  ? <>
+                      {products.map((item) => (
+                        <ProductListItem modalInstance={modalInstance} setIsNewProduct={setIsNewProduct}
+                          product={item} key={item.id} />
+                      ))}
+                      <div className="d-flex justify-content-center my-5">
+                        <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
+                      </div>
+                    </>
+                  : <p className="text-center">尚無產品，請新增產品</p>
+                }
               </div>
-            </div>
+            </>
           : isLogin !== null && <LoginForm setIsLogin={setIsLogin} toast={toastInstance} setToastText={setToastText} />
       }
-      <div className="d-flex justify-content-center my-5">
-        <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
-      </div>
+      <ProductModal modalRef={modalRef} isNewProduct={isNewProduct} />
       <Notification toastRef={toastRef} toastText={toastText} />
     </>
   )
