@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import './assets/home.scss';
 import { Toast, Modal } from 'bootstrap';
+import { flushSync } from 'react-dom';
 import LoginForm from './components/LoginForm';
 import AlertToast from './components/Toast';
 import ProductListItem from './components/ProductListItem';
@@ -51,8 +52,10 @@ const App = () => {
 
   // 顯示提示訊息
   const showToast = (text: string, type: ToastType) => {
-    setToastText(text);
-    setToastType(type);
+    flushSync(() => {
+      setToastText(text);
+      setToastType(type);
+    });
     toast.current?.show();
   }
 
@@ -92,7 +95,6 @@ const App = () => {
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
-          setToastText(err?.response?.data.message);
         }
         setIsLogin(false);
       }
