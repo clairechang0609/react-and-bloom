@@ -16,13 +16,27 @@ const DeleteBtn = styled("div")`
   cursor: pointer;
 `;
 
-// 設定 Authorization
-const setAuthorization = () => {
-  const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-  axios.defaults.headers.common.Authorization = token;
+const defaultValues = {
+  title: '',
+  category: '',
+  unit: '',
+  origin_price: null,
+  price: null,
+  description: '',
+  content: '',
+  is_enabled: true,
+  imageUrl: '',
+  imagesUrl: []
 }
 
-const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, setToastText, getProducts }) => {
+const ProductModal: FC<ProductModalProps> = ({
+    modalRef,
+    selectedProduct,
+    getProducts,
+    showToast,
+    modal,
+    setIsFullPageLoading
+  }) => {
   const {
     register,
     handleSubmit,
@@ -34,25 +48,14 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
     formState: { errors },
   } = useForm<FieldValues>({
     mode: 'onTouched',
-    defaultValues: {
-      title: '',
-      category: '',
-      unit: '',
-      origin_price: null,
-      price: null,
-      description: '',
-      content: '',
-      is_enabled: '1',
-      imageUrl: '',
-      imagesUrl: []
-    }
+    defaultValues
   });
 
   const [loading, setLoading] = useState('');
 
-  const [imageUrl, imagesUrl] = useWatch({
+  const [imageUrl, imagesUrl, isEnabled] = useWatch({
     control,
-    name: ['imageUrl', 'imagesUrl'], // 同時監聽多個欄位
+    name: ['imageUrl', 'imagesUrl', 'is_enabled'], // 同時監聽多個欄位
   });
 
   // 上傳圖片
@@ -66,23 +69,23 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
     e.target.files = new DataTransfer().files;
     try {
       setLoading(type);
-      setAuthorization();
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
+      axios.defaults.headers.common.Authorization = token;
       const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       if (type === 'imageUrl') {
-        setValue('imageUrl', res.data.imageUrl);
+        setValue('imageUrl', res.data.imageUrl, { shouldValidate: true });
       } else {
-        setValue('imagesUrl', [...imagesUrl, res.data.imageUrl]);
+        setValue('imagesUrl', [...imagesUrl, res.data.imageUrl], { shouldValidate: true });
       }
       setLoading('');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        setToastText(err?.response?.data.message);
-        toast.current?.show();
+        showToast(err?.response?.data.message, 'danger')
       }
       setLoading('');
     }
@@ -98,38 +101,49 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
   // 送出表單
   const onSubmit = async (data: unknown) => {
     try {
-      setLoading('full');
-      setAuthorization();
-      await axios[isNewProduct ? 'post' : 'put'](`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product`, {
-        data
-      });
+      setIsFullPageLoading(true);
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
+      axios.defaults.headers.common.Authorization = token;
+      const res = await axios[!selectedProduct ? 'post' : 'put'](
+        `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product${selectedProduct ? `/${selectedProduct.id}` : ''}`,
+        { data }
+      );
       getProducts();
-      setLoading('');
+      setIsFullPageLoading(false);
+      modal.current?.hide();
+      showToast(res?.data.message, 'success');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        setToastText(err?.response?.data.message);
-        toast.current?.show();
+        showToast(err?.response?.data.message, 'danger');
       }
-      setLoading('');
+      setIsFullPageLoading(false);
     }
   }
 
+  // 清空表單
   useEffect(() => {
     const currentModalRef = modalRef.current;
     const handleModalHidden = () => {
-      reset();
+      reset(defaultValues);
     };
     currentModalRef?.addEventListener('hidden.bs.modal', handleModalHidden);
     return () => currentModalRef?.removeEventListener('hidden.bs.modal', handleModalHidden);
   }, [modalRef, reset]);
 
+  // 編輯表單預設值
+  useEffect(() => {
+    if (selectedProduct) {
+      reset(selectedProduct)
+    }
+  }, [selectedProduct, reset])
+
   return (
-    <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} aria-labelledby="modalTitle" aria-hidden="true" ref={modalRef}>
+    <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h1 className="modal-title fs-5" id="modalTitle">{isNewProduct ? '新增產品' : '編輯產品'}</h1>
+            <h2 className="modal-title fs-5">{!selectedProduct ? '新增產品' : '編輯產品'}</h2>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -160,7 +174,8 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
                   <FormInput id="origin_price" label="原價" type="number" placeholder="請輸入原價"
                     register={register} errors={errors}
                     rules={{
-                      required: '原價必填'
+                      required: '原價必填',
+                      valueAsNumber: true
                     }} />
                 </div>
                 <div className="col-md-6 mb-3">
@@ -168,6 +183,7 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
                     register={register} errors={errors}
                     rules={{
                       required: '售價必填',
+                      valueAsNumber: true,
                       validate: (value: string) => Number(value) < Number(getValues().origin_price) || '售價必須小於原價'
                     }} />
                 </div>
@@ -180,16 +196,12 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
                     register={register} errors={errors} />
                 </div>
                 <div className="mb-3">
-                  <Field id="is_enabled" label="是否啟用" isRequired={true} errors={errors}>
-                    <div className={`btn-group d-block ${errors.is_enabled && "is-invalid"}`} role="group">
-                      <input type="radio" className="btn-check" id="enabled" value={1} {...register('is_enabled', {
-                      required: '請選擇是否啟用'
-                    })} />
-                      <label className="btn btn-outline-secondary px-4" htmlFor="enabled">啟用</label>
-                      <input type="radio" className="btn-check" id="disabled" value={0} {...register('is_enabled', {
-                      required: '請選擇是否啟用'
-                    })} />
-                      <label className="btn btn-outline-secondary px-4" htmlFor="disabled">停用</label>
+                  <Field id="is_enabled" label="是否啟用" errors={errors}>
+                    <div className={`d-block ${errors.is_enabled && "is-invalid"}`} role="group">
+                      <input type="checkbox" className="btn-check" id="enabled" {...register('is_enabled')} />
+                      <label className={`btn px-4 ${isEnabled ? 'btn-success' : 'btn-danger'}`} htmlFor="enabled">
+                        {isEnabled ? '啟用' : '停用'}
+                      </label>
                     </div>
                   </Field>
                 </div>
@@ -204,7 +216,7 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
                         onChange={(e) => handleUploadImage(e, 'imageUrl')}
                       />
                       <label className={`btn btn-primary ${loading && 'opacity-50'}`} htmlFor="mainImage" >
-                        {loading === 'imageUrl' && <span className="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>}
+                        {loading === 'imageUrl' && <span className="spinner-grow spinner-grow-sm me-2"></span>}
                         上傳圖片
                       </label>
                     </div>
@@ -226,20 +238,20 @@ const ProductModal: FC<ProductModalProps> = ({ modalRef, isNewProduct, toast, se
                         id="subImages"
                         type="file"
                         className="form-control d-none"
-                        disabled={imagesUrl.length >= 3 || !!loading}
+                        disabled={imagesUrl?.length >= 3 || !!loading}
                         onChange={(e) => handleUploadImage(e, 'imagesUrl')}
                       />
-                      <label className={`btn btn-primary ${(imagesUrl.length >= 3 || !!loading) && 'opacity-50'}`} htmlFor="subImages" >
-                        {loading === 'imagesUrl' && <span className="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>}
+                      <label className={`btn btn-primary ${(imagesUrl?.length >= 3 || !!loading) && 'opacity-50'}`} htmlFor="subImages" >
+                        {loading === 'imagesUrl' && <span className="spinner-grow spinner-grow-sm me-2"></span>}
                         上傳圖片
                       </label>
                     </div>
-                    {imagesUrl.length > 0 &&
+                    {imagesUrl?.length > 0 &&
                       imagesUrl.map((item: string, index: number) => {
                         return (
                           <div className="position-relative mt-3 mb-2" key={index}>
                             <img src={item} alt="副圖" className="img-fluid" />
-                            <input type="text" className="form-control-sm form-control-plaintext" value={item} />
+                            <input type="text" className="form-control-sm form-control-plaintext" value={item} readOnly />
                             <DeleteBtn className="position-absolute bi bi-x fs-2" onClick={() => handleRemoveImage(index)} />
                           </div>
                         )

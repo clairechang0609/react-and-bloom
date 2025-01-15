@@ -20,7 +20,7 @@ const Pagination = ({ currentPage, totalPages = 0, setCurrentPage }: any) => {
 				<ul className="pagination align-items-center">
 					<li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
 						<span className="page-link border-0 page-link-prev" aria-label="Previous" onClick={() => setCurrentPage(currentPage - 1)}>
-							<span aria-hidden="true">
+							<span>
                 <i className="bi bi-arrow-left-short"></i>
 								<span className="d-none d-sm-inline-block ms-1">上一頁</span>
 							</span>
@@ -35,7 +35,7 @@ const Pagination = ({ currentPage, totalPages = 0, setCurrentPage }: any) => {
           }
 					<li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 						<span className="page-link border-0 page-link-next" aria-label="Next" onClick={() => setCurrentPage(currentPage + 1)}>
-							<span aria-hidden="true">
+							<span>
 								<span className="d-none d-sm-inline-block me-1">下一頁</span>
 								<i className="bi bi-arrow-right-short"></i>
 							</span>

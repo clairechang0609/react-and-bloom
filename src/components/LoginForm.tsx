@@ -5,7 +5,7 @@ const { VITE_API_BASE } = import.meta.env;
 
 
 // 登入表單
-const LoginForm: FC<LoginFormProps> = ({ toast, setIsLogin, setToastText }) => {
+const LoginForm: FC<LoginFormProps> = ({ setIsLogin, showToast, setIsFullPageLoading }) => {
     const [form, setForm] = useState({
       username: '',
       password: ''
@@ -22,19 +22,21 @@ const LoginForm: FC<LoginFormProps> = ({ toast, setIsLogin, setToastText }) => {
 
     // 登入
     const login = async (e: { preventDefault: () => void }) => {
+      e.preventDefault();
       try {
-        e.preventDefault();
+        setIsFullPageLoading(true);
         const res = await axios.post(`${VITE_API_BASE}/admin/signin`, form);
         const { token, expired } = res.data;
         document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
         setIsLogin(true);
+        setIsFullPageLoading(false);
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
-          setToastText(err?.response?.data.message);
-          toast.current?.show();
+          showToast(err?.response?.data.message, 'danger')
         }
         setIsLogin(false);
+        setIsFullPageLoading(false);
       }
     }
 

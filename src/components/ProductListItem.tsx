@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import StatusIcon from './StatusIcon';
 import Button from './Button';
-import type { ProductListItemProps } from '../types/product';
+import type { Product, ProductListItemProps } from '../types/product';
 import styled from 'styled-components';
 
 const ImageContainer = styled.div`
@@ -19,12 +19,17 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = ({ product, modalInstance, setIsNewProduct }) => {
-  const { title, price, origin_price, is_enabled, category } = product;
+const ProductListItem: FC<ProductListItemProps> = ({ product, modal, setSelectedProduct, alertModal }) => {
+  const { id, title, price, origin_price, is_enabled, category } = product;
 
-  const editForm = () => {
-    setIsNewProduct(false);
-    modalInstance.current?.show();
+  const editForm = (product: Product) => {
+    setSelectedProduct(product);
+    modal.current?.show();
+  }
+
+  const deleteProduct = (product: Product) => {
+    setSelectedProduct(product);
+    alertModal.current?.show();
   }
 
   return (
@@ -48,9 +53,10 @@ const ProductListItem: FC<ProductListItemProps> = ({ product, modalInstance, set
             <StatusIcon isEnabled={is_enabled} />
           </div>
           <div className="col-auto d-flex align-items-center justify-content-end">
-            <Button btnStyle="btn-sm btn-secondary" handleClick={editForm}>編輯</Button>
-            <Button btnStyle="btn-sm btn-outline-secondary ms-2">預覽</Button>
-            <Button btnStyle="btn-sm btn-outline-primary ms-2">刪除</Button>
+            <Button btnStyle="btn-sm btn-secondary" handleClick={() => editForm(product)}>編輯</Button>
+            <Button btnStyle="btn-sm btn-outline-primary ms-2" handleClick={() => deleteProduct(product)}>
+              刪除
+            </Button>
           </div>
         </div>
       </div>

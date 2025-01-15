@@ -1,8 +1,8 @@
-import { SetStateAction, Dispatch, MutableRefObject } from 'react';
-import type { Toast } from 'bootstrap';
+import { SetStateAction, Dispatch } from 'react';
+import type { ToastType } from './toast';
 
 export interface LoginFormProps {
-  toast: MutableRefObject<Toast | null>;
   setIsLogin: Dispatch<SetStateAction<boolean | null>>;
-  setToastText: Dispatch<SetStateAction<string>>;
+  showToast: (message: string, type: ToastType) => void;
+  setIsFullPageLoading: (value: boolean) => void;
 }

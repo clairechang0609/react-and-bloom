@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 // 狀態圖示
-const StatusIcon: FC<{isEnabled: '0' | '1'}> = ({ isEnabled }) => {
+const StatusIcon: FC<{isEnabled: boolean}> = ({ isEnabled }) => {
   const status = isEnabled
     ? { icon: 'bi-check-circle-fill', label: '啟用', class: 'text-success' }
     : { icon: 'bi-x-circle-fill', label: '停用', class: 'text-danger' };

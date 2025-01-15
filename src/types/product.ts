@@ -1,6 +1,6 @@
-import { SetStateAction, Dispatch, RefObject, MutableRefObject } from "react";
-import { Modal } from 'bootstrap';
-import type { Toast } from 'bootstrap';
+import { RefObject } from "react";
+import { Modal } from "bootstrap";
+import type { ToastType } from "./toast";
 
 export interface Product {
   id?: string;
@@ -9,7 +9,7 @@ export interface Product {
   origin_price: number | null;
   price: number | null;
   description: string;
-  is_enabled: '0' | '1';
+  is_enabled: boolean;
   title: string;
   unit: string;
   num: number;
@@ -19,14 +19,16 @@ export interface Product {
 
 export interface ProductListItemProps {
   product: Product;
-  modalInstance: RefObject<Modal>;
-  setIsNewProduct: (value: boolean) => void;
+  modal: RefObject<Modal>;
+  alertModal: RefObject<Modal>;
+  setSelectedProduct: (value: Product | null) => void;
 }
 
 export interface ProductModalProps {
   modalRef: RefObject<HTMLDivElement>;
-  toast: MutableRefObject<Toast | null>;
-  isNewProduct: boolean;
-  setToastText: Dispatch<SetStateAction<string>>;
+  selectedProduct: Product | null;
   getProducts: () => void;
+  showToast: (message: string, type: ToastType) => void;
+  modal: RefObject<Modal>;
+  setIsFullPageLoading: (value: boolean) => void;
 }
