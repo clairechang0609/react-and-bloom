@@ -1,6 +1,7 @@
+import { memo } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Pagination = ({ currentPage, totalPages = 0, setCurrentPage }: any) => {
+const Pagination = memo(({ currentPage, totalPages = 0, setCurrentPage }: any) => {
   let pageList = [];
   if (totalPages === 0) {
     pageList = [1];
@@ -45,6 +46,6 @@ const Pagination = ({ currentPage, totalPages = 0, setCurrentPage }: any) => {
 			</nav>
     </>
   )
-}
+});
 
 export default Pagination;

@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import Button from './Button';
 import type { AlertModalProps } from '../types/alert';
 
-const AlertModal: FC<AlertModalProps> = ({ alertModalRef, children, nextFn }) => {
+const AlertModal: FC<AlertModalProps> = memo(({ alertModalRef, children, nextFn }) => {
   return (
     <div className="modal fade" tabIndex={-1} ref={alertModalRef}>
       <div className="modal-dialog">
@@ -22,6 +22,6 @@ const AlertModal: FC<AlertModalProps> = ({ alertModalRef, children, nextFn }) =>
       </div>
     </div>
   )
-}
+});
 
 export default AlertModal;

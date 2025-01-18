@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo, useCallback } from 'react';
 import StatusIcon from './StatusIcon';
 import Button from './Button';
 import type { Product, ProductListItemProps } from '../types/product';
@@ -19,18 +19,18 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = ({ product, modal, setSelectedProduct, alertModal }) => {
+const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct, alertModal }) => {
   const { id, title, price, origin_price, is_enabled, category } = product;
 
-  const editForm = (product: Product) => {
+  const editForm = useCallback((product: Product) => {
     setSelectedProduct(product);
     modal.current?.show();
-  }
+  }, [modal, setSelectedProduct]);
 
-  const deleteProduct = (product: Product) => {
+  const deleteProduct = useCallback((product: Product) => {
     setSelectedProduct(product);
     alertModal.current?.show();
-  }
+  }, [alertModal, setSelectedProduct]);
 
   return (
     <ProductItem className="product-list-item card mb-3">
@@ -62,6 +62,6 @@ const ProductListItem: FC<ProductListItemProps> = ({ product, modal, setSelected
       </div>
     </ProductItem>
   )
-}
+});
 
 export default ProductListItem;

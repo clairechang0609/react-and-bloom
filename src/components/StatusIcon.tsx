@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
 // 狀態圖示
-const StatusIcon: FC<{isEnabled: boolean}> = ({ isEnabled }) => {
+const StatusIcon: FC<{isEnabled: boolean}> = memo(({ isEnabled }) => {
   const status = isEnabled
     ? { icon: 'bi-check-circle-fill', label: '啟用', class: 'text-success' }
     : { icon: 'bi-x-circle-fill', label: '停用', class: 'text-danger' };
@@ -12,6 +12,6 @@ const StatusIcon: FC<{isEnabled: boolean}> = ({ isEnabled }) => {
       {status.label}
     </small>
   );
-};
+});
 
 export default StatusIcon;

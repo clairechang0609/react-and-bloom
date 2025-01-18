@@ -1,4 +1,4 @@
-import { useEffect, FC, ChangeEvent, useState } from 'react';
+import { useEffect, FC, ChangeEvent, useState, memo, useCallback } from 'react';
 import axios, { AxiosError } from 'axios';
 import Field from './Form/Field';
 import FormTextarea from './Form/FormTextarea';
@@ -29,7 +29,7 @@ const defaultValues = {
   imagesUrl: []
 }
 
-const ProductModal: FC<ProductModalProps> = ({
+const ProductModal: FC<ProductModalProps> = memo(({
     modalRef,
     selectedProduct,
     getProducts,
@@ -59,7 +59,7 @@ const ProductModal: FC<ProductModalProps> = ({
   });
 
   // 上傳圖片
-  const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>, type: 'imageUrl' | 'imagesUrl') => {
+  const handleUploadImage = useCallback(async (e: ChangeEvent<HTMLInputElement>, type: 'imageUrl' | 'imagesUrl') => {
     const file = e.target.files?.[0];
     const formData = new FormData();
     if (!file) {
@@ -89,17 +89,17 @@ const ProductModal: FC<ProductModalProps> = ({
       }
       setLoading('');
     }
-  }
+  }, [imagesUrl, setValue, showToast]);
 
   // 移除圖片
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = useCallback((index: number) => {
     const updatedImagesUrl = [...imagesUrl];
     updatedImagesUrl.splice(index, 1);
     setValue('imagesUrl', updatedImagesUrl);
-  }
+  }, [imagesUrl, setValue]);
 
   // 送出表單
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = useCallback(async (data: unknown) => {
     try {
       setIsFullPageLoading(true);
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
@@ -119,7 +119,7 @@ const ProductModal: FC<ProductModalProps> = ({
       }
       setIsFullPageLoading(false);
     }
-  }
+  }, [getProducts, modal, selectedProduct, setIsFullPageLoading, showToast]);
 
   // 清空表單
   useEffect(() => {
@@ -136,7 +136,7 @@ const ProductModal: FC<ProductModalProps> = ({
     if (selectedProduct) {
       reset(selectedProduct)
     }
-  }, [selectedProduct, reset])
+  }, [selectedProduct, reset]);
 
   return (
     <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
@@ -175,6 +175,10 @@ const ProductModal: FC<ProductModalProps> = ({
                     register={register} errors={errors}
                     rules={{
                       required: '原價必填',
+                      min: {
+                        value: 0,
+                        message: '價格需大於 0'
+                      },
                       valueAsNumber: true
                     }} />
                 </div>
@@ -183,6 +187,10 @@ const ProductModal: FC<ProductModalProps> = ({
                     register={register} errors={errors}
                     rules={{
                       required: '售價必填',
+                      min: {
+                        value: 0,
+                        message: '價格需大於 0'
+                      },
                       valueAsNumber: true,
                       validate: (value: string) => Number(value) < Number(getValues().origin_price) || '售價必須小於原價'
                     }} />
@@ -270,6 +278,6 @@ const ProductModal: FC<ProductModalProps> = ({
       </div>
     </div>
   )
-}
+});
 
 export default ProductModal;

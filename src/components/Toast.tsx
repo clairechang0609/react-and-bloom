@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import type { ToastProps } from '../types/toast';
 
 // 提示訊息
-const Toast: FC<ToastProps> = ({ toastRef, toastText, type = 'success' }) => {
+const Toast: FC<ToastProps> = memo(({ toastRef, toastText, type = 'success' }) => {
   return (
     <div className="toast-container position-fixed bottom-0 end-0 p-3">
       <div id="toast" className={`toast text-bg-${type}`} role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
@@ -13,6 +13,6 @@ const Toast: FC<ToastProps> = ({ toastRef, toastText, type = 'success' }) => {
       </div>
     </div>
   )
-}
+});
 
 export default Toast;

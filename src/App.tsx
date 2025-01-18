@@ -51,13 +51,13 @@ const App = () => {
   }, []);
 
   // 顯示提示訊息
-  const showToast = (text: string, type: ToastType) => {
+  const showToast = useCallback((text: string, type: ToastType) => {
     flushSync(() => {
       setToastText(text);
       setToastType(type);
     });
     toast.current?.show();
-  }
+  }, []);
 
   // 取得產品資料
   const getProducts = useCallback(async () => {
@@ -79,10 +79,11 @@ const App = () => {
   }, [currentPage]);
 
   // 新增產品
-  const addProduct = () => {
+  const addProduct = useCallback(() => {
+    console.log('addProduct');
     setSelectedProduct(null);
     modal.current?.show();
-  }
+  }, []);
 
   // 檢查登入是否過期
   useEffect(() => {
@@ -109,7 +110,7 @@ const App = () => {
   }, [getProducts, isLogin]);
 
   // 刪除商品
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = useCallback(async (id: string) => {
     if (!id) return;
 
     try {
@@ -128,7 +129,7 @@ const App = () => {
         setSelectedProduct(null);
       }
     }
-  }
+  }, [getProducts, showToast]);
 
   return (
     <>

@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import type { FieldProps } from '../../types/form';
 
-const Field: FC<FieldProps> = ({ id, label, children, isRequired = false, errors }) => {
+const Field: FC<FieldProps> = memo(({ id, label, children, isRequired = false, errors }) => {
   return (
     <>
       <label htmlFor={id} className="form-label d-block mb-1">
@@ -12,6 +12,6 @@ const Field: FC<FieldProps> = ({ id, label, children, isRequired = false, errors
       {errors?.[id] && <small className="text-danger">{String(errors?.[id]?.message)}</small>}
     </>
   )
-}
+});
 
 export default Field;
