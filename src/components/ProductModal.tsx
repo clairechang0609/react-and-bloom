@@ -26,7 +26,9 @@ const defaultValues = {
   content: '',
   is_enabled: true,
   imageUrl: '',
-  imagesUrl: []
+  imagesUrl: [],
+  petCareNotes: '',
+  floriography: ''
 }
 
 const ProductModal: FC<ProductModalProps> = memo(({
@@ -133,10 +135,15 @@ const ProductModal: FC<ProductModalProps> = memo(({
 
   // 編輯表單預設值
   useEffect(() => {
-    if (selectedProduct) {
-      reset(selectedProduct)
-    }
-  }, [selectedProduct, reset]);
+    const currentModalRef = modalRef.current;
+    const handleModalOpen = () => {
+      if (selectedProduct) {
+        reset(selectedProduct);
+      }
+    };
+    currentModalRef?.addEventListener('shown.bs.modal', handleModalOpen);
+    return () => currentModalRef?.removeEventListener('shown.bs.modal', handleModalOpen);
+  }, [selectedProduct, modalRef, reset]);
 
   return (
     <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
@@ -201,6 +208,14 @@ const ProductModal: FC<ProductModalProps> = memo(({
                 </div>
                 <div className="mb-3">
                   <FormTextarea id="content" label="說明內容" placeholder="請輸入說明內容"
+                    register={register} errors={errors} />
+                </div>
+                <div className="mb-3">
+                  <FormTextarea id="petCareNotes" label="寵物注意事項" placeholder="請輸入注意事項"
+                    register={register} errors={errors} />
+                </div>
+                <div className="mb-3">
+                  <FormTextarea id="floriography" label="花語" placeholder="請輸入花語"
                     register={register} errors={errors} />
                 </div>
                 <div className="mb-3">

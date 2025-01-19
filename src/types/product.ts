@@ -15,6 +15,8 @@ export interface Product {
   num: number;
   imageUrl: string;
   imagesUrl: string[];
+  petCareNotes?: string;
+  floriography?: string;
 }
 
 export interface ProductListItemProps {
