@@ -1,17 +1,6 @@
-img {
-  aspect-ratio: 3 / 4;
-}
-.product-list-item {
-  cursor: pointer;
-  border-width: 1px !important;
-  margin-top: -1px;
-  &:hover {
-    background-color: #f8f9fa;
-    transform: translateX(3px);
-    z-index: 1000;
-    border-color: rgba(0, 0, 0, 0.3);
-  }
-}
+// img {
+//   aspect-ratio: 3 / 4;
+// }
 .carousel-control-prev-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8'/%3e%3c/svg%3e") !important;
 }
@@ -20,4 +9,7 @@ img {
 }
 .mask-img {
   mask: linear-gradient(0deg, rgba(0, 0, 0, 0.75), black 50%);
+}
+.h-0 {
+  height: 0;
 }

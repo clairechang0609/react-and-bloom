@@ -1,218 +1,101 @@
-import { useState, useRef, useEffect, SetStateAction, Dispatch, FC, ChangeEvent, MutableRefObject } from 'react';
+import { useState, useRef, useEffect, FC, ReactNode, RefObject, useCallback } from 'react';
 import axios, { AxiosError } from 'axios';
+import 'bootstrap';
 import './assets/home.scss';
-import { Toast } from 'bootstrap';
+import { Toast, Modal } from 'bootstrap';
+import { flushSync } from 'react-dom';
+import LoginForm from './components/LoginForm';
+import AlertToast from './components/Toast';
+import ProductListItem from './components/ProductListItem';
+import Pagination from './components/Pagination';
+import ProductModal from './components/ProductModal';
+import AlertModal from './components/AlertModal';
+import Button from './components/Button';
+import type { Product } from './types/product';
+import type { ToastType } from './types/toast';
+import styled from 'styled-components';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
-interface LoginFormProps {
-  toast: MutableRefObject<Toast | null>;
-  setIsLogin: Dispatch<SetStateAction<boolean | null>>;
-  setToastText: Dispatch<SetStateAction<string>>;
-}
-interface Product {
-  id: string;
-  category: string;
-  content: string;
-  origin_price: number;
-  price: number;
-  description: string;
-  is_enabled: 0 | 1;
-  title: string;
-  unit: string;
-  num: number;
-  imageUrl: string;
-  imagesUrl: string[];
-}
-interface ProductListItemProps {
-  product: Product;
-  setTempProduct: Dispatch<SetStateAction<Product | null>>;
-}
-
-interface ToastProps {
-  toastRef: MutableRefObject<HTMLDivElement | null>;
-  toastText: string;
-}
-
-// 設定 Authorization
-const setAuthorization = () => {
-  const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-  axios.defaults.headers.common.Authorization = token;
-}
-
-// 登入表單
-const LoginForm: FC<LoginFormProps> = ({ toast, setIsLogin, setToastText }) => {
-  const [form, setForm] = useState({
-    username: '',
-    password: ''
-  });
-
-  // 處理輸入資料
-  const handleInput = (e: { target: { name: string; value: string } }) => {
-    const { name, value } = e.target;
-    setForm((pre) => ({
-      ...pre,
-      [name]: value
-    }))
-  }
-
-  // 登入
-  const login = async (e: { preventDefault: () => void }) => {
-    try {
-      e.preventDefault();
-      const res = await axios.post(`${VITE_API_BASE}/admin/signin`, form);
-      const { token, expired } = res.data;
-      document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
-      setIsLogin(true);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-        setToastText(err?.response?.data.message);
-        toast.current?.show();
-      }
-      setIsLogin(false);
-    }
-  }
-
-  return (
-    <div className="position-fixed top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center">
-      <form id="form" className="form" onSubmit={login}>
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">Email</label>
-          <input type="email" name="username" className="form-control" id="username" placeholder="email" onChange={handleInput} />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input type="password" name="password" className="form-control" id="password" placeholder="password" onChange={handleInput} />
-        </div>
-        <button type="submit" className="btn btn-primary w-100">Login</button>
-      </form>
-    </div>
-  )
-}
-
-// 狀態圖示
-const StatusIcon: FC<{isEnabled: 0|1}> = ({ isEnabled }) => {
-  const status = isEnabled
-    ? { icon: 'bi-check', label: '啟用', class: 'text-bg-success' }
-    : { icon: 'bi-x', label: '停用', class: 'text-bg-danger' };
-
-  return (
-    <div className={`badge rounded-pill ${status.class}`}>
-      <i className={`bi ${status.icon}`}></i> {status.label}
-    </div>
-  );
-};
-
-// 產品項目
-const ProductListItem: FC<ProductListItemProps> = ({ product, setTempProduct }) => {
-  const { title, price, origin_price, is_enabled } = product;
-  return (
-    <li className="product-list-item card mb-2" onClick={() => setTempProduct(product)}>
-      <div className="card-body d-flex justify-content-between">
-        <div>
-          <h6 className="mt-1 mb-2">{title}</h6>
-          <div className="d-flex align-items-center">
-            <p className="mb-0 me-2">$ {price}</p>
-            <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
-          </div>
-        </div>
-        <div>
-          <StatusIcon isEnabled={is_enabled} />
-        </div>
-      </div>
-    </li>
-  )
-}
-
-// 產品介紹卡片
-const TempProductCard: FC<{ tempProduct: Product | null }> = ({ tempProduct }) => {
-  return <>
-    {tempProduct ? (
-      <div className="card mb-3">
-        <div className="card-body">
-          <div className="row">
-            <div className="col-lg-5 mb-3 mb-lg-0">
-              <div className="carousel slide" id="carousel">
-                <div className="carousel-inner">
-                  <div className="carousel-item active bg-black">
-                    <img src={tempProduct.imageUrl} className="w-100 object-fit-cover mask-img" alt="主圖" />
-                  </div>
-                  {tempProduct.imagesUrl.map((item, index) => {
-                    return <div className="carousel-item bg-black" key={index}>
-                      <img src={item} alt="附圖" className="d-block w-100 object-fit-cover mask-img" />
-                    </div>
-                  })}
-                </div>
-                <button className="carousel-control-prev align-items-end pb-2" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span className="visually-hidden">Previous</span>
-                </button>
-                <button className="carousel-control-next align-items-end pb-2" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span className="visually-hidden">Next</span>
-                </button>
-              </div>
-            </div>
-            <div className="col-lg-7">
-              <span className="badge rounded-pill bg-primary fs-sm mb-2">{tempProduct.category}</span>
-              <h5 className="border-bottom pb-2 mb-3">{tempProduct.title}</h5>
-              <p className="card-text">
-                <small className="fw-bold d-block">商品描述：</small>
-                {tempProduct.description}
-              </p>
-              <p className="card-text">
-              <small className="fw-bold d-block">注意事項：</small>
-                {tempProduct.content}
-              </p>
-              <div className="d-flex align-items-center">
-                <h4 className="mb-0 me-2 text-danger">$ {tempProduct.price}</h4>
-                <small className="text-muted text-decoration-line-through">$ {tempProduct.origin_price}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <p>點擊商品查看介紹</p>
-    )}
-  </>
-}
-
-// toast 元件
-const ToastComponent: FC<ToastProps> = ({ toastRef, toastText }) => {
-  return (
-    <div className="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="toast" className="toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" ref={toastRef}>
-        <div className="toast-body d-flex">
-          {toastText}
-          <button type="button" className="btn-close ms-auto flex-shrink-0" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
-    </div>
-  )
-}
+const LoadingContainer = styled("div")`
+  z-index: 2000;
+`;
 
 const App = () => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [tempProduct, setTempProduct] = useState<Product | null>(null);
+  const [toastText, setToastText] = useState<string>('');
+  const [toastType, setToastType] = useState<ToastType>('success');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [TotalPages, setTotalPages] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modal = useRef<Modal | null>(null);
+  const alertModalRef = useRef<HTMLDivElement | null>(null);
+  const alertModal = useRef<Modal | null>(null);
   const toastRef = useRef<HTMLDivElement | null>(null);
   const toast = useRef<Toast | null>(null);
-  const [toastText, setToastText] = useState<string>('');
+
+  // Modal & Toast 實體
+  useEffect(() => {
+    if (modalRef.current) {
+      modal.current = new Modal(modalRef.current);
+    }
+    if (alertModalRef.current) {
+      alertModal.current = new Modal(alertModalRef.current);
+    }
+    if (toastRef.current) {
+      toast.current = new Toast(toastRef.current);
+    }
+  }, []);
+
+  // 顯示提示訊息
+  const showToast = useCallback((text: string, type: ToastType) => {
+    flushSync(() => {
+      setToastText(text);
+      setToastType(type);
+    });
+    toast.current?.show();
+  }, []);
+
+  // 取得產品資料
+  const getProducts = useCallback(async () => {
+    try {
+      setIsFullPageLoading(true);
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
+      axios.defaults.headers.common.Authorization = token;
+      const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products?page=${currentPage}`);
+      setProducts(res.data.products);
+      setTotalPages(res.data.pagination?.total_pages);
+      setCurrentPage(res.data.pagination?.current_page);
+      setIsFullPageLoading(false);
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+      }
+      setIsFullPageLoading(false);
+    }
+  }, [currentPage]);
+
+  // 新增產品
+  const addProduct = useCallback(() => {
+    console.log('addProduct');
+    setSelectedProduct(null);
+    modal.current?.show();
+  }, []);
 
   // 檢查登入是否過期
   useEffect(() => {
     (async () => {
       try {
-        setAuthorization();
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
+        axios.defaults.headers.common.Authorization = token;
         await axios.post(`${VITE_API_BASE}/api/user/check`);
         setIsLogin(true);
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
-          setToastText(err?.response?.data.message);
-          toast.current?.show();
         }
         setIsLogin(false);
       }
@@ -222,48 +105,80 @@ const App = () => {
   // 取得商品列表
   useEffect(() => {
     if (isLogin) {
-      (async () => {
-        try {
-          setAuthorization();
-          const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products`);
-          setProducts(res.data.products);
-        } catch (err) {
-          console.log(err);
-        }
-      })();
+      getProducts();
     }
-  }, [isLogin]);
+  }, [getProducts, isLogin]);
 
-  // toast
-  useEffect(() => {
-    if (toastRef.current) {
-      toast.current = new Toast(toastRef.current);
+  // 刪除商品
+  const deleteProduct = useCallback(async (id: string) => {
+    if (!id) return;
+
+    try {
+      setIsFullPageLoading(true);
+      const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
+      showToast(res.data.message, 'success');
+      getProducts();
+      setIsFullPageLoading(false);
+      setSelectedProduct(null);
+      alertModal.current?.hide();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+        showToast(err?.response?.data.message, 'danger');
+        setIsFullPageLoading(false);
+        setSelectedProduct(null);
+      }
     }
-  }, []);
+  }, [getProducts, showToast]);
 
   return (
     <>
       {
         isLogin
-          ? <div className="container mt-5 mb-5">
-              <h3 className="pb-3 mb-3 border-bottom">產品列表</h3>
-              <div className="row gx-3 gx-lg-4 mt-5">
-                <div className="col-md-4 mb-3 mb-md-0">
-                  <ul className="list-group">
-                    {products.map((item) => (
-                      <ProductListItem product={item} setTempProduct={setTempProduct} key={item.id} />
-                    ))}
-                  </ul>
+          ? <>
+              <div className="container my-5">
+                <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                  <h3 className="mb-0">產品列表</h3>
+                  <Button btnStyle="btn-sm btn-secondary" handleClick={addProduct}>新增</Button>
                 </div>
-                <div className="col-md-8">
-                  <TempProductCard tempProduct={tempProduct} />
-                </div>
+                {
+                  products.length
+                  ? <>
+                      {products.map((item) => (
+                        <ProductListItem modal={modal} setSelectedProduct={setSelectedProduct} alertModal={alertModal}
+                          product={item} key={item.id} />
+                      ))}
+                      <div className="d-flex justify-content-center my-5">
+                        <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
+                      </div>
+                    </>
+                  : <p className="text-center">尚無產品，請新增產品</p>
+                }
               </div>
-            </div>
-          : isLogin !== null && <LoginForm setIsLogin={setIsLogin} toast={toast} setToastText={setToastText} />
+            </>
+          : isLogin !== null && <LoginForm setIsLogin={setIsLogin} showToast={showToast} setIsFullPageLoading={setIsFullPageLoading} />
       }
 
-      <ToastComponent toastRef={toastRef} toastText={toastText} />
+      <ProductModal
+        modalRef={modalRef}
+        selectedProduct={selectedProduct}
+        getProducts={getProducts}
+        showToast={showToast}
+        modal={modal}
+        setIsFullPageLoading={setIsFullPageLoading}
+      />
+
+      <AlertModal alertModalRef={alertModalRef} nextFn={() => deleteProduct(selectedProduct?.id || '')}>
+        <p className="text-center py-4">刪除後無法復原，您確定刪除<strong>{selectedProduct?.title}</strong>嗎？</p>
+      </AlertModal>
+
+      <AlertToast toastRef={toastRef} toastText={toastText} type={toastType} />
+
+      {isFullPageLoading && <LoadingContainer className="fixed-top w-100 h-100 bg-white bg-opacity-75 d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-primary">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </LoadingContainer>}
     </>
   )
 }
