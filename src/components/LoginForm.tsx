@@ -29,13 +29,13 @@ const LoginForm: FC<LoginFormProps> = memo(({ setIsLogin, showToast, setIsFullPa
       const { token, expired } = res.data;
       document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
       setIsLogin(true);
-      setIsFullPageLoading(false);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         showToast(err?.response?.data.message, 'danger')
       }
       setIsLogin(false);
+    } finally {
       setIsFullPageLoading(false);
     }
   }, [form, setIsFullPageLoading, setIsLogin, showToast])

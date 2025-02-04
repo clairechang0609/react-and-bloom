@@ -69,11 +69,11 @@ const App = () => {
       setProducts(res.data.products);
       setTotalPages(res.data.pagination?.total_pages);
       setCurrentPage(res.data.pagination?.current_page);
-      setIsFullPageLoading(false);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
       }
+    } finally {
       setIsFullPageLoading(false);
     }
   }, [currentPage]);

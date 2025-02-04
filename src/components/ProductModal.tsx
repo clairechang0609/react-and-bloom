@@ -83,12 +83,12 @@ const ProductModal: FC<ProductModalProps> = memo(({
       } else {
         setValue('imagesUrl', [...imagesUrl, res.data.imageUrl], { shouldValidate: true });
       }
-      setLoading('');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         showToast(err?.response?.data.message, 'danger')
       }
+    } finally {
       setLoading('');
     }
   }, [imagesUrl, setValue, showToast]);
@@ -111,7 +111,6 @@ const ProductModal: FC<ProductModalProps> = memo(({
         { data }
       );
       getProducts();
-      setIsFullPageLoading(false);
       modal.current?.hide();
       showToast(res?.data.message, 'success');
     } catch (err) {
@@ -119,6 +118,7 @@ const ProductModal: FC<ProductModalProps> = memo(({
         console.log(err?.response?.data.message);
         showToast(err?.response?.data.message, 'danger');
       }
+    } finally {
       setIsFullPageLoading(false);
     }
   }, [getProducts, modal, selectedProduct, setIsFullPageLoading, showToast]);
