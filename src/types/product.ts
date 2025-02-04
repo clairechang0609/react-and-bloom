@@ -22,15 +22,10 @@ export interface Product {
 export interface ProductListItemProps {
   product: Product;
   modal: RefObject<Modal>;
-  alertModal: RefObject<Modal>;
   setSelectedProduct: (value: Product | null) => void;
 }
 
 export interface ProductModalProps {
   modalRef: RefObject<HTMLDivElement>;
   selectedProduct: Product | null;
-  getProducts: () => void;
-  showToast: (message: string, type: ToastType) => void;
-  modal: RefObject<Modal>;
-  setIsFullPageLoading: (value: boolean) => void;
 }

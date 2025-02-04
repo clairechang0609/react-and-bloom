@@ -19,18 +19,17 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct, alertModal }) => {
+const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct }) => {
   const { id, title, price, origin_price, is_enabled, category } = product;
 
-  const editForm = useCallback((product: Product) => {
+  const handleSeeMore = useCallback((product: Product) => {
     setSelectedProduct(product);
     modal.current?.show();
   }, [modal, setSelectedProduct]);
 
-  const deleteProduct = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    alertModal.current?.show();
-  }, [alertModal, setSelectedProduct]);
+  // TODO: 加入購物車
+  const addProduct = useCallback((product: Product) => {
+  }, []);
 
   return (
     <ProductItem className="product-list-item card mb-3">
@@ -49,14 +48,11 @@ const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSel
             <p className="mb-0 me-2">$ {price}</p>
             <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
           </div>
-          <div className="col-auto">
-            <StatusIcon isEnabled={is_enabled} />
-          </div>
-          <div className="col-auto d-flex align-items-center justify-content-end">
-            <Button btnStyle="btn-sm btn-secondary" handleClick={() => editForm(product)}>編輯</Button>
-            <Button btnStyle="btn-sm btn-outline-primary ms-2" handleClick={() => deleteProduct(product)}>
-              刪除
+          <div className="col-auto d-flex flex-column align-items-stretch justify-content-end">
+            <Button btnStyle="btn-sm btn-outline-primary mb-2" handleClick={() => handleSeeMore(product)}>
+              查看更多
             </Button>
+            <Button btnStyle="btn-sm btn-secondary" handleClick={() => addProduct(product)}>加入購物車</Button>
           </div>
         </div>
       </div>

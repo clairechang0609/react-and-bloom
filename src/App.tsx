@@ -4,7 +4,6 @@ import 'bootstrap';
 import './assets/home.scss';
 import { Toast, Modal } from 'bootstrap';
 import { flushSync } from 'react-dom';
-import LoginForm from './components/LoginForm';
 import AlertToast from './components/Toast';
 import ProductListItem from './components/ProductListItem';
 import Pagination from './components/Pagination';
@@ -60,117 +59,84 @@ const App = () => {
   }, []);
 
   // 取得產品資料
-  const getProducts = useCallback(async () => {
-    try {
-      setIsFullPageLoading(true);
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-      axios.defaults.headers.common.Authorization = token;
-      const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products?page=${currentPage}`);
-      setProducts(res.data.products);
-      setTotalPages(res.data.pagination?.total_pages);
-      setCurrentPage(res.data.pagination?.current_page);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-      }
-    } finally {
-      setIsFullPageLoading(false);
-    }
-  }, [currentPage]);
-
-  // 新增產品
-  const addProduct = useCallback(() => {
-    console.log('addProduct');
-    setSelectedProduct(null);
-    modal.current?.show();
-  }, []);
-
-  // 檢查登入是否過期
   useEffect(() => {
     (async () => {
       try {
-        const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-        axios.defaults.headers.common.Authorization = token;
-        await axios.post(`${VITE_API_BASE}/api/user/check`);
-        setIsLogin(true);
+        setIsFullPageLoading(true);
+        const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=${currentPage}`);
+        setProducts(res.data.products);
+        setTotalPages(res.data.pagination?.total_pages);
+        setCurrentPage(res.data.pagination?.current_page);
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
         }
-        setIsLogin(false);
+      } finally {
+        setIsFullPageLoading(false);
       }
-    })();
-  }, []);
+    })()
+  }, [currentPage]);
 
-  // 取得商品列表
-  useEffect(() => {
-    if (isLogin) {
-      getProducts();
-    }
-  }, [getProducts, isLogin]);
+  // 新增產品
+  // const addProduct = useCallback(() => {
+  //   console.log('addProduct');
+  //   setSelectedProduct(null);
+  //   modal.current?.show();
+  // }, []);
 
   // 刪除商品
-  const deleteProduct = useCallback(async (id: string) => {
-    if (!id) return;
+  // const deleteProduct = useCallback(async (id: string) => {
+  //   if (!id) return;
 
-    try {
-      setIsFullPageLoading(true);
-      const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
-      showToast(res.data.message, 'success');
-      getProducts();
-      setIsFullPageLoading(false);
-      setSelectedProduct(null);
-      alertModal.current?.hide();
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger');
-        setIsFullPageLoading(false);
-        setSelectedProduct(null);
-      }
-    }
-  }, [getProducts, showToast]);
+  //   try {
+  //     setIsFullPageLoading(true);
+  //     const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
+  //     showToast(res.data.message, 'success');
+  //     getProducts();
+  //     setIsFullPageLoading(false);
+  //     setSelectedProduct(null);
+  //     alertModal.current?.hide();
+  //   } catch (err) {
+  //     if (err instanceof AxiosError) {
+  //       console.log(err?.response?.data.message);
+  //       showToast(err?.response?.data.message, 'danger');
+  //       setIsFullPageLoading(false);
+  //       setSelectedProduct(null);
+  //     }
+  //   }
+  // }, [getProducts, showToast]);
 
   return (
     <>
-      {
-        isLogin
-          ? <>
-              <div className="container my-5">
-                <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-                  <h3 className="mb-0">產品列表</h3>
-                  <Button btnStyle="btn-sm btn-secondary" handleClick={addProduct}>新增</Button>
-                </div>
-                {
-                  products.length
-                  ? <>
-                      {products.map((item) => (
-                        <ProductListItem modal={modal} setSelectedProduct={setSelectedProduct} alertModal={alertModal}
-                          product={item} key={item.id} />
-                      ))}
-                      <div className="d-flex justify-content-center my-5">
-                        <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
-                      </div>
-                    </>
-                  : <p className="text-center">尚無產品，請新增產品</p>
-                }
+      <div className="container my-5">
+        <div className="row row-cols-1 row-cols-md-2 g-4">
+          <div className="col-md-8">
+            <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+              <h4 className="mb-0">產品列表</h4>
+            </div>
+            {products.map((item) => (
+              <ProductListItem modal={modal} setSelectedProduct={setSelectedProduct} product={item} key={item.id} />
+            ))}
+            <div className="d-flex justify-content-center my-5">
+              <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                <h4 className="mb-0">購物車</h4>
               </div>
-            </>
-          : isLogin !== null && <LoginForm setIsLogin={setIsLogin} showToast={showToast} setIsFullPageLoading={setIsFullPageLoading} />
-      }
+          </div>
+        </div>
+      </div>
 
       <ProductModal
         modalRef={modalRef}
         selectedProduct={selectedProduct}
-        getProducts={getProducts}
-        showToast={showToast}
-        modal={modal}
-        setIsFullPageLoading={setIsFullPageLoading}
       />
 
-      <AlertModal alertModalRef={alertModalRef} nextFn={() => deleteProduct(selectedProduct?.id || '')}>
+      {/* <AlertModal alertModalRef={alertModalRef} nextFn={() => deleteProduct(selectedProduct?.id || '')}>
         <p className="text-center py-4">刪除後無法復原，您確定刪除<strong>{selectedProduct?.title}</strong>嗎？</p>
-      </AlertModal>
+      </AlertModal> */}
 
       <AlertToast toastRef={toastRef} toastText={toastText} type={toastType} />
 
