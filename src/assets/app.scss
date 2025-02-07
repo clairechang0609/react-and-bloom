@@ -61,11 +61,14 @@ $pagination-disabled-color: $light-gray;
 
 // 8. Add additional custom code here
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
 }
 .page-link {
   cursor: pointer;
 }
 .page-link-prev, .page-link-next {
   background-color: transparent !important;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

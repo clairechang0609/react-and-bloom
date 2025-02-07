@@ -1,8 +1,23 @@
-import { useEffect, FC, ChangeEvent, useState, memo, useCallback } from 'react';
+import { useEffect, FC, ChangeEvent, useState, memo, useCallback, useRef } from 'react';
+import { Carousel } from 'bootstrap';
 import type { ProductModalProps } from '../types/product';
 import Button from './Button';
 
-const ProductModal: FC<ProductModalProps> = memo(({ modalRef, selectedProduct }) => {
+const ProductModal: FC<ProductModalProps> = memo(({ modalRef, modal, selectedProduct, addCart }) => {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedProduct && carouselRef.current) {
+      const carouselInstance = new Carousel(carouselRef.current);
+      carouselInstance.to(0); // 回到第一張
+    }
+  }, [selectedProduct]);
+
+  const addItem = async() => {
+    await addCart(selectedProduct?.id);
+    modal.current?.hide();
+  }
+
   return (
     <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
       <div className="modal-dialog modal-lg">
@@ -14,7 +29,7 @@ const ProductModal: FC<ProductModalProps> = memo(({ modalRef, selectedProduct })
           <div className="modal-body">
             <div className="row">
               <div className="col-lg-5 mb-3 mb-lg-0">
-                <div className="carousel slide" id="carousel">
+                <div className="carousel slide" id="carousel" ref={carouselRef}>
                   <div className="carousel-inner">
                     <div className="carousel-item active bg-black">
                       <img src={selectedProduct?.imageUrl} className="w-100 object-fit-cover mask-img" alt="主圖" />
@@ -50,15 +65,12 @@ const ProductModal: FC<ProductModalProps> = memo(({ modalRef, selectedProduct })
                   <h4 className="mb-0 me-2 text-danger">$ {selectedProduct?.price}</h4>
                   <small className="text-muted text-decoration-line-through">$ {selectedProduct?.origin_price}</small>
                 </div>
-                <div className="mt-auto">
-                  <label htmlFor="quantity" className="form-label d-block mb-1">數量</label>
-                  <div className="d-flex align-items-center">
-                    <input type="number" className="form-control" id="quantity" defaultValue="1" min="1" />
-                    <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-2">加入購物車</Button>
-                  </div>
-                </div>
               </div>
             </div>
+          </div>
+          <div className="modal-footer">
+            <Button btnStyle="btn btn-outline-secondary" data-bs-dismiss="modal">關閉</Button>
+            <Button type="submit" btnStyle="btn btn-secondary" handleClick={addItem}>加入購物車</Button>
           </div>
         </div>
       </div>

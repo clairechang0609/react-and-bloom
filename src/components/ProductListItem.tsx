@@ -19,17 +19,13 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct }) => {
+const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct, addCart }) => {
   const { id, title, price, origin_price, is_enabled, category } = product;
 
   const handleSeeMore = useCallback((product: Product) => {
     setSelectedProduct(product);
     modal.current?.show();
   }, [modal, setSelectedProduct]);
-
-  // TODO: 加入購物車
-  const addProduct = useCallback((product: Product) => {
-  }, []);
 
   return (
     <ProductItem className="product-list-item card mb-3">
@@ -52,7 +48,7 @@ const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSel
             <Button btnStyle="btn-sm btn-outline-primary mb-2" handleClick={() => handleSeeMore(product)}>
               查看更多
             </Button>
-            <Button btnStyle="btn-sm btn-secondary" handleClick={() => addProduct(product)}>加入購物車</Button>
+            <Button btnStyle="btn-sm btn-secondary" handleClick={() => addCart(product.id)}>加入購物車</Button>
           </div>
         </div>
       </div>
