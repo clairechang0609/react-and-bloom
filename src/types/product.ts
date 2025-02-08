@@ -1,6 +1,5 @@
-import { RefObject } from "react";
 import { Modal } from "bootstrap";
-import type { ToastType } from "./toast";
+import { RefObject } from "react";
 
 export interface Product {
   id?: string;
