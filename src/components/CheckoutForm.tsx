@@ -82,8 +82,8 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, showTo
             rules={{
               required: '電話必填',
               minLength: {
-                value: 6,
-                message: '電話不少於 6 碼',
+                value: 8,
+                message: '電話不少於 8 碼',
               },
               maxLength: {
                 value: 12,
