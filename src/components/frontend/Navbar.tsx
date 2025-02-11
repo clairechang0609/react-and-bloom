@@ -40,7 +40,7 @@ const Navbar = () => {
           <Link>PLANTS</Link>
         </NavLink>
         <NavLink to="/cart" className="px-4">
-          <Link>CHECKOUT</Link>
+          <i className="bi bi-cart2 fs-4 cursor-pointer" />
         </NavLink>
       </div>
     </Nav>

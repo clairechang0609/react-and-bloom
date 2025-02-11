@@ -60,7 +60,7 @@ const Cart = () => {
   return (
     <>
       <div className="row row-cols-1 row-cols-md-2 g-4">
-        <div className="col-md-8">
+        <div className="col-md-6">
           <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
             <h4 className="mb-0">購物車</h4>
           </div>
@@ -69,11 +69,12 @@ const Cart = () => {
               <CartListItem item={item} key={item.id} setIsFullPageLoading={setIsFullPageLoading} getCart={getCart} />
             ))}
             <div className="list-group-item d-flex align-items-center justify-content-between p-3">
-              總金額<strong>${total}</strong>
+              <strong>總金額</strong>
+              <strong>${total}</strong>
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
             <h4 className="mb-0">結帳</h4>
           </div>

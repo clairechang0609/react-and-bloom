@@ -20,15 +20,13 @@ export interface Product {
 }
 
 export interface ProductListItemProps {
+  showModal: () => void;
   product: Product;
-  modal: RefObject<Modal>;
   setSelectedProduct: (value: Product | null) => void;
   addCart: (productId?: string) => void;
 }
 
 export interface ProductModalProps {
-  modalRef: RefObject<HTMLDivElement>;
-  modal: RefObject<Modal>;
   selectedProduct: Product | null;
   addCart: (productId?: string) => void;
 }

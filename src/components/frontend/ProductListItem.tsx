@@ -19,13 +19,13 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = memo(({ product, modal, setSelectedProduct, addCart }) => {
+const ProductListItem: FC<ProductListItemProps> = memo(({ showModal, product, setSelectedProduct, addCart }) => {
   const { id, title, price, origin_price, category } = product;
 
   const handleSeeMore = useCallback((product: Product) => {
     setSelectedProduct(product);
-    modal.current?.show();
-  }, [modal, setSelectedProduct]);
+    showModal();
+  }, [showModal, setSelectedProduct]);
 
   return (
     <ProductItem className="product-list-item card mb-3">

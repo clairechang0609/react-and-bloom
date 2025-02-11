@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { FC } from "react";
 import styled from 'styled-components';
 import type { CartListItemProp } from "../../types/cart";
+import { NavLink } from "react-router";
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -50,10 +51,15 @@ const CartListItem: FC<CartListItemProp> = ({ item, setIsFullPageLoading, getCar
         </ImageContainer>
         <div className="flex-grow-1 flex-shrink-0 ">
           <div className="d-flex justify-content-between">
-            <h6 className="mb-1">{product.title}</h6>
+            <NavLink to={`/product/${id}`} className="text-secondary">
+              <h6 className="mb-2">{product.title}</h6>
+            </NavLink>
             <i className="bi bi-x-lg opacity-75 cursor-pointer" onClick={() => editQty(id, 0, product.id)} />
           </div>
-          <p className="mb-0 text-muted">單價 ${product.price}</p>
+          <p className="mb-0 d-flex align-items-center text-muted">
+            <span className="badge rounded-pill text-bg-light me-2">單價</span>
+            <span>${product.price}</span>
+          </p>
           <div className="d-flex align-items-center mt-2">
             <i className={`bi bi-dash-square-fill fs-3 ${qty === 1 ? 'cursor-default opacity-50' : 'cursor-pointer'}`} onClick={() => qty > 1 && editQty(id, qty - 1, product.id)} />
             <input type="number" className="form-control form-control-sm mx-2" value={qty} onChange={(e) => editQty(id, toPositiveInteger(e.target.value), product.id)} />

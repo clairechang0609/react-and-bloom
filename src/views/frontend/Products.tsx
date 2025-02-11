@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { Modal } from 'bootstrap';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
 import ProductModal from '../../components/frontend/ProductModal';
@@ -9,7 +9,8 @@ import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
 import AlertToast from '../../components/Toast';
 import type { Product } from '../../types/product';
-import type { ToastRef } from '../../types/toast';
+import type { ToastRef, ToastType } from '../../types/toast';
+import { ModalRef } from '../../types/modal';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Products = () => {
@@ -18,20 +19,23 @@ const Products = () => {
   const [TotalPages, setTotalPages] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const modalRef = useRef<HTMLDivElement | null>(null);
-  const modal = useRef<Modal | null>(null);
-  const alertModalRef = useRef<HTMLDivElement | null>(null);
-  const alertModal = useRef<Modal | null>(null);
+  const modalRef = useRef<ModalRef | null>(null);
+  const alertModalRef = useRef<ModalRef | null>(null);
   const toastRef = useRef<ToastRef | null>(null);
 
-  // Modal 實體
-  useEffect(() => {
-    if (modalRef.current) {
-      modal.current = new Modal(modalRef.current);
-    }
-    if (alertModalRef.current) {
-      alertModal.current = new Modal(alertModalRef.current);
-    }
+  // 顯示提示訊息
+  const showToast = useCallback((text: string, type: ToastType) => {
+    toastRef.current?.show(text, type);
+  }, []);
+
+  // 顯示 Modal
+  const showModal = useCallback(() => {
+    modalRef.current?.show();
+  }, []);
+
+  // 顯示 Alert Modal
+  const showAlertModal = useCallback(() => {
+    alertModalRef.current?.show();
   }, []);
 
   // 取得產品資料
@@ -51,18 +55,19 @@ const Products = () => {
         setIsFullPageLoading(false);
       }
     })()
-  }, [currentPage]);
+  }, [currentPage, showToast]);
 
   // 加入購物車
   const addCart = async(productId?: string) => {
     try {
       setIsFullPageLoading(true);
-      await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
+      const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
         data: {
           product_id: productId,
           qty: 1
         }
       });
+      showToast(res?.data.message, 'success');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
@@ -78,7 +83,7 @@ const Products = () => {
         <h4 className="mb-0">產品列表</h4>
       </div>
       {products.map((item) => (
-        <ProductListItem modal={modal} setSelectedProduct={setSelectedProduct} product={item} key={item.id}
+        <ProductListItem showModal={showModal} setSelectedProduct={setSelectedProduct} product={item} key={item.id}
           addCart={addCart} />
       ))}
       <div className="d-flex justify-content-center my-5">
@@ -86,8 +91,7 @@ const Products = () => {
       </div>
 
       <ProductModal
-        modalRef={modalRef}
-        modal={modal}
+        ref={modalRef}
         selectedProduct={selectedProduct}
         addCart={addCart}
       />

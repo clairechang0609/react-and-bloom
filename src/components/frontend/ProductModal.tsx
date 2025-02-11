@@ -1,10 +1,13 @@
-import { Carousel } from 'bootstrap';
-import { FC, memo, useEffect, useRef } from 'react';
+import { Carousel, Modal } from 'bootstrap';
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ProductModalProps } from '../../types/product';
 import Button from '../Button';
+import { ModalRef } from '../../types/modal';
 
-const ProductModal: FC<ProductModalProps> = memo(({ modalRef, modal, selectedProduct, addCart }) => {
+const ProductModal = forwardRef<ModalRef, ProductModalProps>(({ selectedProduct, addCart }, ref) => {
   const carouselRef = useRef<HTMLDivElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modal = useRef<Modal | null>(null);
 
   useEffect(() => {
     if (selectedProduct && carouselRef.current) {
@@ -17,6 +20,16 @@ const ProductModal: FC<ProductModalProps> = memo(({ modalRef, modal, selectedPro
     await addCart(selectedProduct?.id);
     modal.current?.hide();
   }
+
+  // 讓父元件可以呼叫子元件方法
+  useImperativeHandle(ref, () => ({
+    show: () => {
+      modal.current?.show();
+    },
+    hide: () => {
+      modal.current?.hide();
+    }
+  }));
 
   return (
     <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
@@ -78,4 +91,4 @@ const ProductModal: FC<ProductModalProps> = memo(({ modalRef, modal, selectedPro
   )
 });
 
-export default ProductModal;
+export default memo(ProductModal);
