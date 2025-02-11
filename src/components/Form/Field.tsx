@@ -2,6 +2,9 @@ import { FC, memo } from 'react';
 import type { FieldProps } from '../../types/form';
 
 const Field: FC<FieldProps> = memo(({ id, label, children, isRequired = false, errors }) => {
+  const error = id.includes('.')
+    ? id.split('.').reduce((obj, key) => obj?.[key], errors as Record<string, never>)
+    : errors?.[id];
   return (
     <>
       <label htmlFor={id} className="form-label d-block mb-1">
@@ -9,7 +12,7 @@ const Field: FC<FieldProps> = memo(({ id, label, children, isRequired = false, e
         {isRequired && <span className="text-danger ms-1">*</span>}
       </label>
       {children}
-      {errors?.[id] && <small className="text-danger">{String(errors?.[id]?.message)}</small>}
+      {error && <small className="text-danger">{String(error?.message)}</small>}
     </>
   )
 });

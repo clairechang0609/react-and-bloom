@@ -1,5 +1,5 @@
-import { ReactNode, RefObject } from 'react';
-import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
+import { ReactNode } from 'react';
+import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 
 interface FormItemBase {
   id: string;

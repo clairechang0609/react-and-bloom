@@ -1,7 +1,7 @@
-import { useEffect, FC, ChangeEvent, useState, memo, useCallback, useRef } from 'react';
 import { Carousel } from 'bootstrap';
-import type { ProductModalProps } from '../types/product';
-import Button from './Button';
+import { FC, memo, useEffect, useRef } from 'react';
+import type { ProductModalProps } from '../../types/product';
+import Button from '../Button';
 
 const ProductModal: FC<ProductModalProps> = memo(({ modalRef, modal, selectedProduct, addCart }) => {
   const carouselRef = useRef<HTMLDivElement | null>(null);

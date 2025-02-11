@@ -1,9 +1,6 @@
-import { MutableRefObject } from 'react';
 
 export type ToastType = 'success' | 'danger';
 
-export interface ToastProps {
-  toastRef: MutableRefObject<HTMLDivElement | null>;
-  toastText: string;
-  type?: ToastType;
+export interface ToastRef {
+  show: (text: string, type: ToastType) => void;
 }

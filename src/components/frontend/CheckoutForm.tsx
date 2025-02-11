@@ -1,10 +1,10 @@
 import axios, { AxiosError } from 'axios';
 import { FC, memo } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { CheckoutFormProps } from '../types/cart';
-import Button from './Button';
-import FormInput from './Form/FormInput';
-import FormTextarea from './Form/FormTextarea';
+import { CheckoutFormProps } from '../../types/cart';
+import Button from '../Button';
+import FormInput from '../Form/FormInput';
+import FormTextarea from '../Form/FormTextarea';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -59,17 +59,6 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, showTo
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
         <div className="mb-3">
-          <FormInput id="email" label="Email" type="email" placeholder="請輸入 Email"
-            register={register} errors={errors}
-            rules={{
-              required: 'Email 必填',
-              pattern: {
-                value: /^\S+@\S+$/,
-                message: 'Email 格式錯誤'
-              }
-            }} />
-        </div>
-        <div className="mb-3">
           <FormInput id="name" label="收件人" type="text" placeholder="請輸入收件人姓名"
             register={register} errors={errors}
             rules={{
@@ -96,6 +85,17 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, showTo
             register={register} errors={errors}
             rules={{
               required: '收件人地址必填'
+            }} />
+        </div>
+        <div className="mb-3">
+          <FormInput id="email" label="Email" type="email" placeholder="請輸入 Email"
+            register={register} errors={errors}
+            rules={{
+              required: 'Email 必填',
+              pattern: {
+                value: /^\S+@\S+$/,
+                message: 'Email 格式錯誤'
+              }
             }} />
         </div>
         <div className="mb-3">

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { FC } from "react";
 import styled from 'styled-components';
-import type { CartListItemProp } from "../types/cart";
+import type { CartListItemProp } from "../../types/cart";
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
