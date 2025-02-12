@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 import '../../assets/home.scss';
 import OrderListItem from '../../components/admin/OrderListItem';
 import OrderModal from '../../components/admin/OrderModal';
@@ -14,10 +13,6 @@ import type { Order } from '../../types/order';
 import type { ToastRef, ToastType } from '../../types/toast';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
-const LoadingContainer = styled("div")`
-  z-index: 2000;
-`;
 
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -77,16 +72,16 @@ const Orders = () => {
       const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/order/${id}`);
       showToast(res.data.message, 'success');
       getOrders();
-      setIsFullPageLoading(false);
       setSelectedOrder(null);
       alertModalRef.current?.hide();
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         showToast(err?.response?.data.message, 'danger');
-        setIsFullPageLoading(false);
         setSelectedOrder(null);
       }
+    } finally {
+      setIsFullPageLoading(false);
     }
   }, [getOrders, showToast]);
 

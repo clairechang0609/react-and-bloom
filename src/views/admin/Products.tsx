@@ -78,16 +78,15 @@ const AdminProducts = () => {
       const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
       showToast(res.data.message, 'success');
       getProducts();
-      setIsFullPageLoading(false);
-      setSelectedProduct(null);
       alertModalRef.current?.hide();
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         showToast(err?.response?.data.message, 'danger');
-        setIsFullPageLoading(false);
-        setSelectedProduct(null);
       }
+    } finally {
+      setIsFullPageLoading(false);
+      setSelectedProduct(null);
     }
   }, [getProducts, showToast]);
 

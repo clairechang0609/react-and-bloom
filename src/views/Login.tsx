@@ -39,7 +39,6 @@ const Login = () => {
       const { token, expired } = res.data;
       document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
       navigate('/admin/products');
-      setIsFullPageLoading(false);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
