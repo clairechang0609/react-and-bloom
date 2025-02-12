@@ -3,16 +3,11 @@ import { FC } from "react";
 import styled from 'styled-components';
 import type { CartListItemProp } from "../../types/cart";
 import { NavLink } from "react-router";
-
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const ImageContainer = styled.div`
   width: 50px;
   height: 50px;
-`;
-
-const Qty = styled.span`
-  width: 60px;
 `;
 
 const CartListItem: FC<CartListItemProp> = ({ item, setIsFullPageLoading, getCart }) => {
@@ -40,7 +35,7 @@ const CartListItem: FC<CartListItemProp> = ({ item, setIsFullPageLoading, getCar
 
   const toPositiveInteger = (value: string) => {
     const result = value.replace(/[^0-9]+/g, '');
-    return result ? parseInt(result) : 0;
+    return result && parseInt(result) ? parseInt(result) : 1;
   }
 
   return (<>

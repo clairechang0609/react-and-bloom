@@ -9,27 +9,16 @@ import FullPageLoading from '../../components/FullPageLoading';
 import AlertToast from '../../components/Toast';
 import type { CartItem } from '../../types/cart';
 import type { ToastRef, ToastType } from '../../types/toast';
+import { ModalRef } from '../../types/modal';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Cart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const modalRef = useRef<HTMLDivElement | null>(null);
-  const modal = useRef<Modal | null>(null);
-  const alertModalRef = useRef<HTMLDivElement | null>(null);
-  const alertModal = useRef<Modal | null>(null);
+  const modalRef = useRef<ModalRef | null>(null);
+  const alertModalRef = useRef<ModalRef | null>(null);
   const toastRef = useRef<ToastRef | null>(null);
-
-  // Modal 實體
-  useEffect(() => {
-    if (modalRef.current) {
-      modal.current = new Modal(modalRef.current);
-    }
-    if (alertModalRef.current) {
-      alertModal.current = new Modal(alertModalRef.current);
-    }
-  }, []);
 
   // 顯示提示訊息
   const showToast = (text: string, type: ToastType) => {
@@ -43,7 +32,6 @@ const Cart = () => {
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
       setCart(res.data.data?.carts);
       setTotal(res.data.data?.total);
-      console.log(res.data.data);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);

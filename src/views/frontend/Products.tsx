@@ -33,11 +33,6 @@ const Products = () => {
     modalRef.current?.show();
   }, []);
 
-  // 顯示 Alert Modal
-  const showAlertModal = useCallback(() => {
-    alertModalRef.current?.show();
-  }, []);
-
   // 取得產品資料
   useEffect(() => {
     (async () => {

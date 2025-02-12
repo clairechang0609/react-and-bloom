@@ -9,6 +9,13 @@ const ProductModal = forwardRef<ModalRef, ProductModalProps>(({ selectedProduct,
   const modalRef = useRef<HTMLDivElement | null>(null);
   const modal = useRef<Modal | null>(null);
 
+  // Modal 實體
+  useEffect(() => {
+    if (modalRef.current) {
+      modal.current = new Modal(modalRef.current);
+    }
+  }, []);
+
   useEffect(() => {
     if (selectedProduct && carouselRef.current) {
       const carouselInstance = new Carousel(carouselRef.current);
