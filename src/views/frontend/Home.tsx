@@ -1,246 +1,224 @@
+import axios, { AxiosError } from 'axios';
 import 'bootstrap';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
 import '../../assets/home.scss';
+import { Product } from '../../types/product';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Global = createGlobalStyle`
-  body {
-    color: #333;
-    font-family: 'Fraunces', Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif;
+  html {
+  scroll-snap-type: y mandatory;
+  timeline-scope: --section;
+}
+
+  h2 {
+    line-height: 1;
+    font-weight: 300;
+    font-size: calc(7vw + 1rem);
+    font-family: 'Cormorant Garamond', Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif;
+
+    @media screen and (min-width: 1000px) {
+      font-size: 100px;
+    }
   }
+`;
+
+const Banner = styled("div")`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-image: url('/banner-01.jpg');
+  background-position: center;
+  background-size: cover;
+  animation: stickyAnimation linear both;
+  animation-duration: 1ms;
+  animation-direction: alternate;
+  animation-timeline: scroll(block nearest);
+  animation-range: 0vh 100vh;
+
+  @keyframes stickyAnimation {
+    0% {
+      height: 100vh;
+      font-size: 100px;
+    }
+    50% {
+      font-size: 0;
+    }
+    100% {
+      height: 70px;
+      opacity: 0;
+      font-size: 0;
+      visibility: hidden;
+    }
+  }
+`;
+
+const Title = styled("div")`
+  color: white;
+  text-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.75);
+
+  h2 {
+    font-size: 1em;
+  }
+
+  p {
+    font-size: 0.15em;
+  }
+`;
+
+const IntroContainer = styled("div")`
+  margin-top: calc(110vh);
+  view-timeline: --section;
 `;
 
 const Intro = styled("div")`
   animation-name: scaleAnimation;
   animation-duration: 1ms; /* Firefox requires this to apply the animation */
   animation-direction: alternate;
-  animation-timeline: scroll(block nearest);
+  animation-timeline: --section;
+  animation-range: entry 0% 50%;
   max-width: 100%;
   width: 1000px;
   margin-left: auto;
   margin-right: auto;
 
   @keyframes scaleAnimation {
-    0% {
+    from {
       opacity: 0;
       transform: scaleX(0);
     }
-    50% {
+    to {
       opacity: 1;
       transform: scaleX(100%);
     }
-  }
-
-  h2 {
-    line-height: 1;
-    font-weight: 200;
-    font-size: calc(7vw + 1rem);
   }
 
   strong {
     color:rgb(37, 106, 76);
   }
 
-  img {
-    margin-left: 1rem;
-    width: calc(35vw - 3rem);
+  > img {
+    width: 40vw;
+
+    @media screen and (min-width: 1000px) {
+      width: 400px;
+    }
   }
 }
-`
+`;
 
-const A = styled("div")`
-  html {
-    scroll-snap-type: y mandatory;
-    timeline-scope: --section, --main, --site-header;
+const Card = styled("div")`
+  .card {
+    border-radius: 20px;
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 5px 5px black;
   }
 
-  body,
-  .content {
-    background-color: var(--color-background, black);
+  .sub {
+    display: none;
   }
 
-  main {
-    view-timeline: --main;
-  }
-
-  .section {
-    /* Creating a snapping rule on the section element */
-    scroll-snap-align: start;
-    scroll-snap-stop: always;/
-    view-timeline: --section;
-
-    /* Set each section to the full dynamic height of the viewport */
-    height: 100dvh;
-  }
-
-  .content {
-    /* Fix the content, so it doesn't scroll with the section */
-    overflow: hidden;
-    position: fixed;
-    inset: 0;
-
-    /* Animate the content based on the section scrolling */
-    --contrast: 4;
-    --blur: 0.5rem;
-
-    animation: blink ease-in-out both;
-    animation-timeline: --section;
-  }
-
-  @keyframes blink {
-    0%,
-    100% {
-      filter: blur(var(--blur)) contrast(var(--contrast));
-      opacity: 0;
-      visibility: hidden;
+  &:hover {
+    .sub {
+      display: block;
     }
-
-    50% {
-      filter: blur(0) contrast(1);
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  .indicator::before {
-    animation: indicate linear both;
-    animation-timeline: --main;
-    animation-range: contain;
-  }
-
-  @keyframes indicate {
-    0% {
-      --color-indicator: var(--color-primary);
-      transform: translateY(0);
-    }
-
-    25% {
-      --color-indicator: var(--color-yellow);
-    }
-
-    50% {
-      --color-indicator: var(--color-secondary);
-    }
-
-    75% {
-      --color-indicator: var(--color-red);
-    }
-
-    100% {
-      --color-indicator: var(--color-purple);
-      transform: translateY(
-        calc(var(--indicator-total-height) - var(--indicator-size))
-      );
-    }
-  }
-
-  .site-header label:last-of-type {
-    view-timeline: --site-header inline;
-  }
-
-  .site-header::after {
-    animation: fade-scroll ease-in-out both;
-    animation-timeline: --site-header;
-    animation-range: entry-crossing;
-  }
-
-  @keyframes fade-scroll {
-    0% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0;
-    }
-  }
-
-  /* Change animation based on radio checked */
-  body:has([value="horizontal-scroll"]:checked) .content {
-    animation: horizontal-scroll ease-in-out both;
-    animation-timeline: --section;
-  }
-
-  body:has([value="backwards-scroll"]:checked) .content {
-    animation: backwards-scroll ease-in-out both;
-    animation-timeline: --section;
-  }
-
-  body:has([value="zoom-scroll"]:checked) .content {
-    animation: zoom-scroll ease-in-out both;
-    animation-timeline: --section;
-  }
-
-  /* Alternative animations */
-  /* Very cool, try it */
-  @keyframes horizontal-scroll {
-    0% {
-      transform: translate3d(100%, 0%, 0);
-    }
-
-    50% {
-      transform: none;
-    }
-
-    100% {
-      transform: translate3d(-100%, 0%, 0);
-    }
-  }
-
-  /* Befuddling, try it */
-  @keyframes backwards-scroll {
-    0% {
-      transform: translate3d(0%, -100%, 0);
-    }
-
-    50% {
-      transform: none;
-    }
-
-    100% {
-      transform: translate3d(0%, 100%, 0);
-    }
-  }
-
-  /* WIP */
-  @keyframes zoom-scroll {
-    0% {
-      filter: blur(5rem);
-      transform: scale(0);
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    50% {
-      filter: blur(0);
-      transform: none;
-      opacity: 1;
-      visibility: visible;
-    }
-
-    100% {
-      filter: blur(3rem);
-      transform: scale(1.5);
-      opacity: 0;
-      visibility: hidden;
+    .main {
+      display: none;
     }
   }
 `;
 
+const ImageWrap = styled("div")`
+  width: 30%;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 1rem;
+  overflow: hidden;
+
+	img {
+		object-fit: cover;
+    width: 100%;
+    height: 100%;
+	}
+}
+`;
+
 const Home = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // 取得產品資料
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=1`);
+        setProducts(res.data.products.slice(0, 3));
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          console.log(err?.response?.data.message);
+        }
+      }
+    })()
+  }, []);
+
   return (
     <>
       <Global />
-      <div className="vh-100">
+      <Banner className="d-flex align-items-center justify-content-center">
+        <Title className="text-center">
+          <h2>&<em>Bloom</em></h2>
+          <p>植｜物｜販｜賣｜所</p>
+        </Title>
+      </Banner>
+      <IntroContainer>
+        <Intro className="d-flex align-items-center justify-content-center">
+          <h2>Meet your <strong className="fw-bold">plant</strong>, <em>bring</em> nature home</h2>
+          <img src="/plant-01.jpg" alt="plant-01" className="ms-5" />
+        </Intro>
+      </IntroContainer>
+      <div className="bg-light text-center mt-5 p-5">
+        <h2 className="mb-5 fs-2">＼ New Items ／</h2>
+        <div className="row row-cols-1 row-cols-md-3 mx-0 mb-5">
+          {
+            products.map(item => {
+              const { id, category, title, price, origin_price, imageUrl, imagesUrl } = item;
+
+              return (
+                <Card className="col" key={id}>
+                  <NavLink to={`/product/${id}`} className="card">
+                    <div className="card-body d-flex align-items-center">
+                      <ImageWrap>
+                        <img src={imageUrl} alt={`${title} image`} className="main" />
+                        <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
+                      </ImageWrap>
+                      <div className="d-flex flex-column align-items-center flex-fill">
+                        <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
+                        <h5 className="mt-1 mb-2">{title}</h5>
+                        <div className="d-flex align-items-center">
+                          <p className="text-secondary mb-0 me-2">$ {price}</p>
+                          <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </NavLink>
+                </Card>
+              )
+            })
+          }
+        </div>
+        <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
+          PLANT・所有植栽
+          <span className="ms-3">→</span>
+        </NavLink>
       </div>
-      <Intro className="d-flex align-items-center justify-content-center">
-        {/* <h1>
-          Meet <br />
-          Your <br />
-          PLANTS
-        </h1> */}
-        <h2>Meet your <strong>Plant</strong>, <em>bring</em> nature home</h2>
-        <img src="/plant-01.jpg" alt="plant-01" />
-      </Intro>
+      <IntroContainer className="my-5">
+        <Intro className="d-flex align-items-center justify-content-center">
+          <img src="/plant-06.jpg" alt="plant-06" className="me-5" />
+          <h2>Every <strong className="fw-bold">plant</strong> <em>whispers</em> a story of life</h2>
+        </Intro>
+      </IntroContainer>
     </>
   )
 }

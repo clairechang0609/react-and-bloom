@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { Modal } from 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
@@ -8,9 +7,9 @@ import ProductModal from '../../components/frontend/ProductModal';
 import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
 import AlertToast from '../../components/Toast';
+import { ModalRef } from '../../types/modal';
 import type { Product } from '../../types/product';
 import type { ToastRef, ToastType } from '../../types/toast';
-import { ModalRef } from '../../types/modal';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Products = () => {
@@ -73,7 +72,7 @@ const Products = () => {
   };
 
   return (
-    <>
+    <div className="container my-5">
       <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
         <h4 className="mb-0">產品列表</h4>
       </div>
@@ -94,7 +93,7 @@ const Products = () => {
       <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
-    </>
+    </div>
   )
 }
 

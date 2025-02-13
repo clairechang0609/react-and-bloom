@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { Modal } from 'bootstrap';
 import { useEffect, useRef, useState } from 'react';
 import '../../assets/home.scss';
 import CartListItem from '../../components/frontend/CartListItem';
@@ -8,8 +7,8 @@ import CheckoutForm from '../../components/frontend/CheckoutForm';
 import FullPageLoading from '../../components/FullPageLoading';
 import AlertToast from '../../components/Toast';
 import type { CartItem } from '../../types/cart';
-import type { ToastRef, ToastType } from '../../types/toast';
 import { ModalRef } from '../../types/modal';
+import type { ToastRef, ToastType } from '../../types/toast';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Cart = () => {
@@ -46,7 +45,7 @@ const Cart = () => {
   }, []);
 
   return (
-    <>
+    <div className="container my-5">
       <div className="row row-cols-1 row-cols-md-2 g-4">
         <div className="col-md-6">
           <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
@@ -81,7 +80,7 @@ const Cart = () => {
       <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
-    </>
+    </div>
   )
 }
 

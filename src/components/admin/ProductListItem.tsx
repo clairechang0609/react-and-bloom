@@ -44,7 +44,7 @@ const ProductListItem: FC<AdminProductListItemProps> = memo(({ showModal, produc
             <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
             <h6 className="mt-1 mb-2">{title}</h6>
           </div>
-          <div className="col-md d-flex justify-content-center">
+          <div className="col-md d-flex justify-content-center align-items-center">
             <p className="mb-0 me-2">$ {price}</p>
             <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
           </div>
