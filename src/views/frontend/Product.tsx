@@ -36,12 +36,16 @@ const Product = () => {
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
+          if (err?.response?.status === 404) {
+            showToast(err?.response?.data.message, 'danger');
+            navigate('*');
+          }
         }
       } finally {
         setIsFullPageLoading(false);
       }
     })()
-  }, [id, navigate]);
+  }, [id, navigate, showToast]);
 
   // 加入購物車
   const addCart = async(productId?: string) => {
