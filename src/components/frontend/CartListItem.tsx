@@ -46,7 +46,7 @@ const CartListItem: FC<CartListItemProp> = ({ item, setIsFullPageLoading, getCar
         </ImageContainer>
         <div className="flex-grow-1 flex-shrink-0 ">
           <div className="d-flex justify-content-between">
-            <NavLink to={`/product/${id}`} className="text-secondary">
+            <NavLink to={`/product/${product?.id}`} className="text-secondary">
               <h6 className="mb-2">{product.title}</h6>
             </NavLink>
             <i className="bi bi-x-lg opacity-75 cursor-pointer" onClick={() => editQty(id, 0, product.id)} />
