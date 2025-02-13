@@ -61,8 +61,11 @@ $pagination-disabled-color: $light;
 
 // 8. Add additional custom code here
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   padding-top: 70px;
+  &.container-admin {
+    max-width: 1200px;
+  }
 }
 .page-link {
   cursor: pointer;

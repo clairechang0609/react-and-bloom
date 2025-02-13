@@ -3,11 +3,9 @@ import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
-import ProductModal from '../../components/frontend/ProductModal';
 import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
 import AlertToast from '../../components/Toast';
-import { ModalRef } from '../../types/modal';
 import type { Product } from '../../types/product';
 import type { ToastRef, ToastType } from '../../types/toast';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
@@ -16,20 +14,12 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const modalRef = useRef<ModalRef | null>(null);
-  const alertModalRef = useRef<ModalRef | null>(null);
   const toastRef = useRef<ToastRef | null>(null);
 
   // 顯示提示訊息
   const showToast = useCallback((text: string, type: ToastType) => {
     toastRef.current?.show(text, type);
-  }, []);
-
-  // 顯示 Modal
-  const showModal = useCallback(() => {
-    modalRef.current?.show();
   }, []);
 
   // 取得產品資料
@@ -77,18 +67,11 @@ const Products = () => {
         <h4 className="mb-0">產品列表</h4>
       </div>
       {products.map((item) => (
-        <ProductListItem showModal={showModal} setSelectedProduct={setSelectedProduct} product={item} key={item.id}
-          addCart={addCart} />
+        <ProductListItem product={item} addCart={addCart} key={item.id} />
       ))}
       <div className="d-flex justify-content-center my-5">
         <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
       </div>
-
-      <ProductModal
-        ref={modalRef}
-        selectedProduct={selectedProduct}
-        addCart={addCart}
-      />
 
       <AlertToast ref={toastRef} />
 

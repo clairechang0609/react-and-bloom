@@ -20,14 +20,7 @@ export interface Product {
 }
 
 export interface ProductListItemProps {
-  showModal: () => void;
   product: Product;
-  setSelectedProduct: (value: Product | null) => void;
-  addCart: (productId?: string) => void;
-}
-
-export interface ProductModalProps {
-  selectedProduct: Product | null;
   addCart: (productId?: string) => void;
 }
 

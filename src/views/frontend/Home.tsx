@@ -9,9 +9,9 @@ const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Global = createGlobalStyle`
   html {
-  scroll-snap-type: y mandatory;
-  timeline-scope: --section;
-}
+    scroll-snap-type: y mandatory;
+    timeline-scope: --section;
+  }
 
   h2 {
     line-height: 1;
@@ -32,6 +32,7 @@ const Banner = styled("div")`
   background-image: url('/banner-01.jpg');
   background-position: center;
   background-size: cover;
+  background-color: #dfdbcf;
   animation: stickyAnimation linear both;
   animation-duration: 1ms;
   animation-direction: alternate;
@@ -115,19 +116,20 @@ const Card = styled("div")`
     border: 1px solid black;
     background-color: white;
     box-shadow: 5px 5px black;
+
+    &:hover {
+      .sub {
+        transform: scaleX(1);
+      }
+      .main {
+        display: none;
+        opacity: 0;
+      }
+    }
   }
 
   .sub {
-    display: none;
-  }
-
-  &:hover {
-    .sub {
-      display: block;
-    }
-    .main {
-      display: none;
-    }
+    transform: scaleX(0);
   }
 `;
 
@@ -142,6 +144,7 @@ const ImageWrap = styled("div")`
 		object-fit: cover;
     width: 100%;
     height: 100%;
+    transition: 0.3s ease;
 	}
 }
 `;
@@ -186,7 +189,7 @@ const Home = () => {
               const { id, category, title, price, origin_price, imageUrl, imagesUrl } = item;
 
               return (
-                <Card className="col" key={id}>
+                <Card className="col mb-4 mb-md-0" key={id}>
                   <NavLink to={`/product/${id}`} className="card">
                     <div className="card-body d-flex align-items-center">
                       <ImageWrap>

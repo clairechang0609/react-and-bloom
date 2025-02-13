@@ -1,7 +1,7 @@
-import { FC, memo, useCallback } from 'react';
+import { FC, memo } from 'react';
 import { NavLink } from 'react-router';
 import styled from 'styled-components';
-import type { Product, ProductListItemProps } from '../../types/product';
+import type { ProductListItemProps } from '../../types/product';
 import Button from '../Button';
 
 const ImageContainer = styled.div`
@@ -10,7 +10,10 @@ const ImageContainer = styled.div`
 `;
 
 const ProductItem = styled("li")`
-  margin-top: -1px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 5px 5px #dfe2e6;
+
   &:hover {
     background-color: #f8f9fa;
     z-index: 1000;
@@ -19,13 +22,8 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = memo(({ showModal, product, setSelectedProduct, addCart }) => {
+const ProductListItem: FC<ProductListItemProps> = memo(({ product, addCart }) => {
   const { id, title, price, origin_price, category } = product;
-
-  const handleSeeMore = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    showModal();
-  }, [showModal, setSelectedProduct]);
 
   return (
     <ProductItem className="product-list-item card mb-3">
@@ -45,9 +43,6 @@ const ProductListItem: FC<ProductListItemProps> = memo(({ showModal, product, se
             <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
           </div>
           <div className="col-auto d-flex flex-column align-items-stretch justify-content-end">
-            <Button btnStyle="btn-sm btn-outline-primary mb-2" handleClick={() => handleSeeMore(product)}>
-              查看更多
-            </Button>
             <NavLink to={`/product/${id}`} className="btn btn-sm btn-outline-primary rounded-pill mb-2">查看更多</NavLink>
             <Button btnStyle="btn-sm btn-secondary" handleClick={() => addCart(id)}>加入購物車</Button>
           </div>
