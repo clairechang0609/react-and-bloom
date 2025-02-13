@@ -6,15 +6,15 @@ $primary: #333;
 $secondary: #967760;
 $success: #42b983;
 $danger: #e53e3e;
-$light: #D9C5B2;
-$light-gray: #b7b7b7;
+$light: #dfe2e6;
+$dark: #757779;
 $info: #E9C46A;
 $min-contrast-ratio: 3.5;
 $pagination-focus-bg: rgba($secondary, 0.5);
 $pagination-hover-bg: rgba($secondary, 0.5);
 $pagination-active-bg: $secondary;
 $pagination-disabled-bg: transparent;
-$pagination-disabled-color: $light-gray;
+$pagination-disabled-color: $light;
 
 :root {
   --bg-success: rgba(66, 185, 131, 0.1);
@@ -61,7 +61,11 @@ $pagination-disabled-color: $light-gray;
 
 // 8. Add additional custom code here
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
+  padding-top: 70px;
+  &.container-admin {
+    max-width: 1200px;
+  }
 }
 .page-link {
   cursor: pointer;
@@ -84,4 +88,10 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   appearance: textfield;
+}
+a {
+  text-decoration: none;
+}
+.form-label {
+  font-size: 0.875rem;
 }

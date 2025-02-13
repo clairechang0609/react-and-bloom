@@ -1,5 +1,6 @@
 import { Modal } from "bootstrap";
 import { RefObject } from "react";
+import { ToastType } from "./toast";
 
 export interface Product {
   id?: string;
@@ -20,14 +21,19 @@ export interface Product {
 
 export interface ProductListItemProps {
   product: Product;
-  modal: RefObject<Modal>;
-  setSelectedProduct: (value: Product | null) => void;
   addCart: (productId?: string) => void;
 }
 
-export interface ProductModalProps {
-  modalRef: RefObject<HTMLDivElement>;
-  modal: RefObject<Modal>;
+export interface AdminProductModalProps {
   selectedProduct: Product | null;
-  addCart: (productId?: string) => void;
+  getProducts: () => void;
+  showToast: (text: string, type: ToastType) => void;
+  setIsFullPageLoading: (value: boolean) => void;
+}
+
+export interface AdminProductListItemProps {
+  showModal: () => void;
+  product: Product;
+  showAlertModal: () => void;
+  setSelectedProduct: (value: Product | null) => void;
 }
