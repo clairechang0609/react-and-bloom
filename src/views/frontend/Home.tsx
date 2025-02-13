@@ -29,7 +29,7 @@ const Banner = styled("div")`
   position: fixed;
   top: 0;
   width: 100%;
-  background-image: url('/banner-01.jpg');
+  background-image: url('./banner-01.jpg');
   background-position: center;
   background-size: cover;
   background-color: #dfdbcf;
@@ -112,6 +112,7 @@ const Intro = styled("div")`
 
 const Card = styled("div")`
   .card {
+    height: 100%;
     border-radius: 20px;
     border: 1px solid black;
     background-color: white;
@@ -178,7 +179,7 @@ const Home = () => {
       <IntroContainer>
         <Intro className="d-flex align-items-center justify-content-center">
           <h2>Meet your <strong className="fw-bold">plant</strong>, <em>bring</em> nature home</h2>
-          <img src="/plant-01.jpg" alt="plant-01" className="ms-5" />
+          <img src="./plant-01.jpg" alt="plant-01" className="ms-5" />
         </Intro>
       </IntroContainer>
       <div className="bg-light text-center mt-5 p-5">
@@ -218,7 +219,7 @@ const Home = () => {
       </div>
       <IntroContainer className="my-5">
         <Intro className="d-flex align-items-center justify-content-center">
-          <img src="/plant-06.jpg" alt="plant-06" className="me-5" />
+          <img src="./plant-06.jpg" alt="plant-06" className="me-5" />
           <h2>Every <strong className="fw-bold">plant</strong> <em>whispers</em> a story of life</h2>
         </Intro>
       </IntroContainer>
