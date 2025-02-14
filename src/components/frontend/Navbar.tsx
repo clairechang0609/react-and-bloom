@@ -49,6 +49,9 @@ const Navbar = () => {
         <NavLink to="/cart" className="px-4">
           <Link>CART・購物車</Link>
         </NavLink>
+        <NavLink to="/admin" className="btn btn-sm btn-outline-primary rounded-pill px-4 mx-4 py-1">
+            後台
+          </NavLink>
         {/* <i className="bi bi-cart2 fs-4 cursor-pointer" /> */}
       </div>
     </Nav>
