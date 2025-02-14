@@ -5,22 +5,17 @@ import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
 import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
-import AlertToast from '../../components/Toast';
 import type { Product } from '../../types/product';
-import type { ToastRef, ToastType } from '../../types/toast';
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Products = () => {
+  const dispatch = useAppDispatch();
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const toastRef = useRef<ToastRef | null>(null);
-
-  // 顯示提示訊息
-  const showToast = useCallback((text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
-  }, []);
 
   // 取得產品資料
   useEffect(() => {
@@ -39,7 +34,7 @@ const Products = () => {
         setIsFullPageLoading(false);
       }
     })()
-  }, [currentPage, showToast]);
+  }, [currentPage]);
 
   // 加入購物車
   const addCart = async(productId?: string) => {
@@ -51,7 +46,7 @@ const Products = () => {
           qty: 1
         }
       });
-      showToast(res?.data.message, 'success');
+      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
@@ -72,8 +67,6 @@ const Products = () => {
       <div className="d-flex justify-content-center my-5">
         <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
       </div>
-
-      <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
     </div>

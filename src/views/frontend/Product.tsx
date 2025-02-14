@@ -1,27 +1,22 @@
 import { useParams, useNavigate } from 'react-router';
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 import '../../assets/home.scss';
 import FullPageLoading from '../../components/FullPageLoading';
 import type { Product } from '../../types/product';
-import type { ToastRef, ToastType } from '../../types/toast';
 import Button from '../../components/Button';
-import AlertToast from '../../components/Toast';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [product, setProduct] = useState<Product | null>(null);
   const [qty, setQty] = useState<number>(1);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const toastRef = useRef<ToastRef | null>(null);
-
-  // 顯示提示訊息
-  const showToast = useCallback((text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
-  }, []);
 
   // 取得產品資料
   useEffect(() => {
@@ -37,7 +32,7 @@ const Product = () => {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
           if (err?.response?.status === 404) {
-            showToast(err?.response?.data.message, 'danger');
+            dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
             navigate('*');
           }
         }
@@ -45,7 +40,7 @@ const Product = () => {
         setIsFullPageLoading(false);
       }
     })()
-  }, [id, navigate, showToast]);
+  }, [dispatch, id, navigate]);
 
   // 加入購物車
   const addCart = async(productId?: string) => {
@@ -57,7 +52,7 @@ const Product = () => {
           qty
         }
       });
-      showToast(res?.data.message, 'success');
+      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
@@ -126,8 +121,6 @@ const Product = () => {
           </div>
         </div>
       </div>
-
-      <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
     </div>

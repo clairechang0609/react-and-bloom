@@ -8,6 +8,8 @@ import Button from '../Button';
 import Field from '../Form/Field';
 import FormInput from '../Form/FormInput';
 import FormTextarea from '../Form/FormTextarea';
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -30,9 +32,9 @@ const defaultValues = {
 const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
     selectedOrder,
     getOrders,
-    showToast,
     setIsFullPageLoading
   }, ref) => {
+  const dispatch = useAppDispatch();
   const modalRef = useRef<HTMLDivElement | null>(null);
   const modal = useRef<Modal | null>(null);
   const {
@@ -70,11 +72,11 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
       );
       getOrders();
       modal.current?.hide();
-      showToast(res?.data.message, 'success');
+      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger');
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);

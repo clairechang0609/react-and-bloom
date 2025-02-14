@@ -39,6 +39,5 @@ export interface AdminOrderListItemProps {
 export interface AdminOrderModalProps {
   selectedOrder: Order | null;
   getOrders: () => void;
-  showToast: (text: string, type: ToastType) => void;
   setIsFullPageLoading: (value: boolean) => void;
 }
