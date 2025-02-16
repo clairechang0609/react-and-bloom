@@ -2,17 +2,22 @@ import axios, { AxiosError } from 'axios';
 import { useCallback, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import AlertToast from '../../components/Toast';
 import type { ModalRef } from '../../types/modal';
-import type { ToastRef, ToastType } from '../../types/toast';
 import AlertModal from '../AlertModal';
 import FullPageLoading from '../FullPageLoading';
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE } = import.meta.env;
 
 const Nav = styled("nav")`
   height: 70px;
-  backdrop-filter: blur(10px);
   box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  background-color: rgba(255,255,255,0.5);
+
+  @supports (animation-timeline: scroll()) {
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+  }
 `;
 
 const Link = styled("span")`
@@ -43,19 +48,14 @@ const Heading = styled("h1")`
 `;
 
 const Navbar = () => {
+  const dispatch = useAppDispatch();
   const alertModalRef = useRef<ModalRef | null>(null);
-  const toastRef = useRef<ToastRef | null>(null);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // 顯示 Alert Modal
   const showAlertModal = useCallback(() => {
     alertModalRef.current?.show();
-  }, [])
-
-  // 顯示提示訊息
-  const showToast = useCallback((text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
   }, []);
 
   const logout = async() => {
@@ -67,7 +67,7 @@ const Navbar = () => {
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger');
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);
@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <>
-      <Nav className="fixed-top py-3 px-5 d-flex align-items-center bg-white bg-opacity-10">
+      <Nav className="fixed-top py-3 px-5 d-flex align-items-center">
         <NavLink to="/admin" className="d-flex align-items-center px-4">
           <Heading>&<em>Bloom</em></Heading>
         </NavLink>
@@ -97,8 +97,6 @@ const Navbar = () => {
       <AlertModal ref={alertModalRef} nextFn={logout}>
         <p className="text-center py-4">您確定登出系統嗎？</p>
       </AlertModal>
-
-      <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
     </>

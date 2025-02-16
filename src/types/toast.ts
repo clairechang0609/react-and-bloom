@@ -1,6 +1,8 @@
 
 export type ToastType = 'success' | 'danger';
 
-export interface ToastRef {
-  show: (text: string, type: ToastType) => void;
+export interface Toast {
+  text: string;
+  type: ToastType;
+  id?: string;
 }

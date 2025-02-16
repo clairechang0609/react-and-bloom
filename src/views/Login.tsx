@@ -1,19 +1,19 @@
 import axios, { AxiosError } from 'axios';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import FullPageLoading from '../components/FullPageLoading';
-import AlertToast from '../components/Toast';
-import { ToastRef, ToastType } from '../types/toast';
+import { useAppDispatch } from '../store';
+import { asyncSetMessage } from '../slice/toastSlice';
 const { VITE_API_BASE } = import.meta.env;
 
 // 登入表單
 const Login = () => {
+  const dispatch = useAppDispatch();
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     username: '',
     password: ''
   });
-  const toastRef = useRef<ToastRef | null>(null);
   const navigate = useNavigate();
 
   // 處理輸入資料
@@ -24,11 +24,6 @@ const Login = () => {
       [name]: value
     }))
   }, []);
-
-  // 顯示提示訊息
-  const showToast = (text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
-  };
 
   // 登入
   const login = async (e: { preventDefault: () => void }) => {
@@ -42,7 +37,7 @@ const Login = () => {
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger')
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);
@@ -64,7 +59,6 @@ const Login = () => {
           <button type="submit" className="btn btn-primary w-100">Login</button>
         </form>
       </div>
-      <AlertToast ref={toastRef} />
       {isFullPageLoading && <FullPageLoading />}
     </>
   )

@@ -26,18 +26,23 @@ const Global = createGlobalStyle`
 `;
 
 const Banner = styled("div")`
-  position: fixed;
-  top: 0;
-  width: 100%;
   background-image: url('./banner-01.jpg');
   background-position: center;
   background-size: cover;
   background-color: #dfdbcf;
-  animation: stickyAnimation linear both;
-  animation-duration: 1ms;
-  animation-direction: alternate;
-  animation-timeline: scroll(block nearest);
-  animation-range: 0vh 100vh;
+  height: 100vh;
+  font-size: 100px;
+
+  @supports (animation-timeline: scroll()) {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    animation: stickyAnimation linear both;
+    animation-duration: 1ms;
+    animation-direction: alternate;
+    animation-timeline: scroll(block nearest);
+    animation-range: 0vh 100vh;
+  }
 
   @keyframes stickyAnimation {
     0% {
@@ -70,7 +75,10 @@ const Title = styled("div")`
 `;
 
 const IntroContainer = styled("div")`
-  margin-top: calc(110vh);
+  margin-top: 3rem;
+  @supports (animation-timeline: scroll()) {
+    margin-top: calc(110vh);
+  }
   view-timeline: --section;
 `;
 
@@ -199,7 +207,7 @@ const Home = () => {
                       </ImageWrap>
                       <div className="d-flex flex-column align-items-center flex-fill">
                         <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
-                        <h5 className="mt-1 mb-2">{title}</h5>
+                        <h6 className="mt-1 mb-2">{title}</h6>
                         <div className="d-flex align-items-center">
                           <p className="text-secondary mb-0 me-2">$ {price}</p>
                           <small className="text-muted text-decoration-line-through">$ {origin_price}</small>

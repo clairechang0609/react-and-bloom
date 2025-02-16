@@ -5,7 +5,8 @@ import { CheckoutFormProps } from '../../types/cart';
 import Button from '../Button';
 import FormInput from '../Form/FormInput';
 import FormTextarea from '../Form/FormTextarea';
-
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -16,7 +17,8 @@ const defaultValues = {
   message: ''
 }
 
-const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, showToast, getCart }) => {
+const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, getCart }) => {
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -43,12 +45,12 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, showTo
         }
       );
       getCart();
-      showToast(res?.data.message, 'success');
+      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       reset(defaultValues);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger');
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);

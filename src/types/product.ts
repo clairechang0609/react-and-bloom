@@ -27,7 +27,6 @@ export interface ProductListItemProps {
 export interface AdminProductModalProps {
   selectedProduct: Product | null;
   getProducts: () => void;
-  showToast: (text: string, type: ToastType) => void;
   setIsFullPageLoading: (value: boolean) => void;
 }
 
