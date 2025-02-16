@@ -32,7 +32,6 @@ const Product = () => {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
           if (err?.response?.status === 404) {
-            dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
             navigate('*');
           }
         }

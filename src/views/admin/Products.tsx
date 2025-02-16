@@ -8,13 +8,14 @@ import AlertModal from '../../components/AlertModal';
 import Button from '../../components/Button';
 import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
-import AlertToast from '../../components/Toast';
 import type { ModalRef } from '../../types/modal';
 import type { Product } from '../../types/product';
-import type { ToastRef, ToastType } from '../../types/toast';
+import { useAppDispatch } from '../../store';
+import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const AdminProducts = () => {
+  const dispatch = useAppDispatch();
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
@@ -22,7 +23,6 @@ const AdminProducts = () => {
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
-  const toastRef = useRef<ToastRef | null>(null);
 
   // 取得產品資料
   const getProducts = useCallback(async () => {
@@ -48,11 +48,6 @@ const AdminProducts = () => {
     getProducts();
   }, [getProducts]);
 
-  // 顯示提示訊息
-  const showToast = useCallback((text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
-  }, []);
-
   // 顯示 Modal
   const showModal = useCallback(() => {
     modalRef.current?.show();
@@ -76,19 +71,19 @@ const AdminProducts = () => {
     try {
       setIsFullPageLoading(true);
       const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
-      showToast(res.data.message, 'success');
+      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       getProducts();
       alertModalRef.current?.hide();
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
-        showToast(err?.response?.data.message, 'danger');
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);
       setSelectedProduct(null);
     }
-  }, [getProducts, showToast]);
+  }, [dispatch, getProducts]);
 
   return (
     <>
@@ -114,15 +109,12 @@ const AdminProducts = () => {
         ref={modalRef}
         selectedProduct={selectedProduct}
         getProducts={getProducts}
-        showToast={showToast}
         setIsFullPageLoading={setIsFullPageLoading}
       />
 
       <AlertModal ref={alertModalRef} nextFn={() => deleteProduct(selectedProduct?.id || '')}>
         <p className="text-center py-4">刪除後無法復原，您確定刪除<strong>{selectedProduct?.title}</strong>嗎？</p>
       </AlertModal>
-
-      <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
     </>

@@ -1,28 +1,17 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../assets/home.scss';
 import CartListItem from '../../components/frontend/CartListItem';
 import CheckoutForm from '../../components/frontend/CheckoutForm';
 import FullPageLoading from '../../components/FullPageLoading';
-import AlertToast from '../../components/Toast';
 import type { CartItem } from '../../types/cart';
-import { ModalRef } from '../../types/modal';
-import type { ToastRef, ToastType } from '../../types/toast';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Cart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
-  const modalRef = useRef<ModalRef | null>(null);
-  const alertModalRef = useRef<ModalRef | null>(null);
-  const toastRef = useRef<ToastRef | null>(null);
-
-  // 顯示提示訊息
-  const showToast = (text: string, type: ToastType) => {
-    toastRef.current?.show(text, type);
-  };
 
   // 取得購物車
   const getCart = async() => {
@@ -69,15 +58,13 @@ const Cart = () => {
             cart.length
               ? <div className="card">
                   <div className="card-body">
-                    <CheckoutForm setIsFullPageLoading={setIsFullPageLoading} showToast={showToast} getCart={getCart} />
+                    <CheckoutForm setIsFullPageLoading={setIsFullPageLoading} getCart={getCart} />
                   </div>
                 </div>
               : <p className="opacity-75">尚未選購商品</p>
           }
         </div>
       </div>
-
-      <AlertToast ref={toastRef} />
 
       {isFullPageLoading && <FullPageLoading />}
     </div>

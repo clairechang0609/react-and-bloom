@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
 import FullPageLoading from '../../components/FullPageLoading';
@@ -50,6 +50,7 @@ const Products = () => {
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
+        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
       setIsFullPageLoading(false);

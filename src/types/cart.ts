@@ -17,6 +17,5 @@ export interface CartListItemProp {
 
 export interface CheckoutFormProps {
   setIsFullPageLoading: (value: boolean) => void;
-  showToast: (text: string, type: 'success' | 'danger') => void;
   getCart: () => void;
 }
