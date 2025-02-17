@@ -8,14 +8,3 @@ export interface CartItem {
   qty: number;
   total: number;
 }
-
-export interface CartListItemProp {
-  item: CartItem;
-  setIsFullPageLoading: (value: boolean) => void;
-  getCart: () => void;
-}
-
-export interface CheckoutFormProps {
-  setIsFullPageLoading: (value: boolean) => void;
-  getCart: () => void;
-}

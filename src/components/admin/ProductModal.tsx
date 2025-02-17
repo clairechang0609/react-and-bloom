@@ -3,14 +3,15 @@ import { Modal } from 'bootstrap';
 import { ChangeEvent, forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FieldValues, useForm, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { AdminProductModalProps } from '../../types/product';
 import Button from '../Button';
 import Field from '../Form/Field';
 import FormInput from '../Form/FormInput';
 import FormTextarea from '../Form/FormTextarea';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const DeleteBtn = styled("div")`
@@ -36,8 +37,7 @@ const defaultValues = {
 
 const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
     selectedProduct,
-    getProducts,
-    setIsFullPageLoading
+    getProducts
   }, ref) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState('');
@@ -112,7 +112,7 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
   // 送出表單
   const onSubmit = async (data: unknown) => {
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios[!selectedProduct ? 'post' : 'put'](
@@ -128,7 +128,7 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   };
 

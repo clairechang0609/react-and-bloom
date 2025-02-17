@@ -9,14 +9,14 @@ export const toastSlice = createSlice({
     id: ''
   },
   reducers: {
-    setMessage(state, action) {
+    setMessage(_state, action) {
       return action.payload;
     }
   }
 });
 
 export const asyncSetMessage = createAsyncThunk(
-  'toast/createAsyncMessage',
+  'toast/asyncSetMessage',
   (payload: Toast, { dispatch, requestId }) => {
     dispatch(toastSlice.actions.setMessage({
       ...payload,
@@ -26,4 +26,5 @@ export const asyncSetMessage = createAsyncThunk(
 );
 
 export const { setMessage } = toastSlice.actions;
+export const toastData = (state: { toast: Toast }) => state.toast;
 export default toastSlice.reducer;

@@ -1,22 +1,21 @@
-import { useParams, useNavigate } from 'react-router';
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
+import { useNavigate, useParams } from 'react-router';
 import '../../assets/home.scss';
-import FullPageLoading from '../../components/FullPageLoading';
-import type { Product } from '../../types/product';
 import Button from '../../components/Button';
+import { asyncAddCart } from '../../slice/cartSlice';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { useAppDispatch } from '../../store';
+import type { Product } from '../../types/product';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Product = () => {
+  const dispatch = useAppDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [product, setProduct] = useState<Product | null>(null);
   const [qty, setQty] = useState<number>(1);
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
 
   // 取得產品資料
   useEffect(() => {
@@ -25,7 +24,7 @@ const Product = () => {
     }
     (async () => {
       try {
-        setIsFullPageLoading(true);
+        dispatch(setIsFullPageLoading(true));
         const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/product/${id}`);
         setProduct(res.data.product);
       } catch (err) {
@@ -36,30 +35,10 @@ const Product = () => {
           }
         }
       } finally {
-        setIsFullPageLoading(false);
+        dispatch(setIsFullPageLoading(false));
       }
     })()
   }, [dispatch, id, navigate]);
-
-  // 加入購物車
-  const addCart = async(productId?: string) => {
-    try {
-      setIsFullPageLoading(true);
-      const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
-        data: {
-          product_id: productId,
-          qty
-        }
-      });
-      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-      }
-    } finally {
-      setIsFullPageLoading(false);
-    }
-  };
 
   const toPositiveInteger = (value: string) => {
     const result = value.replace(/[^0-9]+/g, '');
@@ -116,12 +95,10 @@ const Product = () => {
             <i className={`bi bi-dash-square-fill fs-3 ${qty === 1 ? 'cursor-default opacity-50' : 'cursor-pointer'}`} onClick={() => qty > 1 && setQty(qty - 1)} />
             <input type="number" className="form-control w-auto mx-2" value={qty} onChange={(e) => setQty(toPositiveInteger(e.target.value))} />
             <i className="bi bi-plus-square-fill fs-3 cursor-pointer" onClick={() => setQty(qty + 1)} />
-            <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-3" handleClick={() => { addCart(product?.id) }}>加入購物車</Button>
+            <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-3" handleClick={() => { dispatch(asyncAddCart({ productId: product?.id, qty })) }}>加入購物車</Button>
           </div>
         </div>
       </div>
-
-      {isFullPageLoading && <FullPageLoading />}
     </div>
   );
 };

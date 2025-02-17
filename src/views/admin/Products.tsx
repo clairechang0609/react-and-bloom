@@ -6,12 +6,12 @@ import ProductListItem from '../../components/admin/ProductListItem';
 import ProductModal from '../../components/admin/ProductModal';
 import AlertModal from '../../components/AlertModal';
 import Button from '../../components/Button';
-import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { Product } from '../../types/product';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const AdminProducts = () => {
@@ -20,14 +20,13 @@ const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
 
   // 取得產品資料
   const getProducts = useCallback(async () => {
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/products?page=${currentPage}`);
@@ -39,9 +38,9 @@ const AdminProducts = () => {
         console.log(err?.response?.data.message);
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   // 取得商品列表
   useEffect(() => {
@@ -69,7 +68,7 @@ const AdminProducts = () => {
     if (!id) return;
 
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
       dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       getProducts();
@@ -80,7 +79,7 @@ const AdminProducts = () => {
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
       setSelectedProduct(null);
     }
   }, [dispatch, getProducts]);
@@ -109,14 +108,11 @@ const AdminProducts = () => {
         ref={modalRef}
         selectedProduct={selectedProduct}
         getProducts={getProducts}
-        setIsFullPageLoading={setIsFullPageLoading}
       />
 
       <AlertModal ref={alertModalRef} nextFn={() => deleteProduct(selectedProduct?.id || '')}>
         <p className="text-center py-4">刪除後無法復原，您確定刪除<strong>{selectedProduct?.title}</strong>嗎？</p>
       </AlertModal>
-
-      {isFullPageLoading && <FullPageLoading />}
     </>
   )
 }

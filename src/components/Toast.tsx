@@ -1,13 +1,14 @@
 import { Toast as BootstrapToast } from 'bootstrap';
 import { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { toastData } from '../slice/toastSlice';
 import type { Toast } from '../types/toast';
 
 // forwardRef 用於轉發 ref
 const Toast: FC = (() => {
   const toastRef = useRef<HTMLDivElement | null>(null);
   const toast = useRef<BootstrapToast | null>(null);
-  const { text, type, id } = useSelector((state: { toast: Toast }) => state.toast);
+  const { text, type, id } = useSelector(toastData);
 
   // Toast 實體
   useEffect(() => {
