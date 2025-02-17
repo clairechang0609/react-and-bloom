@@ -80,6 +80,10 @@ const CheckoutForm: FC = memo(() => {
               maxLength: {
                 value: 12,
                 message: '電話不大於 12 碼',
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: '電話需為數字'
               }
             }} />
         </div>
