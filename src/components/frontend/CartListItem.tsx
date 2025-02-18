@@ -1,8 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { FC } from "react";
-import styled from 'styled-components';
-import type { CartListItemProp } from "../../types/cart";
 import { NavLink } from "react-router";
+import styled from 'styled-components';
+import { asyncGetCart } from "../../slice/cartSlice";
+import { setIsFullPageLoading } from "../../slice/loadingSlice";
+import { useAppDispatch } from "../../store";
+import type { CartItem } from "../../types/cart";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const ImageContainer = styled.div`
@@ -10,26 +13,26 @@ const ImageContainer = styled.div`
   height: 50px;
 `;
 
-const CartListItem: FC<CartListItemProp> = ({ item, setIsFullPageLoading, getCart }) => {
+const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
+  const dispatch = useAppDispatch();
   const { id, qty, total, product } = item;
 
   const editQty = async (id: string, qty: number, productId?: string) => {
     try {
-      setIsFullPageLoading(true);
-
+      dispatch(setIsFullPageLoading(true));
       await axios[qty ? 'put' : 'delete'](`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${id}`, (qty && {
         data: {
           product_id: productId,
           qty
         }
       }) as AxiosRequestConfig | undefined);
-      getCart();
+      await dispatch(asyncGetCart());
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   }
 

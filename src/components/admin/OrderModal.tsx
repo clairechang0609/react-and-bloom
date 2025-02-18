@@ -2,14 +2,15 @@ import axios, { AxiosError } from 'axios';
 import { Modal } from 'bootstrap';
 import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { AdminOrderModalProps, OrderProductDetail } from '../../types/order';
 import Button from '../Button';
 import Field from '../Form/Field';
 import FormInput from '../Form/FormInput';
 import FormTextarea from '../Form/FormTextarea';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -31,8 +32,7 @@ const defaultValues = {
 
 const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
     selectedOrder,
-    getOrders,
-    setIsFullPageLoading
+    getOrders
   }, ref) => {
   const dispatch = useAppDispatch();
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -63,7 +63,7 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
   // 送出表單
   const onSubmit = async (data: unknown) => {
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios.put(
@@ -79,7 +79,7 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   };
 
@@ -146,6 +146,10 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
                     maxLength: {
                       value: 12,
                       message: '電話不大於 12 碼',
+                    },
+                    pattern: {
+                      value: /^[0-9]*$/,
+                      message: '電話需為數字'
                     }
                   }} />
                 </div>

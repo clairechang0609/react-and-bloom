@@ -1,7 +1,3 @@
-import { Modal } from "bootstrap";
-import { RefObject } from "react";
-import { ToastType } from "./toast";
-
 export interface Product {
   id?: string;
   category: string;
@@ -19,15 +15,9 @@ export interface Product {
   floriography?: string;
 }
 
-export interface ProductListItemProps {
-  product: Product;
-  addCart: (productId?: string) => void;
-}
-
 export interface AdminProductModalProps {
   selectedProduct: Product | null;
   getProducts: () => void;
-  setIsFullPageLoading: (value: boolean) => void;
 }
 
 export interface AdminProductListItemProps {

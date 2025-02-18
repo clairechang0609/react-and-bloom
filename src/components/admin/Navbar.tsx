@@ -1,12 +1,12 @@
 import axios, { AxiosError } from 'axios';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import AlertModal from '../AlertModal';
-import FullPageLoading from '../FullPageLoading';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE } = import.meta.env;
 
 const Nav = styled("nav")`
@@ -50,7 +50,6 @@ const Heading = styled("h1")`
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const alertModalRef = useRef<ModalRef | null>(null);
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // 顯示 Alert Modal
@@ -60,7 +59,7 @@ const Navbar = () => {
 
   const logout = async() => {
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       await axios.post(`${VITE_API_BASE}/logout`);
       alertModalRef.current?.hide();
       navigate('/login');
@@ -70,7 +69,7 @@ const Navbar = () => {
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   };
 
@@ -97,8 +96,6 @@ const Navbar = () => {
       <AlertModal ref={alertModalRef} nextFn={logout}>
         <p className="text-center py-4">您確定登出系統嗎？</p>
       </AlertModal>
-
-      {isFullPageLoading && <FullPageLoading />}
     </>
   )
 };

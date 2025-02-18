@@ -5,12 +5,12 @@ import '../../assets/home.scss';
 import OrderListItem from '../../components/admin/OrderListItem';
 import OrderModal from '../../components/admin/OrderModal';
 import AlertModal from '../../components/AlertModal';
-import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { Order } from '../../types/order';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -20,14 +20,13 @@ const Orders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
 
   // 取得產品資料
   const getOrders = useCallback(async () => {
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/orders?page=${currentPage}`);
@@ -39,9 +38,9 @@ const Orders = () => {
         console.log(err?.response?.data.message);
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   // 取得訂單列表
   useEffect(() => {
@@ -63,7 +62,7 @@ const Orders = () => {
     if (!id) return;
 
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/order/${id}`);
       dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       getOrders();
@@ -76,7 +75,7 @@ const Orders = () => {
         setSelectedOrder(null);
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   }, [dispatch, getOrders]);
 
@@ -103,14 +102,11 @@ const Orders = () => {
         ref={modalRef}
         selectedOrder={selectedOrder}
         getOrders={getOrders}
-        setIsFullPageLoading={setIsFullPageLoading}
       />
 
       <AlertModal ref={alertModalRef} nextFn={() => deleteOrder(selectedOrder?.id || '')}>
         <p className="text-center py-4">刪除後無法復原，您確定刪除該筆訂單嗎？</p>
       </AlertModal>
-
-      {isFullPageLoading && <FullPageLoading />}
     </>
   )
 }

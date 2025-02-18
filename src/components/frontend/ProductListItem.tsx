@@ -1,7 +1,9 @@
 import { FC, memo } from 'react';
 import { NavLink } from 'react-router';
 import styled from 'styled-components';
-import type { ProductListItemProps } from '../../types/product';
+import { asyncAddCart } from '../../slice/cartSlice';
+import { useAppDispatch } from "../../store";
+import type { Product } from '../../types/product';
 import Button from '../Button';
 
 const ImageContainer = styled.div`
@@ -22,7 +24,8 @@ const ProductItem = styled("li")`
 `;
 
 // 產品項目
-const ProductListItem: FC<ProductListItemProps> = memo(({ product, addCart }) => {
+const ProductListItem: FC<{ product: Product }> = memo(({ product }) => {
+  const dispatch = useAppDispatch();
   const { id, title, price, origin_price, category } = product;
 
   return (
@@ -44,7 +47,7 @@ const ProductListItem: FC<ProductListItemProps> = memo(({ product, addCart }) =>
           </div>
           <div className="col-auto d-flex flex-column align-items-stretch justify-content-end">
             <NavLink to={`/product/${id}`} className="btn btn-sm btn-outline-primary rounded-pill mb-2">查看更多</NavLink>
-            <Button btnStyle="btn-sm btn-secondary" handleClick={() => addCart(id)}>加入購物車</Button>
+            <Button btnStyle="btn-sm btn-secondary" handleClick={() => dispatch(asyncAddCart({ productId: id })) }>加入購物車</Button>
           </div>
         </div>
       </div>

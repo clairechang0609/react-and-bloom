@@ -3,11 +3,10 @@ import 'bootstrap';
 import { useEffect, useState } from 'react';
 import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
-import FullPageLoading from '../../components/FullPageLoading';
 import Pagination from '../../components/Pagination';
-import type { Product } from '../../types/product';
+import { setIsFullPageLoading } from "../../slice/loadingSlice";
 import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
+import type { Product } from '../../types/product';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Products = () => {
@@ -15,13 +14,12 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
 
   // 取得產品資料
   useEffect(() => {
     (async () => {
       try {
-        setIsFullPageLoading(true);
+        dispatch(setIsFullPageLoading(true));
         const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=${currentPage}`);
         setProducts(res.data.products);
         setTotalPages(res.data.pagination?.total_pages);
@@ -31,31 +29,10 @@ const Products = () => {
           console.log(err?.response?.data.message);
         }
       } finally {
-        setIsFullPageLoading(false);
+        dispatch(setIsFullPageLoading(false));
       }
     })()
-  }, [currentPage]);
-
-  // 加入購物車
-  const addCart = async(productId?: string) => {
-    try {
-      setIsFullPageLoading(true);
-      const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
-        data: {
-          product_id: productId,
-          qty: 1
-        }
-      });
-      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
-      }
-    } finally {
-      setIsFullPageLoading(false);
-    }
-  };
+  }, [currentPage, dispatch]);
 
   return (
     <div className="container my-5">
@@ -63,13 +40,11 @@ const Products = () => {
         <h4 className="mb-0">產品列表</h4>
       </div>
       {products.map((item) => (
-        <ProductListItem product={item} addCart={addCart} key={item.id} />
+        <ProductListItem product={item} key={item.id} />
       ))}
       <div className="d-flex justify-content-center my-5">
         <Pagination currentPage={currentPage} totalPages={TotalPages} setCurrentPage={setCurrentPage} />
       </div>
-
-      {isFullPageLoading && <FullPageLoading />}
     </div>
   )
 }

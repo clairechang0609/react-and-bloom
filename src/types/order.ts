@@ -1,5 +1,4 @@
 import { Product } from "./product";
-import { ToastType } from "./toast";
 
 export interface OrderProductDetail {
   id: string;
@@ -39,5 +38,4 @@ export interface AdminOrderListItemProps {
 export interface AdminOrderModalProps {
   selectedOrder: Order | null;
   getOrders: () => void;
-  setIsFullPageLoading: (value: boolean) => void;
 }

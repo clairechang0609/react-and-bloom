@@ -1,12 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import { FC, memo } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { CheckoutFormProps } from '../../types/cart';
+import { asyncGetCart } from '../../slice/cartSlice';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { asyncSetMessage } from '../../slice/toastSlice';
+import { useAppDispatch } from '../../store';
 import Button from '../Button';
 import FormInput from '../Form/FormInput';
 import FormTextarea from '../Form/FormTextarea';
-import { useAppDispatch } from '../../store';
-import { asyncSetMessage } from '../../slice/toastSlice';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -17,7 +18,7 @@ const defaultValues = {
   message: ''
 }
 
-const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, getCart }) => {
+const CheckoutForm: FC = memo(() => {
   const dispatch = useAppDispatch();
   const {
     register,
@@ -37,14 +38,14 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, getCar
   const onSubmit = async (data: unknown) => {
     const { message, ...user } = data as Record<string, string>;
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const res = await axios.post(
         `${VITE_API_BASE}/api/${VITE_API_PATH}/order`,
         {
           data: { user, message }
         }
       );
-      getCart();
+      await dispatch(asyncGetCart());
       dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       reset(defaultValues);
     } catch (err) {
@@ -53,7 +54,7 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, getCar
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   };
 
@@ -79,6 +80,10 @@ const CheckoutForm: FC<CheckoutFormProps> = memo(({ setIsFullPageLoading, getCar
               maxLength: {
                 value: 12,
                 message: '電話不大於 12 碼',
+              },
+              pattern: {
+                value: /^[0-9]*$/,
+                message: '電話需為數字'
               }
             }} />
         </div>

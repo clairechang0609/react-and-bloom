@@ -1,15 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
-import FullPageLoading from '../components/FullPageLoading';
-import { useAppDispatch } from '../store';
+import { setIsFullPageLoading } from '../slice/loadingSlice';
 import { asyncSetMessage } from '../slice/toastSlice';
+import { useAppDispatch } from '../store';
 const { VITE_API_BASE } = import.meta.env;
 
 // 登入表單
 const Login = () => {
   const dispatch = useAppDispatch();
-  const [isFullPageLoading, setIsFullPageLoading] = useState<boolean>(false);
   const [form, setForm] = useState({
     username: '',
     password: ''
@@ -29,7 +28,7 @@ const Login = () => {
   const login = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      setIsFullPageLoading(true);
+      dispatch(setIsFullPageLoading(true));
       const res = await axios.post(`${VITE_API_BASE}/admin/signin`, form);
       const { token, expired } = res.data;
       document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
@@ -40,7 +39,7 @@ const Login = () => {
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
     } finally {
-      setIsFullPageLoading(false);
+      dispatch(setIsFullPageLoading(false));
     }
   };
 
@@ -59,7 +58,6 @@ const Login = () => {
           <button type="submit" className="btn btn-primary w-100">Login</button>
         </form>
       </div>
-      {isFullPageLoading && <FullPageLoading />}
     </>
   )
 };
