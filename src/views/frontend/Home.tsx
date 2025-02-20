@@ -3,7 +3,10 @@ import 'bootstrap';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import '../../assets/home.scss';
+import ProductCard from '../../components/frontend/ProductCard';
 import { Product } from '../../types/product';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -17,7 +20,6 @@ const Global = createGlobalStyle`
     line-height: 1;
     font-weight: 300;
     font-size: calc(7vw + 1rem);
-    font-family: 'Cormorant Garamond', Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif;
 
     @media screen and (min-width: 1000px) {
       font-size: 100px;
@@ -118,55 +120,42 @@ const Intro = styled("div")`
 }
 `;
 
-const Card = styled("div")`
-  .card {
-    height: 100%;
-    border-radius: 20px;
-    border: 1px solid black;
-    background-color: white;
-    box-shadow: 5px 5px black;
-
-    &:hover {
-      .sub {
-        transform: scaleX(1);
-      }
-      .main {
-        display: none;
-        opacity: 0;
-      }
-    }
-  }
-
-  .sub {
-    transform: scaleX(0);
-  }
-`;
-
-const ImageWrap = styled("div")`
-  width: 30%;
-  display: block;
-  aspect-ratio: 1 / 1;
-  border-radius: 1rem;
-  overflow: hidden;
-
-	img {
-		object-fit: cover;
-    width: 100%;
-    height: 100%;
-    transition: 0.3s ease;
-	}
-}
-`;
-
 const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
+
+  const swiperConfig = {
+    modules: [ Autoplay ],
+    autoplay: true,
+    loop: true,
+    spaceBetween: 16,
+    slidesPerView: 1,
+    centeredSlides: true,
+    breakpoints: {
+      575: {
+        spaceBetween: 32,
+        slidesPerView: 2
+      },
+      768: {
+        spaceBetween: 48,
+        slidesPerView: 2
+      },
+      1280: {
+        spaceBetween: 48,
+        slidesPerView: 3.5
+      },
+      1440: {
+        spaceBetween: 48,
+        slidesPerView: 4
+      }
+    }
+  };
 
   // 取得產品資料
   useEffect(() => {
     (async () => {
       try {
         const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=1`);
-        setProducts(res.data.products.slice(0, 3));
+        setProducts(res.data.products.slice(0, 6));
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
@@ -180,55 +169,42 @@ const Home = () => {
       <Global />
       <Banner className="d-flex align-items-center justify-content-center">
         <Title className="text-center">
-          <h2>&<em>Bloom</em></h2>
+          <h2 className="title">&<em>Bloom</em></h2>
           <p>植｜物｜販｜賣｜所</p>
         </Title>
       </Banner>
       <IntroContainer>
         <Intro className="d-flex align-items-center justify-content-center">
-          <h2>Meet your <strong className="fw-bold">plant</strong>, <em>bring</em> nature home</h2>
+          <h2 className="title">Meet your <strong className="fw-bold">plant</strong>, <em>bring</em> nature home</h2>
           <img src="./plant-01.jpg" alt="plant-01" className="ms-5" />
         </Intro>
       </IntroContainer>
-      <div className="bg-light text-center mt-5 p-5">
-        <h2 className="mb-5 fs-2">＼ New Items ／</h2>
-        <div className="row row-cols-1 row-cols-md-3 mx-0 mb-5">
-          {
-            products.map(item => {
-              const { id, category, title, price, origin_price, imageUrl, imagesUrl } = item;
-
-              return (
-                <Card className="col mb-4 mb-md-0" key={id}>
-                  <NavLink to={`/product/${id}`} className="card">
-                    <div className="card-body d-flex align-items-center">
-                      <ImageWrap>
-                        <img src={imageUrl} alt={`${title} image`} className="main" />
-                        <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
-                      </ImageWrap>
-                      <div className="d-flex flex-column align-items-center flex-fill">
-                        <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
-                        <h6 className="mt-1 mb-2">{title}</h6>
-                        <div className="d-flex align-items-center">
-                          <p className="text-secondary mb-0 me-2">$ {price}</p>
-                          <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
-                        </div>
-                      </div>
-                    </div>
-                  </NavLink>
-                </Card>
-              )
-            })
-          }
-        </div>
+      <div className="bg-light bg-opacity-75 text-center mt-5 py-5">
+        <h3 className="title fs-2">＼ New Items ／</h3>
+        {
+          products.length
+            ? <Swiper {...swiperConfig} className="py-5">
+              {
+                products.map(item => {
+                  return (
+                    <SwiperSlide key={item.id}>
+                      <ProductCard item={item} />
+                    </SwiperSlide>
+                  )
+                })
+              }
+            </Swiper>
+            : ''
+        }
         <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
-          PLANT・所有植栽
+          PLANTS・所有植栽
           <span className="ms-3">→</span>
         </NavLink>
       </div>
       <IntroContainer className="my-5">
         <Intro className="d-flex align-items-center justify-content-center">
           <img src="./plant-06.jpg" alt="plant-06" className="me-5" />
-          <h2>Every <strong className="fw-bold">plant</strong> <em>whispers</em> a story of life</h2>
+          <h2 className="title">Every <strong className="fw-bold">plant</strong> <em>whispers</em> a story of life</h2>
         </Intro>
       </IntroContainer>
     </>

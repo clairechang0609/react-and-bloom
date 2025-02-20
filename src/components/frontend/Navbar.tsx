@@ -59,10 +59,14 @@ const Navbar = () => {
         <NavLink to="/cart" className="px-4">
           <Link className="position-relative">
             CART・購物車
-            {qty && <span className="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-success ms-1">
-              {qty}
-              <span className="visually-hidden">unread messages</span>
-            </span>}
+            {
+              qty
+                ? (<span className="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-success ms-1">
+                  {qty}
+                  <span className="visually-hidden">unread messages</span>
+                </span>)
+                : ''
+            }
           </Link>
         </NavLink>
         <NavLink to="/admin" className="btn btn-sm btn-outline-primary rounded-pill px-4 mx-4 py-1">

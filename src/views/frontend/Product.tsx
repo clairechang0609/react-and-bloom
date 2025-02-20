@@ -1,9 +1,10 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import '../../assets/home.scss';
 import Button from '../../components/Button';
+import ProductCard from '../../components/frontend/ProductCard';
 import { asyncAddCart } from '../../slice/cartSlice';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { useAppDispatch } from '../../store';
@@ -15,7 +16,20 @@ const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [qty, setQty] = useState<number>(1);
+
+  // 取得推薦商品
+  const getProducts = useCallback(async () => {
+    try {
+      const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=1&category=${product?.category}`);
+      setProducts(res.data.products.slice(0, 2));
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+      }
+    }
+  }, [product?.category]);
 
   // 取得產品資料
   useEffect(() => {
@@ -27,6 +41,7 @@ const Product = () => {
         dispatch(setIsFullPageLoading(true));
         const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/product/${id}`);
         setProduct(res.data.product);
+        await getProducts();
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
@@ -38,7 +53,7 @@ const Product = () => {
         dispatch(setIsFullPageLoading(false));
       }
     })()
-  }, [dispatch, id, navigate]);
+  }, [dispatch, getProducts, id, navigate]);
 
   const toPositiveInteger = (value: string) => {
     const result = value.replace(/[^0-9]+/g, '');
@@ -98,6 +113,22 @@ const Product = () => {
             <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-3" handleClick={() => { dispatch(asyncAddCart({ productId: product?.id, qty })) }}>加入購物車</Button>
           </div>
         </div>
+        {
+          products.length
+            ? <div className="mt-5">
+                <div className="border-top text-center p-5">
+                  <h5 className="title fs-2">＼ Recommendations ／</h5>
+                  <div className="row row-cols-1 row-cols-md-2 gx-lg-5 my-5">
+                    {
+                      products.map(item => {
+                        return <ProductCard item={item} key={item.id} />
+                      })
+                    }
+                  </div>
+                </div>
+              </div>
+            : ''
+        }
       </div>
     </div>
   );

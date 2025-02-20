@@ -13,11 +13,11 @@ const FrontendLayout = () => {
   }, [dispatch]);
 
   return (
-    <div>
+    <>
       <Navbar />
       <Outlet />
       <Footer />
-    </div>
+    </>
   );
 };
 
