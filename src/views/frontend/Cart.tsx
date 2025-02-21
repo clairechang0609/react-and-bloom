@@ -26,10 +26,10 @@ const Global = createGlobalStyle`
 const Cart = () => {
   const dispatch = useAppDispatch();
   const { cart, total } = useSelector(cartData);
-  const { products } = useGetProducts({ page: 1 });
+  const { products } = useGetProducts();
   const filterProducts = useMemo(() => {
     return products?.slice(0, 3);
-  }, [products])
+  }, [products]);
 
   const swiperConfig = {
     spaceBetween: 16,

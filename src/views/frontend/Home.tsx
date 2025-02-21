@@ -154,10 +154,10 @@ const Home = () => {
     }
   };
 
-  const { products } = useGetProducts({ page: 1 });
+  const { products } = useGetProducts({ isShowLoading: false });
   const filterProducts = useMemo(() => {
     return products?.slice(0, 6);
-  }, [products])
+  }, [products]);
 
   return (
     <>

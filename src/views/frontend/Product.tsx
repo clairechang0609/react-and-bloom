@@ -33,10 +33,10 @@ const Product = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [qty, setQty] = useState<number>(1);
-  const { products } = useGetProducts({ category: product?.category });
+  const { products, getProducts } = useGetProducts({ category: product?.category, immediate: false });
   const filterProducts = useMemo(() => {
     return products?.filter((item: Product) => item.id !== product?.id).slice(0, 2);
-  }, [product?.id, products])
+  }, [product?.id, products]);
 
   // 取得產品資料
   useEffect(() => {
@@ -48,6 +48,7 @@ const Product = () => {
         dispatch(setIsFullPageLoading(true));
         const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/product/${id}`);
         setProduct(res.data.product);
+        await getProducts();
       } catch (err) {
         if (err instanceof AxiosError) {
           console.log(err?.response?.data.message);
@@ -59,7 +60,7 @@ const Product = () => {
         dispatch(setIsFullPageLoading(false));
       }
     })()
-  }, [dispatch, id, navigate]);
+  }, [dispatch, getProducts, id, navigate]);
 
   const toPositiveInteger = (value: string) => {
     const result = value.replace(/[^0-9]+/g, '');

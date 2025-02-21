@@ -9,7 +9,7 @@ const FrontendLayout = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(asyncGetCart());
+    dispatch(asyncGetCart({ isShowLoading: false }));
   }, [dispatch]);
 
   return (

@@ -21,11 +21,13 @@ export const cartSlice = createSlice({
   }
 })
 
-export const asyncGetCart = createAsyncThunk(
+export const asyncGetCart = createAsyncThunk<void, void | { isShowLoading?: boolean }>(
   'cart/asyncGetCart',
-  async (_payload, { dispatch, requestId: _requestId }) => {
+  async ({ isShowLoading = true } = {}, { dispatch, requestId: _requestId }) => {
     try {
-      dispatch(setIsFullPageLoading(true));
+      if (isShowLoading) {
+        dispatch(setIsFullPageLoading(true));
+      }
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
       dispatch(setCart(res.data.data?.carts));
       dispatch(setTotal(res.data.data?.total));
@@ -41,7 +43,7 @@ export const asyncGetCart = createAsyncThunk(
 
 export const asyncAddCart = createAsyncThunk(
   'cart/asyncAddCart',
-  async (payload: { productId?: string, qty?: number }, { dispatch, requestId }) => {
+  async (payload: { productId?: string, qty?: number }, { dispatch, requestId: _requestId }) => {
     try {
       dispatch(setIsFullPageLoading(true));
       const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
