@@ -13,5 +13,5 @@ export const loadingSlice = createSlice({
 });
 
 export const { setIsFullPageLoading } = loadingSlice.actions;
-export const loadingData = (state: { loading: { isFullPageLoading: boolean } }) => state.loading;
+export const loadingData = (state: { loading: ReturnType<typeof loadingSlice.getInitialState> }) => state.loading;
 export default loadingSlice.reducer;

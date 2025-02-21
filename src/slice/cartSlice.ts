@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { setIsFullPageLoading } from '../slice/loadingSlice';
-import { CartItem } from "../types/cart";
 import { asyncSetMessage } from "./toastSlice";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -23,7 +22,7 @@ export const cartSlice = createSlice({
 
 export const asyncGetCart = createAsyncThunk(
   'cart/asyncGetCart',
-  async (payload, { dispatch, requestId }) => {
+  async (_payload, { dispatch, requestId: _requestId }) => {
     try {
       dispatch(setIsFullPageLoading(true));
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
@@ -64,5 +63,5 @@ export const asyncAddCart = createAsyncThunk(
 )
 
 export const { setCart, setTotal } = cartSlice.actions;
-export const cartData = (state: { cart: { cart: CartItem[], total: number } }) => state.cart;
+export const cartData = (state: { cart: ReturnType<typeof cartSlice.getInitialState> }) => state.cart;
 export default cartSlice.reducer;

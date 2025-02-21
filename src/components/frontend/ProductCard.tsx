@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { NavLink } from "react-router";
 import styled from "styled-components";
 import { Product } from "../../types/product";
@@ -34,23 +34,22 @@ const ImageWrap = styled("div")`
   border-radius: 1rem;
   overflow: hidden;
 
-	img {
-		object-fit: cover;
+  img {
+    object-fit: cover;
     width: 100%;
     height: 100%;
-    transition: 0.3s ease;
-	}
+  }
 }
 `;
 
-const ProductCard: FC<{ item: Product }> = ({ item }) => {
+const ProductCard: FC<{ item: Product; children?: ReactNode }> = ({ item, children }) => {
   const { id, category, title, price, origin_price, imageUrl, imagesUrl } = item;
 
   return (
     <Card className="col mb-4 mb-md-0" key={id}>
       <NavLink to={`/product/${id}`} className="card">
         <div className="card-body d-flex align-items-center">
-          <ImageWrap>
+          <ImageWrap className="image-wrap">
             <img src={imageUrl} alt={`${title} image`} className="main" />
             <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
           </ImageWrap>
@@ -61,6 +60,7 @@ const ProductCard: FC<{ item: Product }> = ({ item }) => {
               <p className="text-secondary mb-0 me-2">$ {price}</p>
               <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
             </div>
+            {children}
           </div>
         </div>
       </NavLink>

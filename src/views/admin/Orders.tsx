@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import '../../assets/home.scss';
 import OrderListItem from '../../components/admin/OrderListItem';
 import OrderModal from '../../components/admin/OrderModal';
 import AlertModal from '../../components/AlertModal';

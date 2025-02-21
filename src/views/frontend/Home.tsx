@@ -1,14 +1,11 @@
-import axios, { AxiosError } from 'axios';
 import 'bootstrap';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import '../../assets/home.scss';
 import ProductCard from '../../components/frontend/ProductCard';
-import { Product } from '../../types/product';
-const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+import useGetProducts from '../../hooks/frontend/useGetProducts';
 
 const Global = createGlobalStyle`
   html {
@@ -24,6 +21,15 @@ const Global = createGlobalStyle`
     @media screen and (min-width: 1000px) {
       font-size: 100px;
     }
+  }
+
+  .swiper-slide.swiper-slide-active .image-wrap {
+    aspect-ratio: 3 / 4;
+    transition: aspect-ratio 0.5s ease-out;
+  }
+
+  .swiper-slide .image-wrap {
+    transition: 0.25s ease-in 0.5s;
   }
 `;
 
@@ -121,8 +127,6 @@ const Intro = styled("div")`
 `;
 
 const Home = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-
   const swiperConfig = {
     modules: [ Autoplay ],
     autoplay: true,
@@ -150,19 +154,10 @@ const Home = () => {
     }
   };
 
-  // 取得產品資料
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/products?page=1`);
-        setProducts(res.data.products.slice(0, 6));
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          console.log(err?.response?.data.message);
-        }
-      }
-    })()
-  }, []);
+  const { products } = useGetProducts({ page: 1 });
+  const filterProducts = useMemo(() => {
+    return products?.slice(0, 6);
+  }, [products])
 
   return (
     <>
@@ -182,12 +177,12 @@ const Home = () => {
       <div className="bg-light bg-opacity-75 text-center mt-5 py-5">
         <h3 className="title fs-2">＼ New Items ／</h3>
         {
-          products.length
+          filterProducts.length
             ? <Swiper {...swiperConfig} className="py-5">
               {
-                products.map(item => {
+                filterProducts.map(item => {
                   return (
-                    <SwiperSlide key={item.id}>
+                    <SwiperSlide className="align-self-center" key={item.id}>
                       <ProductCard item={item} />
                     </SwiperSlide>
                   )

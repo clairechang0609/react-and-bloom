@@ -26,5 +26,5 @@ export const asyncSetMessage = createAsyncThunk(
 );
 
 export const { setMessage } = toastSlice.actions;
-export const toastData = (state: { toast: Toast }) => state.toast;
+export const toastData = (state: { toast: ReturnType<typeof toastSlice.getInitialState> }) => state.toast;
 export default toastSlice.reducer;

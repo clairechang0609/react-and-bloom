@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useEffect, useState } from 'react';
-import '../../assets/home.scss';
 import ProductListItem from '../../components/frontend/ProductListItem';
 import Pagination from '../../components/Pagination';
 import { setIsFullPageLoading } from "../../slice/loadingSlice";
