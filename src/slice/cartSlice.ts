@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { setIsFullPageLoading } from '../slice/loadingSlice';
+import { CartItem } from "../types/cart";
 import { asyncSetMessage } from "./toastSlice";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    cart: [],
+    cart: <CartItem[]>[],
     total: 0
   },
   reducers: {
