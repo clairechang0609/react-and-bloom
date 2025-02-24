@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import styled from 'styled-components';
-import { cartData } from '../../slice/cartSlice';
+import { asyncGetCart, cartData } from '../../slice/cartSlice';
+import { useAppDispatch } from '../../store';
 
 const Nav = styled("nav")`
   height: 70px;
@@ -44,11 +45,28 @@ const Heading = styled("h1")`
 `;
 
 const Navbar = () => {
+  const dispatch = useAppDispatch();
+  const header = useRef<HTMLDivElement | null>(null);
   const { cart } = useSelector(cartData);
   const qty = useMemo(() => cart.reduce((acc, cur) => acc + cur.qty, 0), [cart]);
 
+  useEffect(() => {
+    dispatch(asyncGetCart({ isShowLoading: false }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    // if (header.current) {
+    //   new LocomotiveScroll({
+    //     el: header.current,
+    //     smooth: true,
+    //     lerp: .06,
+    //     multiplier: .5
+    //   });
+    // }
+  }, []);
+
   return (
-    <Nav className="fixed-top py-3 px-5 d-flex align-items-center">
+    <Nav ref={header} className="fixed-top py-3 px-5 d-flex align-items-center">
       <NavLink to="/" className="d-flex align-items-center px-4">
         <Heading>&<em>Bloom</em></Heading>
       </NavLink>

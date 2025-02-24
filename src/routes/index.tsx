@@ -12,13 +12,13 @@ import NotFound from '../views/NotFound';
 
 const routes = createHashRouter([
   {
+    path: '',
+    element: <Home />
+  },
+  {
     path: '/',
     element: <FrontendLayout />,
     children: [
-      {
-        path: '',
-        element: <Home />
-      },
       {
         path: 'products',
         element: <Products />

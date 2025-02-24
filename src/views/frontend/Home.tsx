@@ -1,16 +1,16 @@
 import 'bootstrap';
-import { useMemo } from 'react';
+import LocomotiveScroll from 'locomotive-scroll';
+import { useEffect, useMemo, useRef } from 'react';
 import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import Navbar from '../../components/frontend/Navbar';
 import ProductCard from '../../components/frontend/ProductCard';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
 
 const Global = createGlobalStyle`
-  html {
-    scroll-snap-type: y mandatory;
-    timeline-scope: --section;
+  body {
+    background-color: #dfdbcf;
   }
 
   h2 {
@@ -19,7 +19,8 @@ const Global = createGlobalStyle`
     font-size: calc(7vw + 1rem);
 
     @media screen and (min-width: 1000px) {
-      font-size: 100px;
+      font-size: 75px;
+
     }
   }
 
@@ -34,38 +35,49 @@ const Global = createGlobalStyle`
 `;
 
 const Banner = styled("div")`
+  position: relative;
   background-image: url('./banner-01.jpg');
   background-position: center;
   background-size: cover;
-  background-color: #dfdbcf;
+  width: 100%;
   height: 100vh;
   font-size: 100px;
+  transform-origin: top;
+  transition: background-image 3s cubic-bezier(.77,0,.18,1);
 
-  @supports (animation-timeline: scroll()) {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    animation: stickyAnimation linear both;
-    animation-duration: 1ms;
-    animation-direction: alternate;
-    animation-timeline: scroll(block nearest);
-    animation-range: 0vh 100vh;
+  &::after {
+    opacity: 0;
   }
 
-  @keyframes stickyAnimation {
-    0% {
-      height: 100vh;
-      font-size: 100px;
+
+
+  &.is-inview {
+    background-image:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(26, 18, 18, 0.5)), /* 黑色 50% 透明遮罩 */
+    url('./banner-01.jpg'); /* 背景圖片 */
+
+    &::after {
+      opacity: 1;
     }
-    50% {
-      font-size: 0;
-    }
-    100% {
-      height: 70px;
-      opacity: 0;
-      font-size: 0;
-      visibility: hidden;
-    }
+  }
+
+  .banner {
+    position: relative;
+    background-image: url('./banner-01.jpg');
+    background-size: cover;
+    background-position: center;
+    transition: opacity 3s cubic-bezier(.77,0,.18,1);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('./banner-02.jpg'); /* 新的背景圖片 */
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 3s cubic-bezier(.77,0,.18,1);
   }
 `;
 
@@ -83,38 +95,34 @@ const Title = styled("div")`
 `;
 
 const IntroContainer = styled("div")`
-  margin-top: 3rem;
-  @supports (animation-timeline: scroll()) {
-    margin-top: calc(110vh);
-  }
-  view-timeline: --section;
+  // margin-top: 3rem;
+  // @supports (animation-timeline: scroll()) {
+  //   margin-top: calc(110vh);
+  // }
+  // view-timeline: --section;
 `;
 
 const Intro = styled("div")`
-  animation-name: scaleAnimation;
-  animation-duration: 1ms; /* Firefox requires this to apply the animation */
-  animation-direction: alternate;
-  animation-timeline: --section;
-  animation-range: entry 0% 50%;
+  // animation-name: scaleAnimation;
+  // animation-duration: 1ms; /* Firefox requires this to apply the animation */
+  // animation-direction: alternate;
+  // animation-timeline: --section;
+  // animation-range: entry 0% 50%;
   max-width: 100%;
   width: 1000px;
   margin-left: auto;
   margin-right: auto;
 
-  @keyframes scaleAnimation {
-    from {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-    to {
-      opacity: 1;
-      transform: scaleX(100%);
-    }
-  }
-
-  strong {
-    color:rgb(37, 106, 76);
-  }
+  // @keyframes scaleAnimation {
+  //   from {
+  //     opacity: 0;
+  //     transform: scaleX(0);
+  //   }
+  //   to {
+  //     opacity: 1;
+  //     transform: scaleX(100%);
+  //   }
+  // }
 
   > img {
     width: 40vw;
@@ -126,11 +134,98 @@ const Intro = styled("div")`
 }
 `;
 
+const ImageWrap = styled("div")`
+  overflow: hidden;
+  flex-shrink: 0;
+  height: 80vh;
+
+  &.h-500 {
+    height: 500px;
+  }
+
+  .image-outer {
+    height: 100%;
+    will-change: transform, opacity;
+
+    &.is-inview {
+      img {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+    opacity: 0;
+    transform: scale(1.5);
+    transform-origin: center;
+    transition: opacity 1.2s cubic-bezier(.215,.61,.355,1), transform 1.2s cubic-bezier(.215,.61,.355,1);
+  }
+`;
+
+const GuideTitle = styled("h2")`
+  span {
+    transform: translateY(100%) rotateX(-80deg);
+    opacity: 0;
+    transition: opacity .8s cubic-bezier(.215,.61,.355,1), transform .8s cubic-bezier(.215,.61,.355,1);
+    transform-origin: center top;
+    transform-style: preserve-3d;
+    transition-delay: .4s;
+    display: block;
+  }
+
+  &.is-inview {
+    span {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  strong {
+    color:rgb(37, 106, 76);
+  }
+`;
+
+const GuideContent = styled("div")`
+  small {
+    transform: scale(0);
+    transition: transform 0.6s cubic-bezier(.17,.67,.3,1.33);
+    transition-delay: 0.6s;
+    transform-origin: top left;
+    display: block;
+    line-height: 200%;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 200px;
+      height: 2px;
+      background-color: black;
+      transform: scaleX(0);
+      transition: transform 1.2s cubic-bezier(.77,0,.18,1);
+      transition-delay: 0.6s;
+      transform-origin: left;
+    }
+  }
+
+  &.is-inview small {
+    transform: scale(1);
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+`;
+
 const Home = () => {
+  const container = useRef<HTMLDivElement | null>(null);
+  const containerInstance = useRef<LocomotiveScroll | null>(null);
+
   const swiperConfig = {
-    modules: [ Autoplay ],
-    autoplay: true,
-    loop: true,
     spaceBetween: 16,
     slidesPerView: 1,
     centeredSlides: true,
@@ -154,54 +249,123 @@ const Home = () => {
     }
   };
 
-  const { products } = useGetProducts({ isShowLoading: false });
+  const { products } = useGetProducts({ isShowLoading: false});
   const filterProducts = useMemo(() => {
     return products?.slice(0, 6);
   }, [products]);
 
+  useEffect(() => {
+    if (container.current) {
+      containerInstance.current = new LocomotiveScroll({
+        el: container.current,
+        smooth: true,
+        lerp: .06,
+        multiplier: .5
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (products.length) {
+      containerInstance.current?.update();
+    }
+  }, [products]);
+
   return (
     <>
-      <Global />
-      <Banner className="d-flex align-items-center justify-content-center">
-        <Title className="text-center">
-          <h2 className="title">&<em>Bloom</em></h2>
-          <p>植｜物｜販｜賣｜所</p>
-        </Title>
-      </Banner>
-      <IntroContainer>
-        <Intro className="d-flex align-items-center justify-content-center">
-          <h2 className="title">Meet your <strong className="fw-bold">plant</strong>, <em>bring</em> nature home</h2>
-          <img src="./plant-01.jpg" alt="plant-01" className="ms-5" />
-        </Intro>
-      </IntroContainer>
-      <div className="bg-light bg-opacity-75 text-center mt-5 py-5">
-        <h3 className="title fs-2">＼ New Items ／</h3>
-        {
-          filterProducts.length
-            ? <Swiper {...swiperConfig} className="py-5">
+    <Global />
+    <Navbar />
+      <div ref={container}>
+        <Banner className="d-flex align-items-center justify-content-center" data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
+          <Title className="text-center">
+            <h2 className="title" data-scroll data-scroll-speed="3" data-scroll-position="top">&<em>Bloom</em></h2>
+            <p>
               {
-                filterProducts.map(item => {
+                Array.from('植｜物｜販｜賣｜所').map((char, index) => {
                   return (
-                    <SwiperSlide className="align-self-center" key={item.id}>
-                      <ProductCard item={item} />
-                    </SwiperSlide>
-                  )
+                    <span key={`char-${index}`} className="d-inline-block" data-scroll data-scroll-speed="2" data-scroll-position="top"
+                      data-scroll-delay={(0.05 + (index + 1) * 0.01).toFixed(2)}>{char}</span>
+                  );
                 })
               }
-            </Swiper>
-            : ''
-        }
-        <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
-          PLANTS・所有植栽
-          <span className="ms-3">→</span>
-        </NavLink>
+            </p>
+          </Title>
+        </Banner>
+        <IntroContainer>
+          <Intro className="d-flex align-items-center justify-content-center">
+            <div>
+              <GuideTitle className="title mb-5" data-scroll>
+                <span>Meet your </span>
+                <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
+                <span>nature home</span>
+              </GuideTitle>
+              <GuideContent data-scroll data-scroll-speed="2">
+                <small>
+                  拾起一抹綠意<br />
+                  讓自然融入生活
+                </small>
+              </GuideContent>
+            </div>
+            <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="5">
+              <div className="image-outer" data-scroll data-scroll-speed="-1.5">
+                <img src="./plant-01.jpg" alt="plant-01" />
+              </div>
+            </ImageWrap>
+          </Intro>
+        </IntroContainer>
+        <IntroContainer>
+          <div className="d-flex align-items-center justify-content-center px-5">
+            <ImageWrap className="w-30 mb-5" data-scroll data-scroll-speed="2">
+              <div className="image-outer" data-scroll data-scroll-speed="-3">
+                <img src="./plant-06.jpg" alt="plant-06" />
+              </div>
+            </ImageWrap>
+            <div className="w-50 ms-auto" style={{ verticalAlign: 'bottom' }}>
+              <GuideTitle className="title mb-5" data-scroll data-scroll-speed="1">
+                <span>Every <strong className="fw-bold">plant</strong> </span>
+                <span><em>whispers</em> a story </span>
+                <span> of life</span>
+              </GuideTitle>
+              <GuideContent data-scroll data-scroll-speed="3">
+                <small>
+                  植物的細語<br />
+                  療癒生活每個角落
+                </small>
+              </GuideContent>
+              <ImageWrap className="w-40 h-500 ms-auto pt-5" data-scroll data-scroll-speed="1">
+                <div className="image-outer" data-scroll data-scroll-speed="-2">
+                  <img src="./plant-04.jpg" alt="plant-04" />
+                </div>
+              </ImageWrap>
+            </div>
+          </div>
+        </IntroContainer>
+        <div className="text-center py-5">
+          <h3 className="title fs-2">＼ New Items ／</h3>
+          {
+            filterProducts.length
+              ? <Swiper {...swiperConfig} className="py-5">
+                {
+                  filterProducts.map(item => {
+                    return (
+                      <SwiperSlide className="align-self-center" key={item.id}>
+                        <ProductCard item={item} />
+                      </SwiperSlide>
+                    )
+                  })
+                }
+              </Swiper>
+              : ''
+          }
+          <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
+            PLANTS・所有植栽
+            <span className="ms-3">→</span>
+          </NavLink>
+        </div>
+        <div className="c-direction-block_item_inner is-inview" data-scroll data-scroll-direction="horizontal" data-scroll-speed="6">
+            I'm moving in this direction
+        </div>
       </div>
-      <IntroContainer className="my-5">
-        <Intro className="d-flex align-items-center justify-content-center">
-          <img src="./plant-06.jpg" alt="plant-06" className="me-5" />
-          <h2 className="title">Every <strong className="fw-bold">plant</strong> <em>whispers</em> a story of life</h2>
-        </Intro>
-      </IntroContainer>
     </>
   )
 }
