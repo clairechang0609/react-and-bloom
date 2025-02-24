@@ -45,35 +45,17 @@ const Banner = styled("div")`
   transform-origin: top;
   transition: background-image 3s cubic-bezier(.77,0,.18,1);
 
-  &::after {
-    opacity: 0;
-  }
-
-
-
   &.is-inview {
-    background-image:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(26, 18, 18, 0.5)), /* 黑色 50% 透明遮罩 */
-    url('./banner-01.jpg'); /* 背景圖片 */
-
     &::after {
       opacity: 1;
     }
-  }
-
-  .banner {
-    position: relative;
-    background-image: url('./banner-01.jpg');
-    background-size: cover;
-    background-position: center;
-    transition: opacity 3s cubic-bezier(.77,0,.18,1);
   }
 
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('./banner-02.jpg'); /* 新的背景圖片 */
+    background-image: linear-gradient(to bottom, transparent, #dfdbcf);
     background-size: cover;
     background-position: center;
     opacity: 0;
@@ -139,8 +121,8 @@ const ImageWrap = styled("div")`
   flex-shrink: 0;
   height: 80vh;
 
-  &.h-500 {
-    height: 500px;
+  &.h-350 {
+    height: 350px;
   }
 
   .image-outer {
@@ -224,6 +206,8 @@ const GuideContent = styled("div")`
 const Home = () => {
   const container = useRef<HTMLDivElement | null>(null);
   const containerInstance = useRef<LocomotiveScroll | null>(null);
+  const navbarRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollY = useRef(0);
 
   const swiperConfig = {
     spaceBetween: 16,
@@ -262,6 +246,22 @@ const Home = () => {
         lerp: .06,
         multiplier: .5
       });
+
+      containerInstance.current.on("scroll", ({ scroll }) => {
+        if (scroll.y > lastScrollY.current) {
+          // 往下滾 → 隱藏 Navbar
+          navbarRef.current?.classList.add("hidden");
+        } else {
+          // 往上滾 → 顯示 Navbar
+          navbarRef.current?.classList.remove("hidden");
+        }
+
+        lastScrollY.current = scroll.y;
+      });
+
+      return () => {
+        containerInstance.current?.destroy();
+      };
     }
   }, []);
 
@@ -273,8 +273,8 @@ const Home = () => {
 
   return (
     <>
-    <Global />
-    <Navbar />
+      <Global />
+      <Navbar ref={navbarRef} />
       <div ref={container}>
         <Banner className="d-flex align-items-center justify-content-center" data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
           <Title className="text-center">
@@ -283,8 +283,8 @@ const Home = () => {
               {
                 Array.from('植｜物｜販｜賣｜所').map((char, index) => {
                   return (
-                    <span key={`char-${index}`} className="d-inline-block" data-scroll data-scroll-speed="2" data-scroll-position="top"
-                      data-scroll-delay={(0.05 + (index + 1) * 0.01).toFixed(2)}>{char}</span>
+                    <span key={`char-${index}`} className="d-inline-block" data-scroll data-scroll-speed="3.5" data-scroll-position="top"
+                      data-scroll-delay={(0.13 - (index * 0.01)).toFixed(2)}>{char}</span>
                   );
                 })
               }
@@ -306,8 +306,8 @@ const Home = () => {
                 </small>
               </GuideContent>
             </div>
-            <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="5">
-              <div className="image-outer" data-scroll data-scroll-speed="-1.5">
+            <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="3">
+              <div className="image-outer" data-scroll data-scroll-speed="-2">
                 <img src="./plant-01.jpg" alt="plant-01" />
               </div>
             </ImageWrap>
@@ -332,8 +332,8 @@ const Home = () => {
                   療癒生活每個角落
                 </small>
               </GuideContent>
-              <ImageWrap className="w-40 h-500 ms-auto pt-5" data-scroll data-scroll-speed="1">
-                <div className="image-outer" data-scroll data-scroll-speed="-2">
+              <ImageWrap className="w-40 h-350 ms-auto pt-5" data-scroll data-scroll-speed="2">
+                <div className="image-outer" data-scroll data-scroll-speed="-3">
                   <img src="./plant-04.jpg" alt="plant-04" />
                 </div>
               </ImageWrap>
