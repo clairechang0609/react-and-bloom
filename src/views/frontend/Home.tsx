@@ -3,7 +3,7 @@ import LocomotiveScroll from 'locomotive-scroll';
 import { useEffect, useMemo, useRef } from 'react';
 import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import Footer from '../../components/frontend/Footer';
 import Navbar from '../../components/frontend/Navbar';
 import ProductCard from '../../components/frontend/ProductCard';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
@@ -20,7 +20,6 @@ const Global = createGlobalStyle`
 
     @media screen and (min-width: 1000px) {
       font-size: 75px;
-
     }
   }
 
@@ -31,6 +30,40 @@ const Global = createGlobalStyle`
 
   .swiper-slide .image-wrap {
     transition: 0.25s ease-in 0.5s;
+  }
+
+  .product-card-wrap {
+    max-width: 750px;
+    width: 100%;
+  }
+
+  .btn-arrow {
+    right: 1.5rem;
+    transition: 0.25s ease-in;
+  }
+
+  .btn:hover .btn-arrow {
+    right: 0.75rem;
+  }
+
+  .c-fixed_wrapper {
+    padding-top: 70px;
+  }
+
+  .c-fixed, .c-fixed_target {
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: -80vh;
+  }
+
+  .c-fixed_target {
+    bottom: -100vh;
+    top: -100vh;
+  }
+
+  .h-350 {
+    height: 350px;
   }
 `;
 
@@ -76,57 +109,20 @@ const Title = styled("div")`
   }
 `;
 
-const IntroContainer = styled("div")`
-  // margin-top: 3rem;
-  // @supports (animation-timeline: scroll()) {
-  //   margin-top: calc(110vh);
-  // }
-  // view-timeline: --section;
-`;
-
 const Intro = styled("div")`
-  // animation-name: scaleAnimation;
-  // animation-duration: 1ms; /* Firefox requires this to apply the animation */
-  // animation-direction: alternate;
-  // animation-timeline: --section;
-  // animation-range: entry 0% 50%;
   max-width: 100%;
   width: 1000px;
   margin-left: auto;
   margin-right: auto;
-
-  // @keyframes scaleAnimation {
-  //   from {
-  //     opacity: 0;
-  //     transform: scaleX(0);
-  //   }
-  //   to {
-  //     opacity: 1;
-  //     transform: scaleX(100%);
-  //   }
-  // }
-
-  > img {
-    width: 40vw;
-
-    @media screen and (min-width: 1000px) {
-      width: 400px;
-    }
-  }
-}
 `;
 
 const ImageWrap = styled("div")`
   overflow: hidden;
   flex-shrink: 0;
-  height: 80vh;
-
-  &.h-350 {
-    height: 350px;
-  }
 
   .image-outer {
-    height: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
     will-change: transform, opacity;
 
     &.is-inview {
@@ -209,33 +205,9 @@ const Home = () => {
   const navbarRef = useRef<HTMLDivElement | null>(null);
   const lastScrollY = useRef(0);
 
-  const swiperConfig = {
-    spaceBetween: 16,
-    slidesPerView: 1,
-    centeredSlides: true,
-    breakpoints: {
-      575: {
-        spaceBetween: 32,
-        slidesPerView: 2
-      },
-      768: {
-        spaceBetween: 48,
-        slidesPerView: 2
-      },
-      1280: {
-        spaceBetween: 48,
-        slidesPerView: 3.5
-      },
-      1440: {
-        spaceBetween: 48,
-        slidesPerView: 4
-      }
-    }
-  };
-
   const { products } = useGetProducts({ isShowLoading: false});
   const filterProducts = useMemo(() => {
-    return products?.slice(0, 6);
+    return products?.slice(0, 3);
   }, [products]);
 
   useEffect(() => {
@@ -275,7 +247,7 @@ const Home = () => {
     <>
       <Global />
       <Navbar ref={navbarRef} />
-      <div ref={container}>
+      <div className="overflow-hidden" ref={container}>
         <Banner className="d-flex align-items-center justify-content-center" data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
           <Title className="text-center">
             <h2 className="title" data-scroll data-scroll-speed="3" data-scroll-position="top">&<em>Bloom</em></h2>
@@ -291,80 +263,98 @@ const Home = () => {
             </p>
           </Title>
         </Banner>
-        <IntroContainer>
-          <Intro className="d-flex align-items-center justify-content-center">
-            <div>
-              <GuideTitle className="title mb-5" data-scroll>
-                <span>Meet your </span>
-                <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
-                <span>nature home</span>
-              </GuideTitle>
-              <GuideContent data-scroll data-scroll-speed="2">
-                <small>
-                  拾起一抹綠意<br />
-                  讓自然融入生活
-                </small>
-              </GuideContent>
+        <Intro className="d-flex align-items-center justify-content-center">
+          <div>
+            <GuideTitle className="title mb-5" data-scroll>
+              <span>Meet your </span>
+              <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
+              <span>nature home</span>
+            </GuideTitle>
+            <GuideContent data-scroll data-scroll-speed="2">
+              <small>
+                拾起一抹綠意<br />
+                讓自然融入生活
+              </small>
+            </GuideContent>
+          </div>
+          <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="3">
+            <div className="image-outer" data-scroll data-scroll-speed="-2">
+              <img src="./plant-01.jpg" alt="plant-01" />
             </div>
-            <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="3">
-              <div className="image-outer" data-scroll data-scroll-speed="-2">
-                <img src="./plant-01.jpg" alt="plant-01" />
-              </div>
-            </ImageWrap>
-          </Intro>
-        </IntroContainer>
-        <IntroContainer>
-          <div className="d-flex align-items-center justify-content-center px-5">
-            <ImageWrap className="w-30 mb-5" data-scroll data-scroll-speed="2">
+          </ImageWrap>
+        </Intro>
+        <div className="d-flex align-items-center justify-content-center px-5">
+          <ImageWrap className="w-30 mb-5" data-scroll data-scroll-speed="2">
+            <div className="image-outer" data-scroll data-scroll-speed="-3">
+              <img src="./plant-06.jpg" alt="plant-06" />
+            </div>
+          </ImageWrap>
+          <div className="w-50 ms-auto" style={{ verticalAlign: 'bottom' }}>
+            <GuideTitle className="title mb-5" data-scroll data-scroll-speed="1">
+              <span>Every <strong className="fw-bold">plant</strong> </span>
+              <span><em>whispers</em> a story </span>
+              <span> of life</span>
+            </GuideTitle>
+            <GuideContent data-scroll data-scroll-speed="3">
+              <small>
+                植物的細語<br />
+                療癒生活每個角落
+              </small>
+            </GuideContent>
+            <ImageWrap className="w-40 ms-auto pt-5" data-scroll data-scroll-speed="2">
               <div className="image-outer" data-scroll data-scroll-speed="-3">
-                <img src="./plant-06.jpg" alt="plant-06" />
+                <img src="./plant-04.jpg" alt="plant-04" />
               </div>
             </ImageWrap>
-            <div className="w-50 ms-auto" style={{ verticalAlign: 'bottom' }}>
-              <GuideTitle className="title mb-5" data-scroll data-scroll-speed="1">
-                <span>Every <strong className="fw-bold">plant</strong> </span>
-                <span><em>whispers</em> a story </span>
-                <span> of life</span>
-              </GuideTitle>
-              <GuideContent data-scroll data-scroll-speed="3">
-                <small>
-                  植物的細語<br />
-                  療癒生活每個角落
-                </small>
-              </GuideContent>
-              <ImageWrap className="w-40 h-350 ms-auto pt-5" data-scroll data-scroll-speed="2">
-                <div className="image-outer" data-scroll data-scroll-speed="-3">
-                  <img src="./plant-04.jpg" alt="plant-04" />
-                </div>
-              </ImageWrap>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-5 c-fixed_wrapper position-relative overflow-hidden vh-100">
+            <div className="c-fixed_target" id="fixed-target"></div>
+            <div className="c-fixed d-flex flex-column align-items-center text-center vh-100" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
+              <h3 className="title fs-2 mb-3">＼ New Items ／</h3>
+              <small className="d-block">
+                最新植栽推薦 <br />
+                快來挑選你的居家綠色夥伴
+              </small>
+              <svg className="d-block text-white mt-4" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="50px" version="1.1" id="Capa_1" viewBox="0 0 227.096 227.096" xmlSpace="preserve">
+                <g>
+                  <polygon points="152.835,39.285 146.933,45.183 211.113,109.373 0,109.373 0,117.723 211.124,117.723 146.933,181.902 152.835,187.811 227.096,113.55   "/>
+                </g>
+              </svg>
             </div>
           </div>
-        </IntroContainer>
-        <div className="text-center py-5">
-          <h3 className="title fs-2">＼ New Items ／</h3>
-          {
-            filterProducts.length
-              ? <Swiper {...swiperConfig} className="py-5">
-                {
-                  filterProducts.map(item => {
-                    return (
-                      <SwiperSlide className="align-self-center" key={item.id}>
-                        <ProductCard item={item} />
-                      </SwiperSlide>
-                    )
-                  })
-                }
-              </Swiper>
-              : ''
-          }
-          <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
-            PLANTS・所有植栽
-            <span className="ms-3">→</span>
-          </NavLink>
+          <div style={{ marginTop: '-5rem' }} className="col-md-7 text-center" data-scroll data-scroll-delay="0.04" data-scroll-speed="6">
+            <div className="product-card-wrap">
+              {
+                filterProducts.length
+                  ? <>
+                    {
+                      filterProducts.map(item => {
+                        return <div className="mb-5 text-start" key={item.id}>
+                          <ProductCard item={item}>
+                            <small className="d-block mt-3 text-dark">{item.description}</small>
+                          </ProductCard>
+                        </div>
+                      })
+                    }
+                    </>
+                  : ''
+              }
+              <NavLink to="/products" className="btn btn-secondary rounded-pill px-5 mt-4 position-relative">
+                所有植栽
+                <span className="btn-arrow ms-3 position-absolute">→</span>
+              </NavLink>
+            </div>
+          </div>
         </div>
-        <div className="c-direction-block_item_inner is-inview" data-scroll data-scroll-direction="horizontal" data-scroll-speed="6">
-            I'm moving in this direction
+        <div className="px-4" style={{ marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
+          <div className="position-relative h-350">
+<img src="./banner-02.jpg" alt="banner-02" className="position-absolute object-fit-cover w-100 h-100" />
+          </div>
+
         </div>
+        <Footer />
       </div>
     </>
   )

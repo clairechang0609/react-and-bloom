@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
 import styled from 'styled-components';
@@ -10,7 +10,7 @@ const Nav = styled("nav")`
   box-shadow: 0 1px 5px rgba(0,0,0,0.1);
   background-color: rgba(255,255,255,0.5);
   transform: translateY(0);
-  transition: transform 0.5s cubic-bezier(.77,0,.18,1);
+  transition: transform 0.5s cubic-bezier(.77,0,.18,1) 0.15s;
 
   @supports (animation-timeline: scroll()) {
     background-color: rgba(255,255,255,0.1);
