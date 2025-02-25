@@ -54,12 +54,12 @@ const Global = createGlobalStyle`
     left: 0;
     position: absolute;
     right: 0;
-    top: -80vh;
+    top: 0;
   }
 
   .c-fixed_target {
-    bottom: -100vh;
-    top: -100vh;
+    bottom: 0;
+    top: -100px;
   }
 
   .h-350 {
@@ -309,9 +309,9 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-5 c-fixed_wrapper position-relative overflow-hidden vh-100">
+          <div className="col-md-5 c-fixed_wrapper position-relative overflow-hidden">
             <div className="c-fixed_target" id="fixed-target"></div>
-            <div className="c-fixed d-flex flex-column align-items-center text-center vh-100" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
+            <div className="c-fixed d-flex flex-column align-items-center text-center" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
               <h3 className="title fs-2 mb-3">＼ New Items ／</h3>
               <small className="d-block">
                 最新植栽推薦 <br />
@@ -325,7 +325,7 @@ const Home = () => {
             </div>
           </div>
           <div style={{ marginTop: '-5rem' }} className="col-md-7 text-center" data-scroll data-scroll-delay="0.04" data-scroll-speed="6">
-            <div className="product-card-wrap">
+            <div className="product-card-wrap pe-5">
               {
                 filterProducts.length
                   ? <>
@@ -348,11 +348,10 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="px-4" style={{ marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
+        <div className="px-4" style={{ marginTop: '2rem', marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
           <div className="position-relative h-350">
-<img src="./banner-02.jpg" alt="banner-02" className="position-absolute object-fit-cover w-100 h-100" />
+            <img src="./banner-03.jpg" alt="banner-03" className="opacity-75 position-absolute object-fit-cover w-100 h-100" />
           </div>
-
         </div>
         <Footer />
       </div>
