@@ -1,6 +1,10 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 const Global = createGlobalStyle`
+  .categories-wrap {
+    margin-bottom: 5rem;
+  }
+
   .plant-icon {
     max-height: 50px;
     max-width: 50px;
@@ -48,7 +52,7 @@ const PlantCategories = () => {
   return (
     <>
       <Global />
-      <div className="row align-items-center">
+      <div className="categories-wrap row align-items-center">
         <div className="col-12 text-center">
           <h3 className="title fs-2 mb-3">＼ Plant Categories ／</h3>
           <small className="d-block">

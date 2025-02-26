@@ -25,16 +25,6 @@ const Global = createGlobalStyle`
     bottom: 200px;
     top: -100px;
   }
-
-
-  .btn-arrow {
-    right: 1.5rem;
-    transition: 0.25s ease-in;
-  }
-
-  .btn:hover .btn-arrow {
-    right: 0.75rem;
-  }
 `;
 
 const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {

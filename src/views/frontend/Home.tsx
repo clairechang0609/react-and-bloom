@@ -10,6 +10,7 @@ import NewProducts from '../../components/frontend/home/NewProducts';
 import PlantCategories from '../../components/frontend/home/PlantCategories';
 import Navbar from '../../components/frontend/Navbar';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
+import { NavLink } from 'react-router';
 
 const Global = createGlobalStyle`
   body {
@@ -17,13 +18,20 @@ const Global = createGlobalStyle`
   }
 
   .image-outer1 {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
-    border-radius: 50%;
-    margin-top: -5rem;
-    border: 1px solid white;
-    margin-bottom: 2rem;
+  }
+
+  .articles-wrap {
+    max-width: 1000px;
+    margin: 5rem auto;
+
+    .tags-wrap {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 2px solid black;
+    }
   }
 `;
 
@@ -78,31 +86,46 @@ const Home = () => {
         <Intro />
         <NewProducts filterProducts={filterProducts} />
         <PlantCategories />
-        <div className="row">
-          <div className="col-12">
-            <div className="d-inline-block ms-auto text-center">
-              <h3 className="title fs-2 mb-3">＼ Featured Articles ／</h3>
-              <small className="d-block">
-                精選百科 <br />
-                如何照料你的植物
-              </small>
+        <div className="articles-wrap">
+          <div className="row align-items-center my-5 py-5">
+            <div className="col-md-6 px-5">
+              <div data-scroll data-scroll-speed="-1" data-scroll-delay="0.1">
+                <div className="tags-wrap d-flex justify-content-between align-items-center">
+                  <small className="tags d-block">日照｜補水</small>
+                  <small className="badge rounded-pill bg-transparent border border-primary text-primary">2025-02-26</small>
+                </div>
+                <h5 className="card-title fs-4 mb-4">植栽照護</h5>
+                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長</p>
+                <NavLink to="/" className="btn btn-secondary rounded-pill px-5 position-relative">
+                  看更多
+                  <span className="btn-arrow ms-3 position-absolute">→</span>
+                </NavLink>
+              </div>
+            </div>
+            <div className="col-md-6 px-5">
+              <div className="image-outer1">
+                <img src="./plant-08.jpg" alt="plant-08" className="object-fit-cover h-100 w-100" />
+              </div>
             </div>
           </div>
-          <div className="col-md-9">
-            <div className="row row-cols-1 row-cols-lg-3">
-              <div className="card bg-white border-0 rounded-0" data-scroll data-scroll-speed="1">
-                <div className="card-body text-center p-5">
-                  <div className="image-outer1 mx-auto">
-                    <img src="./plant-08.jpg" alt="plant-08" className="object-fit-cover h-100 w-100" />
-                  </div>
-                  <small className="badge rounded-pill text-bg-light">2025-02-26</small>
-                  <h5 className="card-title fs-4 my-3">植栽照護</h5>
-                  <p className="card-text text-start">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長</p>
-                  <small className="d-flex flex-wrap">
-                    <small className="badge rounded-pill text-bg-primary me-1">日照</small>
-                    <small className="badge rounded-pill text-bg-primary me-1">補水</small>
-                  </small>
+          <div className="row align-items-center my-5 py-5">
+            <div className="col-md-6 px-5">
+              <div className="image-outer1">
+                <img src="./plant-08.jpg" alt="plant-08" className="object-fit-cover h-100 w-100" />
+              </div>
+            </div>
+            <div className="col-md-6 px-5">
+              <div data-scroll data-scroll-speed="-1" data-scroll-delay="0.1">
+                <div className="tags-wrap d-flex justify-content-between align-items-center">
+                  <small className="tags d-block">日照｜補水</small>
+                  <small className="badge rounded-pill bg-transparent border border-primary text-primary">2025-02-26</small>
                 </div>
+                <h5 className="card-title fs-4 mb-4">植栽照護</h5>
+                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長</p>
+                <NavLink to="/" className="btn btn-secondary rounded-pill px-5 position-relative">
+                  看更多
+                  <span className="btn-arrow ms-3 position-absolute">→</span>
+                </NavLink>
               </div>
             </div>
           </div>

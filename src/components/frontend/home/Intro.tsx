@@ -81,7 +81,7 @@ const GuideContent = styled("div")`
     &::after {
       content: '';
       position: absolute;
-      bottom: -5px;
+      bottom: -10px;
       left: 0;
       width: 200px;
       height: 2px;
