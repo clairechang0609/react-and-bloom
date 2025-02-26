@@ -6,8 +6,8 @@ import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
 import Button from '../Button';
-import FormInput from '../Form/FormInput';
-import FormTextarea from '../Form/FormTextarea';
+import FormInput from '../form/FormInput';
+import FormTextarea from '../form/FormTextarea';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {

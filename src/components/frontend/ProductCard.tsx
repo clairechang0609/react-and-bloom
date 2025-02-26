@@ -7,9 +7,9 @@ const Card = styled("div")`
   .card {
     height: 100%;
     border-radius: 0;
-    border: 1px solid #afa7a1;
+    border: none;
     background-color: white;
-    box-shadow: 3px 3px #afa7a1;
+    box-shadow: 10px 10px 15px rgba(175, 167, 161, 1);
 
     &:hover {
       .sub {

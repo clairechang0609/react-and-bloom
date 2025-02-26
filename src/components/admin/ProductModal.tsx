@@ -9,9 +9,9 @@ import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { AdminProductModalProps } from '../../types/product';
 import Button from '../Button';
-import Field from '../Form/Field';
-import FormInput from '../Form/FormInput';
-import FormTextarea from '../Form/FormTextarea';
+import Field from '../form/Field';
+import FormInput from '../form/FormInput';
+import FormTextarea from '../form/FormTextarea';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const DeleteBtn = styled("div")`
