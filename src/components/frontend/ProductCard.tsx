@@ -9,7 +9,7 @@ const Card = styled("div")`
     border-radius: 0;
     border: none;
     background-color: white;
-    box-shadow: 10px 10px 15px rgba(175, 167, 161, 1);
+    box-shadow: 10px 10px 15px rgb(117, 119, 121, 0.3);
 
     &:hover {
       .sub {
@@ -62,9 +62,9 @@ const ProductCard: FC<{ item: Product; children?: ReactNode }> = ({ item, childr
           </ImageWrap>
           <div className="d-flex flex-column align-items-start flex-fill p-4">
             <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
-            <h5 className="mt-1 mb-2">{title}</h5>
+            <h5 className="mb-3 fs-4 fw-light">{title}</h5>
             <div className="d-flex align-items-center">
-              <p className="text-secondary mb-0 me-2">$ {price}</p>
+              <h5 className="text-danger mb-0 me-3">$ {price}</h5>
               <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
             </div>
             {children}

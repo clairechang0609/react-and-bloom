@@ -1,6 +1,7 @@
 import 'bootstrap';
 import LocomotiveScroll from 'locomotive-scroll';
 import { useEffect, useMemo, useRef } from 'react';
+import { NavLink } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
 import Footer from '../../components/frontend/Footer';
 import Banner from '../../components/frontend/home/Banner';
@@ -10,7 +11,6 @@ import NewProducts from '../../components/frontend/home/NewProducts';
 import PlantCategories from '../../components/frontend/home/PlantCategories';
 import Navbar from '../../components/frontend/Navbar';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
-import { NavLink } from 'react-router';
 
 const Global = createGlobalStyle`
   body {
@@ -94,8 +94,8 @@ const Home = () => {
                   <small className="tags d-block">日照｜補水</small>
                   <small className="badge rounded-pill bg-transparent border border-primary text-primary">2025-02-26</small>
                 </div>
-                <h5 className="card-title fs-4 mb-4">植栽照護</h5>
-                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長</p>
+                <h5 className="card-title fw-light fs-3 mb-3">植栽照護</h5>
+                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長，讓你的植物茁壯成長。</p>
                 <NavLink to="/" className="btn btn-secondary rounded-pill px-5 position-relative">
                   看更多
                   <span className="btn-arrow ms-3 position-absolute">→</span>
@@ -104,14 +104,14 @@ const Home = () => {
             </div>
             <div className="col-md-6 px-5">
               <div className="image-outer1">
-                <img src="./plant-08.jpg" alt="plant-08" className="object-fit-cover h-100 w-100" />
+                <img src="./plant-07.jpg" alt="plant-07" className="object-fit-cover h-100 w-100" />
               </div>
             </div>
           </div>
           <div className="row align-items-center my-5 py-5">
             <div className="col-md-6 px-5">
               <div className="image-outer1">
-                <img src="./plant-08.jpg" alt="plant-08" className="object-fit-cover h-100 w-100" />
+                <img src="./plant-09.jpg" alt="plant-09" className="object-fit-cover h-100 w-100" />
               </div>
             </div>
             <div className="col-md-6 px-5">
@@ -120,8 +120,8 @@ const Home = () => {
                   <small className="tags d-block">日照｜補水</small>
                   <small className="badge rounded-pill bg-transparent border border-primary text-primary">2025-02-26</small>
                 </div>
-                <h5 className="card-title fs-4 mb-4">植栽照護</h5>
-                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長</p>
+                <h5 className="card-title fw-light fs-3 mb-3">植栽照護</h5>
+                <p className="mb-5">植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長，植物的照護技巧，讓你的植物茁壯成長，讓你的植物茁壯成長。</p>
                 <NavLink to="/" className="btn btn-secondary rounded-pill px-5 position-relative">
                   看更多
                   <span className="btn-arrow ms-3 position-absolute">→</span>

@@ -19,7 +19,7 @@ const Global = createGlobalStyle`
       width: 100%;
       height: 100%;
       transform: translateY(-101%);
-      background-color: #dfe2e6;
+      background-color: #e9e9e3;
       transition: transform 0.2s ease;
       z-index: -1;
     }
@@ -38,7 +38,7 @@ const Contact = () => {
   return (
     <>
       <Global />
-      <div className="bg-white" style={{ marginTop: '2rem', marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
+      <div className="bg-light" style={{ marginTop: '2rem', marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
         <div className="contact-wrap row">
           <div className="col-md-6 position-relative">
             <img src="./banner-04.jpg" alt="banner-04" className="opacity-75 position-absolute object-fit-cover w-100 h-100" />
