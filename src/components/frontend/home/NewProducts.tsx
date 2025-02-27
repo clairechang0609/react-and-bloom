@@ -47,25 +47,27 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
               </svg>
             </div>
           </div>
-          <div style={{ marginTop: '-5rem' }} className="col-md-7 text-center" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
-            <div className="product-card-wrap pe-5">
-              {
-                filterProducts.length
-                  ? <>
-                    {
-                      filterProducts.map(item => {
-                        return <div className="mb-5 text-start" key={item.id}>
-                          <ProductCard item={item}>
-                            <small className="d-block mt-3 text-dark">
-                              <small>{item.description}</small>
-                            </small>
-                          </ProductCard>
-                        </div>
-                      })
-                    }
-                    </>
-                  : ''
-              }
+          <div style={{ marginTop: '-5rem' }} className="col-md-7" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
+            <div className="product-card-wrap text-center pe-5">
+              <div className="row">
+                {
+                  filterProducts.length
+                    ? <>
+                      {
+                        filterProducts.map(item => {
+                          return (
+                            <ProductCard item={item} key={item.id}>
+                              <small className="d-block mt-3 text-start text-dark">
+                                <small>{item.description}</small>
+                              </small>
+                            </ProductCard>
+                          )
+                        })
+                      }
+                      </>
+                    : ''
+                }
+              </div>
               <NavLink to="/products" className="btn btn-secondary rounded-pill px-5 mt-4 position-relative">
                 所有植栽
                 <span className="btn-arrow ms-3 position-absolute">→</span>

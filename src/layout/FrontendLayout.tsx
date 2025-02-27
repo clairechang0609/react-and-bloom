@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Outlet } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
 import Footer from '../components/frontend/Footer';
@@ -20,10 +21,33 @@ const Global = createGlobalStyle`
 `;
 
 const FrontendLayout = () => {
+  const navbarRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log('scrolling');
+
+      if (window.scrollY > lastScrollY.current) {
+        navbarRef.current?.classList.add('hidden');
+      } else {
+        navbarRef.current?.classList.remove('hidden');
+      }
+
+      lastScrollY.current = window.scrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <>
       <Global />
-      <Navbar />
+      <Navbar ref={navbarRef} />
       <Outlet />
       <Footer />
     </>

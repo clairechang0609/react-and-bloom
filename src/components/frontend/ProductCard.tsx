@@ -35,8 +35,8 @@ const Card = styled("div")`
 const ImageWrap = styled("div")`
   position: relative;
   width: 30%;
+  height: 100%;
   display: block;
-  aspect-ratio: 1 / 1;
   overflow: hidden;
 
   img {
@@ -53,10 +53,10 @@ const ProductCard: FC<{ item: Product; children?: ReactNode }> = ({ item, childr
   const { id, category, title, price, origin_price, imageUrl, imagesUrl } = item;
 
   return (
-    <Card className="product-card col mb-4 mb-md-0" key={id}>
+    <Card className="product-card mb-4 mb-md-5" key={id}>
       <NavLink to={`/product/${id}`} className="card">
         <div className="card-body p-0 d-flex align-items-center">
-          <ImageWrap className="image-wrap flex-shrink-0">
+          <ImageWrap className="flex-shrink-0">
             <img src={imageUrl} alt={`${title} image`} className="main" />
             <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
           </ImageWrap>

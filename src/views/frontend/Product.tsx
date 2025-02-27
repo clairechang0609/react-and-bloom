@@ -125,8 +125,8 @@ const Product = () => {
           {
             filterProducts.length
               ? <div className="mt-5">
-                  <div className="border-top text-center p-5">
-                    <h5 className="title fs-2">＼ Recommendations ／</h5>
+                  <div className="border-top p-5">
+                    <h5 className="title text-center fs-2">＼ Recommendations ／</h5>
                     <div className="row row-cols-1 row-cols-md-2 gx-lg-5 my-5">
                       {
                         filterProducts.map(item => {

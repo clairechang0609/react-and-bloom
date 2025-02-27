@@ -64,7 +64,7 @@ const GuideTitle = styled("h2")`
   }
 
   strong {
-    color:rgb(37, 106, 76);
+    color: var(--success);
   }
 `;
 

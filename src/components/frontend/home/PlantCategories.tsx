@@ -1,9 +1,12 @@
+import { FC } from "react";
+import { NavLink } from "react-router";
 import styled, { createGlobalStyle } from "styled-components";
+import { CategoryCardProps } from "../../../types/home";
 
 const Global = createGlobalStyle`
   .categories-wrap {
     padding: 5rem 0;
-    background-color: #566160;
+    background-color: var(--secondary);
   }
 
   .plant-icon {
@@ -49,32 +52,102 @@ const ImageWrap = styled("div")`
   }
 `;
 
+const Line = styled("div")`
+  width: 1px;
+  height: 35px;
+  background-color: var(--gray);
+`;
+
 const categories = [
   {
     icon: "./icon-03.svg",
     title: "觀花植物",
     description: "鮮豔花朵點綴空間，營造溫馨氛圍",
-    plants: ["蝴蝶蘭", "火鶴花", "櫻花苔玉"]
+    plants: [
+      {
+        name: "蝴蝶蘭",
+        id: "-OG5jpm1_E90jFvoKnjz"
+      },
+      {
+        name: "火鶴花",
+        id: "-OFw3pnPKDo3lBndVBjm"
+      },
+      {
+        name: "櫻花苔玉",
+        id: "-OG9J1VVDk-sqPl9qMdY"
+      }
+    ]
   },
   {
     icon: "./icon-02.svg",
     title: "多肉植物",
     description: "迷你療癒系，輕鬆好養不費心",
-    plants: ["沙漠玫瑰"]
+    plants: [
+      {
+        name: '沙漠玫瑰',
+        id: '-OG9FnB6iQqIoqAhZiVb'
+      }
+    ]
   },
   {
     icon: "./icon-04.svg",
     title: "大型植栽",
     description: "打造空間綠意焦點，提升生活質感",
-    plants: ["旅人蕉", "龜背芋"]
+    plants: [
+      {
+        name: "旅人蕉",
+        id: "-OG9KxW4iGCfQys4TP6W"
+      },
+      {
+        name: "龜背芋",
+        id: "-OFvzAWoPIh6KN0cWBbT"
+      }
+    ]
   },
   {
     icon: "./icon-01.svg",
     title: "觀葉植物",
     description: "綠意盎然，輕鬆打造療癒空間",
-    plants: ["黑葉金錢樹", "鹿角蕨", "小葉欖仁"]
+    plants: [
+      {
+        name: "黑葉金錢樹",
+        id: "-OG9HPsocFyozZZ3sRJl"
+      },
+      {
+        name: "小葉欖仁",
+        id: "-OG9B2gF0BH99VU5gpya"
+      },
+      {
+        name: "鹿角蕨",
+        id: "-OG5dWcpJKG5tAxxm0g1"
+      }
+    ]
   }
 ];
+
+const CategoryCard: FC<CategoryCardProps> = ({ icon, title, description, plants }) => {
+  return (
+    <div className="category-card py-5" data-scroll data-scroll-repeat>
+      <img src={icon} alt={title} className="plant-icon mb-4" />
+      <h6 className="fs-4 fw-light text-tertiary">{title}</h6>
+      <Line className="mx-auto my-3"></Line>
+      <p>{description}</p>
+      <small className="text-gray">
+        推薦植栽：
+        {
+          plants.map((plant, key) => {
+            return (
+              <span key={`plant-${plant.id}`}>
+                <NavLink to={`/product/${plant.id}`} className="text-gray border-bottom border-gray">{plant.name}</NavLink>
+                {key !== plants.length - 1 ? '、' : ''}
+              </span>
+            )
+          })
+        }
+      </small>
+    </div>
+  )
+};
 
 const PlantCategories = () => {
   return (
@@ -90,22 +163,14 @@ const PlantCategories = () => {
         </div>
         <div className="col-md-4 d-flex flex-column align-items-center text-center">
           {
-            categories.slice(0, 2).map((category, index) => {
-              const { icon, title, description, plants } = category;
-
+            categories.slice(0, 2).map(category => {
               return (
-                <div className="category-card py-4" key={`category-${index}`} data-scroll data-scroll-repeat>
-                  <img src={icon} alt={title} className="plant-icon mb-4" />
-                  <h6 className="mb-4 fs-4 fw-light text-tertiary">{title}</h6>
-                  <div style={{ width: '3rem' }} className="border-bottom border-gray mx-auto mb-3"></div>
-                  <p>{description}</p>
-                  <small className="text-gray">推薦植栽：{plants.join('、')}</small>
-                </div>
+                <CategoryCard key={`category-${category.title}`} {...category} />
               )
             })
           }
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <ImageWrap className="w-100">
             <div className="image-outer" data-scroll data-scroll-speed="3">
               <img src="./plant-08.jpg" alt="plant-08" />
@@ -114,17 +179,9 @@ const PlantCategories = () => {
         </div>
         <div className="col-md-4 d-flex flex-column align-items-center text-center">
           {
-            categories.slice(2).map((category, index) => {
-              const { icon, title, description, plants } = category;
-
+            categories.slice(2).map(category => {
               return (
-                <div className="category-card py-4" key={`category-${index + 2}`} data-scroll data-scroll-repeat>
-                  <img src={icon} alt={title} className="plant-icon mb-4" />
-                  <h6 className="mb-4 fs-4 fw-light text-tertiary">{title}</h6>
-                  <div style={{ width: '3rem' }} className="border-bottom border-gray mx-auto mb-3"></div>
-                  <p>{description}</p>
-                  <small className="text-gray">推薦植栽：{plants.join('、')}</small>
-                </div>
+                <CategoryCard key={`category-${category.title}`} {...category} />
               )
             })
           }

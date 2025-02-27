@@ -22,7 +22,7 @@ const BannerWrap = styled("div")`
     content: '';
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(to bottom, transparent, #e9e9e3 95%);
+    background-image: linear-gradient(to bottom, transparent, var(--background) 95%);
     background-size: cover;
     background-position: center;
     opacity: 0;
