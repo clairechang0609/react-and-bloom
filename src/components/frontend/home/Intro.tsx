@@ -40,7 +40,7 @@ const ImageWrap = styled("div")`
 const GuideTitle = styled("h2")`
   line-height: 1;
   font-weight: 300;
-  font-size: calc(7vw + 1rem);
+  font-size: calc(7vw + 0.5rem);
 
   @media screen and (min-width: 1000px) {
     font-size: 75px;
@@ -106,28 +106,28 @@ const GuideContent = styled("div")`
 const Intro = () => {
   return (
     <>
-      <IntroWrap className="d-flex align-items-center justify-content-center">
-        <div>
+      <IntroWrap className="d-flex align-items-center justify-content-center px-3">
+        <div className="w-50">
           <GuideTitle className="title mb-5" data-scroll>
             <span>Meet your </span>
             <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
             <span>nature home</span>
           </GuideTitle>
-          <GuideContent data-scroll data-scroll-speed="1">
+          <GuideContent data-scroll data-scroll-speed="1" data-scroll-repeat>
             <small>
               拾起一抹綠意<br />
               讓自然融入生活
             </small>
           </GuideContent>
         </div>
-        <ImageWrap className="ms-auto w-50" data-scroll data-scroll-speed="3">
+        <ImageWrap className="ms-auto w-40 w-lg-50" data-scroll data-scroll-speed="3">
           <div className="image-outer" data-scroll data-scroll-speed="-2">
             <img src="./plant-01.jpg" alt="plant-01" />
           </div>
         </ImageWrap>
       </IntroWrap>
-      <IntroWrapWide className="d-flex align-items-center justify-content-center px-5">
-        <ImageWrap className="w-30 mb-5" data-scroll data-scroll-speed="2">
+      <IntroWrapWide className="d-flex align-items-center justify-content-center px-3 px-lg-5 mt-5 mt-lg-0">
+        <ImageWrap className="w-40 w-lg-30 mb-5" data-scroll data-scroll-speed="2">
           <div className="image-outer" data-scroll data-scroll-speed="-2">
             <img src="./plant-06.jpg" alt="plant-06" />
           </div>
@@ -138,13 +138,13 @@ const Intro = () => {
             <span><em>whispers</em> a story </span>
             <span> of life</span>
           </GuideTitle>
-          <GuideContent data-scroll data-scroll-speed="3">
+          <GuideContent data-scroll data-scroll-speed="3" data-scroll-repeat>
             <small>
               植物的細語<br />
               療癒生活每個角落
             </small>
           </GuideContent>
-          <ImageWrap className="w-40 ms-auto pt-5" data-scroll data-scroll-speed="2">
+          <ImageWrap className="d-none d-lg-block w-40 ms-auto pt-5" data-scroll data-scroll-speed="2">
             <div className="image-outer" data-scroll data-scroll-speed="-2">
               <img src="./plant-10.jpg" alt="plant-10" />
             </div>

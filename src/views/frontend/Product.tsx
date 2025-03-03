@@ -12,18 +12,43 @@ import { useAppDispatch } from '../../store';
 import type { Product } from '../../types/product';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
+import { Swiper as SwiperClass } from 'swiper/types';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+
 const Global = createGlobalStyle`
-  .carousel-item {
+  .main-swiper-side {
     aspect-ratio: 3 / 4;
+    position: relative;
   }
-  .carousel-control-prev-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8'/%3e%3c/svg%3e") !important;
+
+  .main-swiper-side::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 75%, rgba(0, 0, 0, 0.05) 85%, rgba(0, 0, 0, 0.1));
+    pointer-events: none;
   }
-  .carousel-control-next-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath d='M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8'/%3e%3c/svg%3e") !important;
+
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-  .mask-img {
-    mask: linear-gradient(0deg, rgba(0, 0, 0, 0.75), black 50%);
+
+  .swiper-navigation {
+    z-index: 1000;
+  }
+
+  .thumb .swiper-slide {
+    width: 25%;
+    aspect-ratio: 1 / 1;
+    opacity: 0.5;
+    cursor: pointer;
+  }
+
+  .thumb .swiper-slide-thumb-active {
+    opacity: 1;
   }
 `;
 
@@ -67,36 +92,64 @@ const Product = () => {
     return result && parseInt(result) ? parseInt(result) : 1;
   }
 
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+  const [mainSwiper, setMainSwiper] = useState<SwiperClass | null>(null);
+
+  const swiperConfig = {
+    spaceBetween: '10px',
+    loop: true,
+    modules: [ FreeMode, Navigation, Thumbs ]
+  };
+
+  const thumbSwiperConfig = {
+    slidesPerView: 4,
+    spaceBetween: '10px',
+    freeMode: true,
+    watchSlidesProgress: true,
+    modules: [ FreeMode, Navigation, Thumbs ],
+    className: 'thumb'
+  };
+
   return (
     <>
       <Global />
       <div className="container my-5">
         <div className="row">
           <div className="col-md-5 col-lg-4 mb-3 mb-lg-0">
-            <div className="carousel slide" id="carousel">
-              <div className="carousel-inner">
-                <div className="carousel-item active bg-light">
-                  <img src={product?.imageUrl} className="w-100 object-fit-cover mask-img" alt="主圖" />
-                </div>
-                {product?.imagesUrl.map((item, index) => {
-                  return <div className="carousel-item bg-black" key={index}>
-                    <img src={item} alt="附圖" className="d-block w-100 object-fit-cover mask-img" />
-                  </div>
-                })}
-              </div>
-              <button className="carousel-control-prev align-items-end pb-2" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Previous</span>
-              </button>
-              <button className="carousel-control-next align-items-end pb-2" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Next</span>
-              </button>
-            </div>
+            {
+              products.length
+                ? <>
+                  <Swiper onSwiper={setMainSwiper} thumbs={{ swiper: thumbsSwiper }} {...swiperConfig} className="position-relative bg-background mb-2">
+                    <SwiperSlide className="main-swiper-side">
+                      <img src={product?.imageUrl} className="w-100 object-fit-cover mask-img" alt="主圖" />
+                    </SwiperSlide>
+                    {product?.imagesUrl.map((item, index) => {
+                      return <SwiperSlide className="main-swiper-side" key={`swiper-slide-${index}`}>
+                        <img src={item} alt="附圖" className="d-block w-100 object-fit-cover mask-img" />
+                      </SwiperSlide>
+                    })}
+                    <div className="swiper-navigation position-absolute bottom-0 start-0 d-flex justify-content-between w-100 px-2">
+                      <i className="bi bi-arrow-left fs-1 text-white cursor-pointer" onClick={() => mainSwiper?.slidePrev()} />
+                      <i className="bi bi-arrow-right fs-1 text-white cursor-pointer" onClick={() => mainSwiper?.slideNext()} />
+                    </div>
+                  </Swiper>
+                  <Swiper onSwiper={setThumbsSwiper} {...thumbSwiperConfig}>
+                    <SwiperSlide>
+                      <img src={product?.imageUrl} className="w-100 object-fit-cover mask-img" alt="主圖" />
+                    </SwiperSlide>
+                    {product?.imagesUrl.map((item, index) => {
+                      return <SwiperSlide key={`thumb-swiper-slide-${index}`}>
+                        <img src={item} alt="附圖" className="d-block w-100 object-fit-cover mask-img" />
+                      </SwiperSlide>
+                    })}
+                  </Swiper>
+                </>
+                : ''
+            }
           </div>
           <div className="col-md-7 col-lg-8 d-flex flex-column">
             <span className="badge rounded-pill bg-primary mb-3 align-self-start">{product?.category}</span>
-            <h2 className="fs-4 border-bottom pb-3 mb-4">{product?.title}</h2>
+            <h2 className="fs-3 fw-light border-bottom pb-3 mb-4">{product?.title}</h2>
             <div className="card-text mb-3">
               <h6 className="fw-bold d-block">商品描述：</h6>
               <p>{product?.description}</p>
@@ -107,15 +160,14 @@ const Product = () => {
             </div>
             <div className="mb-4">
               <div className="text-muted d-flex align-items-center mb-2">
-                <span className="badge rounded-pill text-bg-light me-2">原價</span>
-                <h6 className="text-decoration-line-through mb-0 me-2">$ {product?.origin_price}</h6>
+                <h6 className="text-decoration-line-through mb-0">$ {product?.origin_price}</h6>
               </div>
               <div className="d-flex align-items-center">
-                <span className="badge rounded-pill text-bg-danger me-2">特價</span>
-                <h4 className="mb-0 me-2 text-danger">$ {product?.price}</h4>
+                <h4 className="mb-0 text-danger">$ {product?.price}</h4>
+                <span className="badge rounded-pill text-bg-danger ms-2">sale</span>
               </div>
             </div>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center mt-auto">
               <i className={`bi bi-dash-square-fill fs-3 ${qty === 1 ? 'cursor-default opacity-50' : 'cursor-pointer'}`} onClick={() => qty > 1 && setQty(qty - 1)} />
               <input type="number" className="form-control w-auto mx-2" value={qty} onChange={(e) => setQty(toPositiveInteger(e.target.value))} />
               <i className="bi bi-plus-square-fill fs-3 cursor-pointer" onClick={() => setQty(qty + 1)} />
@@ -126,11 +178,14 @@ const Product = () => {
             filterProducts.length
               ? <div className="mt-5">
                   <div className="border-top p-5">
-                    <h5 className="title text-center fs-2">＼ Recommendations ／</h5>
+                    <div className="d-flex flex-column align-items-center text-center">
+                      <h5 className="title text-center fs-2 mb-3">＼ Recommendations ／</h5>
+                      <p className="d-block">精選商品</p>
+                    </div>
                     <div className="row row-cols-1 row-cols-md-2 gx-lg-5 my-5">
                       {
                         filterProducts.map(item => {
-                          return <ProductCard item={item} key={item.id} />
+                          return <ProductCard item={item} isLink={true} key={item.id} />
                         })
                       }
                     </div>

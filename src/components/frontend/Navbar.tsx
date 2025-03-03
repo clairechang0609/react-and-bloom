@@ -66,7 +66,7 @@ const Hamberger = styled('div')`
     width: 100%;
     height: 2px;
     border-radius: 1px;
-    background-color: var(--dark);
+    background-color: black;
     transition: opacity .3s, width .3s ease, top .3s ease, transform .3s .2s ease;
     &:nth-child(1) {
       top: 0;
@@ -122,9 +122,9 @@ const Menu = styled('div')`
   z-index: 990;
 
   a {
-    transform: translateY(-100%);
+    transform: translateY(-200%);
     opacity: 0;
-    transition: 0.6s cubic-bezier(.77,0,.18,1) 0.35s;
+    transition: 0.6s cubic-bezier(.77,0,.18,1) 0.3s;
   }
 
   &.active {
@@ -199,7 +199,7 @@ const Navbar = forwardRef<HTMLDivElement>((_props, ref) => {
           <div className="line"></div>
         </Hamberger>
       </Nav>
-      <Menu className={`d-flex flex-column align-items-center ${isActive ? 'active' : ''}`}>
+      <Menu className={`d-lg-none d-flex flex-column align-items-center ${isActive ? 'active' : ''}`}>
         <MenuItems />
       </Menu>
     </>

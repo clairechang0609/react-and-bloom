@@ -91,8 +91,11 @@ const Cart = () => {
               : ''
           }
           <div>
-            <div className="bg-light bg-opacity-75 text-center py-5">
-              <h5 className="title fs-2">＼ Recommendations ／</h5>
+            <div className="bg-background text-center py-5">
+              <div className="d-flex flex-column align-items-center text-center">
+                <h5 className="title text-center fs-2 mb-3">＼ Recommendations ／</h5>
+                <p className="d-block">精選商品</p>
+              </div>
               {
                 filterProducts.length
                   ? <Swiper {...swiperConfig} className="py-5">

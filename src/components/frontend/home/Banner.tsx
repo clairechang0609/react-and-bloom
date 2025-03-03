@@ -7,10 +7,14 @@ const BannerWrap = styled("div")`
   background-size: cover;
   width: 100%;
   height: 100vh;
-  font-size: 100px;
+  font-size: 75px;
   transform-origin: top;
   transition: background-image 3s cubic-bezier(.77,0,.18,1);
   z-index: 800;
+
+  @media screen and (min-width: 1000px) {
+    font-size: 100px;
+  }
 
   &.is-inview {
     &::after {
@@ -40,7 +44,7 @@ const Title = styled("div")`
   }
 
   p {
-    font-size: 0.15em;
+    font-size: 0.925rem;
   }
 `;
 

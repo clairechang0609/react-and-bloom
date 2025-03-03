@@ -16,6 +16,11 @@ const ImageOuter = styled("div")`
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+  margin-top: 4rem;
+
+  @media screen and (min-width: 768px) {
+    margin-top: 0rem;
+  }
 `;
 
 const Articles = () => {

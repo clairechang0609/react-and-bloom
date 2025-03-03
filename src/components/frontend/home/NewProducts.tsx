@@ -1,40 +1,54 @@
 import { FC } from "react";
 import { NavLink } from "react-router";
-import { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 import { Product } from "../../../types/product";
 import ProductCard from "../ProductCard";
 
-const Global = createGlobalStyle`
-  .product-card-wrap {
-    max-width: 750px;
-    width: 100%;
-  }
+const ProductList = styled("div")`
+  margin-top: -10rem;
 
-  .fixed_wrapper {
-    margin-top: 100px;
+  @media screen and (min-width: 992px) {
+    margin-top: -5rem;
   }
+`;
 
-  .fixed, .fixed_target {
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
+const ProductCardWrap = styled("div")`
+  max-width: 750px;
+  width: 100%;
+`;
 
-  .fixed_target {
-    bottom: 200px;
-    top: -100px;
-  }
+const FixedWrap = styled("div")`
+  margin-top: 100px;
+`;
+
+const FixedContent = styled("div")`
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
+
+const FixedTarget = styled(FixedContent)`
+  bottom: 200px;
+  top: -100px;
 `;
 
 const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
     return (
       <>
-        <Global />
         <div className="row">
-          <div className="col-md-5 fixed_wrapper position-relative overflow-hidden">
-            <div className="fixed_target" id="fixed-target"></div>
-            <div className="fixed d-flex flex-column align-items-center text-center" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
+          <div className="d-lg-none my-5">
+            <div className="d-flex flex-column align-items-center text-center">
+              <h3 className="title fs-2 mb-3">＼ New Items ／</h3>
+              <small className="d-block">
+                最新植栽推薦 <br />
+                快來挑選你的居家綠色夥伴
+              </small>
+            </div>
+          </div>
+          <FixedWrap className="col-md-5 position-relative overflow-hidden d-none d-lg-block">
+            <FixedTarget id="fixed-target"></FixedTarget>
+            <FixedContent className="d-flex flex-column align-items-center text-center" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
               <h3 className="title fs-2 mb-3">＼ New Items ／</h3>
               <small className="d-block">
                 最新植栽推薦 <br />
@@ -45,10 +59,10 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
                   <polygon points="152.835,39.285 146.933,45.183 211.113,109.373 0,109.373 0,117.723 211.124,117.723 146.933,181.902 152.835,187.811 227.096,113.55   "/>
                 </g>
               </svg>
-            </div>
-          </div>
-          <div style={{ marginTop: '-5rem' }} className="col-md-7" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
-            <div className="product-card-wrap text-center pe-5">
+            </FixedContent>
+          </FixedWrap>
+          <ProductList className="col-md-7" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
+            <ProductCardWrap className="text-center px-4 ps-lg-0 pe-lg-5">
               <div className="row">
                 {
                   filterProducts.length
@@ -56,8 +70,8 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
                       {
                         filterProducts.map(item => {
                           return (
-                            <ProductCard item={item} key={item.id}>
-                              <small className="d-block mt-3 text-start text-dark">
+                            <ProductCard item={item} isLink={true} style="mb-md-5" key={item.id}>
+                              <small className="d-block mt-3 pt-3 border-top text-start text-dark">
                                 <small>{item.description}</small>
                               </small>
                             </ProductCard>
@@ -72,8 +86,8 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
                 所有植栽
                 <span className="btn-arrow ms-3 position-absolute">→</span>
               </NavLink>
-            </div>
-          </div>
+            </ProductCardWrap>
+          </ProductList>
         </div>
       </>
     )

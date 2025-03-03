@@ -153,7 +153,7 @@ const PlantCategories = () => {
   return (
     <>
       <Global />
-      <div className="categories-wrap text-white row align-items-center">
+      <div className="categories-wrap text-white row align-items-center px-4">
         <div className="col-12 text-center mb-5">
           <h3 className="title fs-2 mb-3">＼ Plant Categories ／</h3>
           <small className="d-block">

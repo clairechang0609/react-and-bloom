@@ -9,6 +9,7 @@ const Global = createGlobalStyle`
     padding-top: 70px;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: var(--background);
   }
 
   .root {
@@ -18,6 +19,14 @@ const Global = createGlobalStyle`
     min-height: calc(100vh - 70px);
     padding-bottom: 73px;
   }
+
+  .page-link {
+    background-color: var(--background);
+  }
+
+  .page-link.disabled, .disabled > .page-link {
+    color: rgba(0,0,0,0.3);
+  }
 `;
 
 const FrontendLayout = () => {
@@ -26,8 +35,6 @@ const FrontendLayout = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      console.log('scrolling');
-
       if (window.scrollY > lastScrollY.current) {
         navbarRef.current?.classList.add('hidden');
       } else {

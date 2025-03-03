@@ -36,7 +36,7 @@ const Contact = () => {
   return (
     <div className="bg-light" style={{ marginTop: '2rem', marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
       <ContactWrap className="row">
-        <div className="col-md-6 position-relative">
+        <div className="d-none d-md-block col-md-6 position-relative">
           <img src="./banner-04.jpg" alt="banner-04" className="opacity-75 position-absolute object-fit-cover w-100 h-100" />
         </div>
         <div className="col-md-6 p-5">
