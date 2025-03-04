@@ -64,7 +64,7 @@ const GuideTitle = styled("h2")`
   }
 
   strong {
-    color: var(--success);
+    color: var(--info);
   }
 `;
 
@@ -113,7 +113,7 @@ const Intro = () => {
             <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
             <span>nature home</span>
           </GuideTitle>
-          <GuideContent data-scroll data-scroll-speed="1" data-scroll-repeat>
+          <GuideContent data-scroll data-scroll-speed="1">
             <small>
               拾起一抹綠意<br />
               讓自然融入生活
@@ -138,7 +138,7 @@ const Intro = () => {
             <span><em>whispers</em> a story </span>
             <span> of life</span>
           </GuideTitle>
-          <GuideContent data-scroll data-scroll-speed="3" data-scroll-repeat>
+          <GuideContent data-scroll data-scroll-speed="3">
             <small>
               植物的細語<br />
               療癒生活每個角落

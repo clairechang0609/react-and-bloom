@@ -32,7 +32,9 @@ const Login = () => {
       const res = await axios.post(`${VITE_API_BASE}/admin/signin`, form);
       const { token, expired } = res.data;
       document.cookie = `andBloom=${token}; expires=${new Date(expired)};`;
-      navigate('/admin/products');
+      setTimeout(() => {
+        navigate('/admin/products');
+      }, 500);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);

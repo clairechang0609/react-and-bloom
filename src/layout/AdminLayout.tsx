@@ -36,7 +36,7 @@ const AdminLayout = () => {
     <>
       <Global />
       <Navbar />
-      <div className="container container-admin my-5">
+      <div className="container my-5">
         <Outlet />
       </div>
     </>

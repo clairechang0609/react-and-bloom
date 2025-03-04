@@ -15,6 +15,12 @@ const ProductList = styled("div")`
 const ProductCardWrap = styled("div")`
   max-width: 750px;
   width: 100%;
+
+  @media (min-width: 768px) {
+    .product-card {
+        margin-bottom: 3rem !important;
+    }
+  }
 `;
 
 const FixedWrap = styled("div")`
@@ -70,7 +76,7 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
                       {
                         filterProducts.map(item => {
                           return (
-                            <ProductCard item={item} isLink={true} style="mb-md-5" key={item.id}>
+                            <ProductCard item={item} isLink={true} key={item.id}>
                               <small className="d-block mt-3 pt-3 border-top text-start text-dark">
                                 <small>{item.description}</small>
                               </small>

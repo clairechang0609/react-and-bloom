@@ -41,7 +41,6 @@ const AdminProducts = () => {
     }
   }, [currentPage, dispatch]);
 
-  // 取得商品列表
   useEffect(() => {
     getProducts();
   }, [getProducts]);
@@ -49,12 +48,12 @@ const AdminProducts = () => {
   // 顯示 Modal
   const showModal = useCallback(() => {
     modalRef.current?.show();
-  }, [])
+  }, []);
 
   // 顯示 Alert Modal
   const showAlertModal = useCallback(() => {
     alertModalRef.current?.show();
-  }, [])
+  }, []);
 
   // 新增產品
   const addProduct = useCallback(() => {

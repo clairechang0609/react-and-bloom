@@ -27,16 +27,14 @@ const Products = () => {
         </select>
       </div>
       <div className="row row-cols-1 row-cols-md-2">
-          {products.map((item) => (
-            <div key={item.id}>
-              <ProductCard item={item}>
-                <div className="w-100 d-flex align-items-center justify-content-end pt-4 mt-auto">
-                  <NavLink to={`/product/${item.id}`} className="btn btn-sm btn-outline-primary rounded-pill me-2 px-4">查看更多</NavLink>
-                  <Button btnStyle="btn-sm btn-secondary" handleClick={() => dispatch(asyncAddCart({ productId: item.id })) }>加入購物車</Button>
-                </div>
-              </ProductCard>
-            </div>
-          ))}
+        {products.map((item) => (
+            <ProductCard item={item} key={item.id}>
+              <div className="w-100 d-flex align-items-center justify-content-end pt-4 mt-auto">
+                <NavLink to={`/product/${item.id}`} className="btn btn-sm btn-outline-primary rounded-pill me-2 px-4">查看更多</NavLink>
+                <Button btnStyle="btn-sm btn-secondary" handleClick={() => dispatch(asyncAddCart({ productId: item.id })) }>加入購物車</Button>
+              </div>
+            </ProductCard>
+        ))}
       </div>
       <div className="d-flex justify-content-center my-5">
         <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />

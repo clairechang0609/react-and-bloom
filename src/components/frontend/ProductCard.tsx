@@ -54,12 +54,12 @@ const ImageWrap = styled("div")`
   }
 `;
 
-const CardBody: FC<{ item: Product; children?: ReactNode }> = ({ item, children }) => {
+const CardBody: FC<{ item: Product; children?: ReactNode; isVerical?: boolean }> = ({ item, children, isVerical }) => {
   const { category, title, price, origin_price, imageUrl, imagesUrl } = item;
 
   return (
-    <div className="card-body p-0 d-flex align-items-stretch">
-      <ImageWrap className="flex-shrink-0">
+    <div className={`card-body p-0 d-flex align-items-stretch ${isVerical ? 'flex-column' : 'flex-row'}`}>
+      <ImageWrap className={`flex-shrink-0 ${isVerical ? 'w-100 ratio ratio-1x1' : ''}`}>
         <img src={imageUrl} alt={`${title} image`} className="main" />
         <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
       </ImageWrap>
@@ -76,18 +76,18 @@ const CardBody: FC<{ item: Product; children?: ReactNode }> = ({ item, children 
   )
 }
 
-const ProductCard: FC<{ item: Product; children?: ReactNode; isLink?: boolean; style?: string }> = ({ item, children, isLink = false, style = '' }) => {
+const ProductCard: FC<{ item: Product; children?: ReactNode; isLink?: boolean; isVerical?: boolean }> = ({ item, children, isLink = false, isVerical = false }) => {
   const { id } = item;
 
   return (
-    <CardWrap className={`product-card mb-4 ${style}`} key={id}>
+    <CardWrap className="product-card mb-4" key={id}>
       {
         isLink
           ? <NavLink to={`/product/${id}`} className="card">
-              <CardBody item={item} children={children} />
+              <CardBody item={item} children={children} isVerical={isVerical} />
             </NavLink>
           : <div className="card">
-              <CardBody item={item} children={children} />
+              <CardBody item={item} children={children} isVerical={isVerical} />
             </div>
       }
     </CardWrap>

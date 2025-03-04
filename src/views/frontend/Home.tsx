@@ -55,10 +55,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (products.length) {
-      containerInstance.current?.update();
+    if (filterProducts.length) {
+      setTimeout(() => {
+        containerInstance.current?.update();
+      }, 500);
     }
-  }, [products]);
+  }, [filterProducts]);
 
   return (
     <>

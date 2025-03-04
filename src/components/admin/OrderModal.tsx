@@ -226,8 +226,8 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
               </div>
             </div>
             <div className="modal-footer">
-              <Button btnStyle="btn btn-outline-secondary" data-bs-dismiss="modal">取消</Button>
-              <Button type="submit" btnStyle="btn btn-secondary">儲存</Button>
+              <Button btnStyle="btn btn-outline-secondary px-4" data-bs-dismiss="modal">取消</Button>
+              <Button type="submit" btnStyle="btn btn-secondary px-4">儲存</Button>
             </div>
           </form>
         </div>

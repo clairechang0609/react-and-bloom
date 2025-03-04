@@ -27,7 +27,7 @@ const OrderListItem: FC<AdminOrderListItemProps> = memo(({ showModal, order, set
   }, [showAlertModal, setSelectedOrder]);
 
   return (
-    <OrderItem className="product-list-item card mb-3">
+    <OrderItem className="card mb-3">
       <div className="card-body">
         <div className="row w-100 justify-content-between align-items-center">
           <div className="col-md">

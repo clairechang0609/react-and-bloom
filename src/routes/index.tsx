@@ -9,6 +9,7 @@ import Product from '../views/frontend/Product';
 import Products from '../views/frontend/Products';
 import Login from '../views/Login';
 import NotFound from '../views/NotFound';
+import Coupons from '../views/admin/Coupons';
 
 const routes = createHashRouter([
   {
@@ -52,6 +53,10 @@ const routes = createHashRouter([
       {
         path: 'orders',
         element: <Orders />
+      },
+      {
+        path: 'coupons',
+        element: <Coupons />
       }
     ]
   },

@@ -152,7 +152,7 @@ const MenuItems = () => {
           CART・購物車
           {
             qty
-              ? (<span className="position-absolute top-25 start-100 translate-middle badge rounded-pill text-bg-success ms-1">
+              ? (<span className="position-absolute top-25 start-100 translate-middle badge rounded-pill text-bg-info ms-1">
                 {qty}
                 <span className="visually-hidden">unread messages</span>
               </span>)

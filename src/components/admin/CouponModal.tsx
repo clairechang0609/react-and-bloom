@@ -12,13 +12,8 @@ import Button from '../Button';
 import Field from '../form/Field';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
+import { AdminCouponModalProps } from '../../types/coupon';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
-const DeleteBtn = styled("div")`
-  right: 5px;
-  top: 0;
-  cursor: pointer;
-`;
 
 const defaultValues = {
   title: '',
@@ -35,12 +30,8 @@ const defaultValues = {
   floriography: ''
 }
 
-const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
-    selectedProduct,
-    getProducts
-  }, ref) => {
+const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupon, getCoupons }, ref) => {
   const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState('');
   const modalRef = useRef<HTMLDivElement | null>(null);
   const modal = useRef<Modal | null>(null);
   const {
@@ -69,57 +60,17 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
     name: ['imageUrl', 'imagesUrl', 'is_enabled'], // 同時監聽多個欄位
   });
 
-  // 上傳圖片
-  const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>, type: 'imageUrl' | 'imagesUrl') => {
-    const file = e.target.files?.[0];
-    const formData = new FormData();
-    if (!file) {
-      return;
-    }
-    formData.append('file-to-upload', file);
-    e.target.files = new DataTransfer().files;
-    try {
-      setLoading(type);
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
-      axios.defaults.headers.common.Authorization = token;
-      const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      if (type === 'imageUrl') {
-        setValue('imageUrl', res.data.imageUrl, { shouldValidate: true });
-      } else {
-        setValue('imagesUrl', [...imagesUrl, res.data.imageUrl], { shouldValidate: true });
-      }
-      setLoading('');
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.message);
-        dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
-      }
-      setLoading('');
-    }
-  };
-
-  // 移除圖片
-  const handleRemoveImage = (index: number) => {
-    const updatedImagesUrl = [...imagesUrl];
-    updatedImagesUrl.splice(index, 1);
-    setValue('imagesUrl', updatedImagesUrl);
-  };
-
   // 送出表單
   const onSubmit = async (data: unknown) => {
     try {
       dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
-      const res = await axios[!selectedProduct ? 'post' : 'put'](
-        `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product${selectedProduct ? `/${selectedProduct.id}` : ''}`,
+      const res = await axios[!selectedCoupon ? 'post' : 'put'](
+        `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product${selectedCoupon ? `/${selectedCoupon.id}` : ''}`,
         { data }
       );
-      getProducts();
+      getCoupons();
       modal.current?.hide();
       dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
     } catch (err) {
@@ -146,13 +97,13 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
   useEffect(() => {
     const currentModalRef = modalRef.current;
     const handleModalOpen = () => {
-      if (selectedProduct) {
-        reset(selectedProduct);
+      if (selectedCoupon) {
+        reset(selectedCoupon);
       }
     };
     currentModalRef?.addEventListener('shown.bs.modal', handleModalOpen);
     return () => currentModalRef?.removeEventListener('shown.bs.modal', handleModalOpen);
-  }, [selectedProduct, modalRef, reset]);
+  }, [selectedCoupon, modalRef, reset]);
 
   // 讓父元件可以呼叫子元件方法
   useImperativeHandle(ref, () => ({
@@ -169,7 +120,7 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title fs-5">{!selectedProduct ? '新增產品' : '編輯產品'}</h2>
+            <h2 className="modal-title fs-5">{!selectedCoupon ? '新增優惠券' : '編輯優惠券'}</h2>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -247,60 +198,6 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
                     </div>
                   </Field>
                 </div>
-                <div className="col-md-6 mb-3">
-                  <Field id="imageUrl" label="主圖" isRequired={true} errors={errors}>
-                    <div>
-                      <input
-                        id="mainImage"
-                        type="file"
-                        className="form-control d-none"
-                        disabled={!!loading}
-                        onChange={(e) => handleUploadImage(e, 'imageUrl')}
-                      />
-                      <label className={`btn btn-primary ${loading && 'opacity-50'}`} htmlFor="mainImage" >
-                        {loading === 'imageUrl' && <span className="spinner-grow spinner-grow-sm me-2"></span>}
-                        上傳圖片
-                      </label>
-                    </div>
-                    {imageUrl && <img src={imageUrl} alt="主圖" className="img-fluid mt-3" />}
-                    <input
-                      id="imageUrl"
-                      className={`form-control-sm form-control-plaintext ${imageUrl ? '' : 'd-none'}`}
-                      readOnly
-                      {...register('imageUrl', {
-                        required: '請上傳主圖'
-                      })}
-                    />
-                  </Field>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <Field id="imagesUrl" label="副圖（最多三張）" errors={errors}>
-                    <div>
-                      <input
-                        id="subImages"
-                        type="file"
-                        className="form-control d-none"
-                        disabled={imagesUrl?.length >= 3 || !!loading}
-                        onChange={(e) => handleUploadImage(e, 'imagesUrl')}
-                      />
-                      <label className={`btn btn-primary ${(imagesUrl?.length >= 3 || !!loading) && 'opacity-50'}`} htmlFor="subImages" >
-                        {loading === 'imagesUrl' && <span className="spinner-grow spinner-grow-sm me-2"></span>}
-                        上傳圖片
-                      </label>
-                    </div>
-                    {imagesUrl?.length > 0 &&
-                      imagesUrl.map((item: string, index: number) => {
-                        return (
-                          <div className="position-relative mt-3 mb-2" key={index}>
-                            <img src={item} alt="副圖" className="img-fluid" />
-                            <input type="text" className="form-control-sm form-control-plaintext" value={item} readOnly />
-                            <DeleteBtn className="position-absolute bi bi-x fs-2" onClick={() => handleRemoveImage(index)} />
-                          </div>
-                        )
-                      })
-                    }
-                  </Field>
-                </div>
               </div>
             </div>
             <div className="modal-footer">
@@ -314,4 +211,4 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
   )
 });
 
-export default memo(ProductModal);
+export default memo(CouponModal);

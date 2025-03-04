@@ -131,14 +131,14 @@ const CategoryCard: FC<CategoryCardProps> = ({ icon, title, description, plants 
       <img src={icon} alt={title} className="plant-icon mb-4" />
       <h6 className="fs-4 fw-light text-tertiary">{title}</h6>
       <Line className="mx-auto my-3"></Line>
-      <p>{description}</p>
-      <small className="text-gray">
+      <p className="text-gray">{description}</p>
+      <small>
         推薦植栽：
         {
           plants.map((plant, key) => {
             return (
               <span key={`plant-${plant.id}`}>
-                <NavLink to={`/product/${plant.id}`} className="text-gray border-bottom border-gray">{plant.name}</NavLink>
+                <NavLink to={`/product/${plant.id}`} className="text-white border-bottom border-white">{plant.name}</NavLink>
                 {key !== plants.length - 1 ? '、' : ''}
               </span>
             )

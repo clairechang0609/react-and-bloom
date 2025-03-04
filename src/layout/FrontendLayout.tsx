@@ -23,10 +23,6 @@ const Global = createGlobalStyle`
   .page-link {
     background-color: var(--background);
   }
-
-  .page-link.disabled, .disabled > .page-link {
-    color: rgba(0,0,0,0.3);
-  }
 `;
 
 const FrontendLayout = () => {
