@@ -105,12 +105,12 @@ const CheckoutForm: FC = memo(() => {
               }
             }} />
         </div>
-        <div className="mb-3">
+        <div className="">
           <FormTextarea id="message" label="備註" placeholder="請輸入備註"
             register={register} errors={errors} />
         </div>
       </div>
-      <Button type="submit" btnStyle="btn btn-secondary w-100">送出訂單</Button>
+      <Button type="submit" btnStyle="btn btn-secondary w-100 mt-4">送出訂單</Button>
     </form>
   )
 });

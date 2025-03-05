@@ -59,8 +59,9 @@ const Cart = () => {
       <div className="container my-5">
         <div className="row g-4">
           <div className={cart.length ? 'col-md-6' : ''}>
-            <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-              <h4 className="mb-0">購物車</h4>
+            <div className="d-flex align-items-center pb-3 mb-4 border-bottom">
+              <h3 className="title fs-2 mb-0 me-2">Your Cart</h3>
+              <small className="mt-2">購物車</small>
             </div>
             {
               cart.length
@@ -68,7 +69,7 @@ const Cart = () => {
                   {cart.map((item: CartItem) => (
                     <CartListItem item={item} key={item.id} />
                   ))}
-                  <div className="list-group-item d-flex align-items-center justify-content-between p-3">
+                  <div className="list-group-item border-0 rounded-0 px-4 d-flex align-items-center justify-content-between p-3">
                     <strong>總金額</strong>
                     <strong>${total}</strong>
                   </div>
@@ -79,26 +80,27 @@ const Cart = () => {
           {
             cart.length
               ? <div className="col-md-6">
-                <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-                  <h4 className="mb-0">結帳</h4>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <CheckoutForm />
+                  <div className="d-flex align-items-center pb-3 mb-4 border-bottom">
+                    <h3 className="title fs-2 mb-0 me-2">Checkout</h3>
+                    <small className="mt-2">結帳</small>
+                  </div>
+                  <div className="card border-0 rounded-0">
+                    <div className="card-body p-4">
+                      <CheckoutForm />
+                    </div>
                   </div>
                 </div>
-              </div>
-              : ''
+                : ''
           }
           <div>
             <div className="bg-background text-center py-5">
               <div className="d-flex flex-column align-items-center text-center">
-                <h5 className="title text-center fs-2 mb-3">＼ Recommendations ／</h5>
-                <p className="d-block">精選商品</p>
+                <h5 className="title text-center fs-4 mb-2">＼ Recommendations ／</h5>
+                <small className="d-block">精選商品</small>
               </div>
               {
                 filterProducts.length
-                  ? <Swiper {...swiperConfig} className="py-5">
+                  ? <Swiper {...swiperConfig} className="py-4">
                     {
                       filterProducts.map(item => {
                         return (
@@ -115,10 +117,6 @@ const Cart = () => {
                   </Swiper>
                   : ''
               }
-              <NavLink to="/products" className="btn btn-secondary rounded-pill px-5">
-                PLANTS・所有植栽
-                <span className="ms-3">→</span>
-              </NavLink>
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
   }
 
   return (<>
-    <div className="list-group-item p-3">
+    <div className="list-group-item border-0 border-bottom rounded-0 p-4">
       <div className="d-flex">
         <ImageContainer className="image-container rounded-circle overflow-hidden border me-3">
           <img src={product.imageUrl} alt={product.title} className="w-100 h-100 object-fit-cover" />
