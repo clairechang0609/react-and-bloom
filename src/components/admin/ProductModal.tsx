@@ -28,7 +28,7 @@ const defaultValues = {
   price: null,
   description: '',
   content: '',
-  is_enabled: true,
+  is_enabled: 1,
   imageUrl: '',
   imagesUrl: [],
   petCareNotes: '',

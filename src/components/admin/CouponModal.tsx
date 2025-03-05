@@ -7,7 +7,6 @@ import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
-import type { AdminProductModalProps } from '../../types/product';
 import Button from '../Button';
 import Field from '../form/Field';
 import FormInput from '../form/FormInput';
@@ -17,17 +16,10 @@ const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
   title: '',
-  category: '',
-  unit: '',
-  origin_price: null,
-  price: null,
-  description: '',
-  content: '',
-  is_enabled: true,
-  imageUrl: '',
-  imagesUrl: [],
-  petCareNotes: '',
-  floriography: ''
+  is_enabled: 1,
+  percent: 100,
+  due_date: '',
+  code: ''
 }
 
 const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupon, getCoupons }, ref) => {
@@ -55,9 +47,9 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
     }
   }, []);
 
-  const [imageUrl, imagesUrl, isEnabled] = useWatch({
+  const [isEnabled] = useWatch({
     control,
-    name: ['imageUrl', 'imagesUrl', 'is_enabled'], // 同時監聽多個欄位
+    name: ['is_enabled'], // 同時監聽多個欄位
   });
 
   // 送出表單
@@ -67,7 +59,7 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios[!selectedCoupon ? 'post' : 'put'](
-        `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product${selectedCoupon ? `/${selectedCoupon.id}` : ''}`,
+        `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/coupon${selectedCoupon ? `/${selectedCoupon.id}` : ''}`,
         { data }
       );
       getCoupons();
@@ -98,7 +90,10 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
     const currentModalRef = modalRef.current;
     const handleModalOpen = () => {
       if (selectedCoupon) {
-        reset(selectedCoupon);
+        reset({
+          ...selectedCoupon,
+          due_date: new Date(selectedCoupon.due_date * 1000).toISOString().split('T')[0]
+        });
       }
     };
     currentModalRef?.addEventListener('shown.bs.modal', handleModalOpen);
@@ -127,66 +122,42 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
             <div className="modal-body">
               <div className="row">
                 <div className="mb-3">
-                  <FormInput id="title" label="產品名稱" type="text" placeholder="請輸入名稱"
+                  <FormInput id="title" label="優惠券名稱" type="text" placeholder="請輸入名稱"
                     register={register} errors={errors}
                     rules={{
-                      required: '產品名稱必填'
+                      required: '優惠券名稱必填'
+                    }} />
+                </div>
+                <div className="mb-3">
+                  <FormInput id="code" label="優惠券代碼" type="text" placeholder="請輸入代碼"
+                    register={register} errors={errors}
+                    rules={{
+                      required: '優惠券代碼必填'
                     }} />
                 </div>
                 <div className="col-md-6 mb-3">
-                  <FormInput id="category" label="分類" type="text" placeholder="請輸入分類"
+                  <FormInput id="percent" label="折扣數" type="number" placeholder="請輸入折扣數"
                     register={register} errors={errors}
                     rules={{
-                      required: '分類必填'
-                    }} />
-                </div>
-                <div className="col-md-6 mb-3">
-                  <FormInput id="unit" label="單位" type="text" placeholder="請輸入單位"
-                    register={register} errors={errors}
-                    rules={{
-                      required: '單位必填'
-                    }} />
-                </div>
-                <div className="col-md-6 mb-3">
-                  <FormInput id="origin_price" label="原價" type="number" placeholder="請輸入原價"
-                    register={register} errors={errors}
-                    rules={{
-                      required: '原價必填',
+                      required: '折扣數必填',
                       min: {
-                        value: 0,
-                        message: '價格需大於 0'
+                        value: 50,
+                        message: '折扣數需大於 50'
+                      },
+                      max: {
+                        value: 100,
+                        message: '折扣數需小於等於 100'
                       },
                       valueAsNumber: true
                     }} />
                 </div>
                 <div className="col-md-6 mb-3">
-                  <FormInput id="price" label="售價" type="number" placeholder="請輸入售價"
+                  <FormInput id="due_date" label="到期日" type="date" placeholder="請輸入到期日"
                     register={register} errors={errors}
                     rules={{
-                      required: '售價必填',
-                      min: {
-                        value: 0,
-                        message: '價格需大於 0'
-                      },
-                      valueAsNumber: true,
-                      validate: (value: string) => Number(value) < Number(getValues().origin_price) || '售價必須小於原價'
+                      required: '到期日必填',
+                      setValueAs: (value: Date) => (value ? (new Date(value).getTime() / 1000) : null)
                     }} />
-                </div>
-                <div className="mb-3">
-                  <FormTextarea id="description" label="產品描述" placeholder="請輸入產品描述"
-                    register={register} errors={errors} />
-                </div>
-                <div className="mb-3">
-                  <FormTextarea id="content" label="說明內容" placeholder="請輸入說明內容"
-                    register={register} errors={errors} />
-                </div>
-                <div className="mb-3">
-                  <FormTextarea id="petCareNotes" label="寵物注意事項" placeholder="請輸入注意事項"
-                    register={register} errors={errors} />
-                </div>
-                <div className="mb-3">
-                  <FormTextarea id="floriography" label="花語" placeholder="請輸入花語"
-                    register={register} errors={errors} />
                 </div>
                 <div className="mb-3">
                   <Field id="is_enabled" label="是否啟用" errors={errors}>
