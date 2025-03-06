@@ -2,7 +2,7 @@ import 'bootstrap';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CartListItem from '../../components/frontend/CartListItem';
 import CheckoutForm from '../../components/frontend/CheckoutForm';
@@ -21,6 +21,10 @@ const Global = createGlobalStyle`
   .swiper-slide .image-wrap {
     transition: 0.25s ease-in 0.5s;
   }
+`;
+
+const CartWrap = styled("div")`
+  background-color: var(--tertiary);
 `;
 
 const Cart = () => {
@@ -56,12 +60,12 @@ const Cart = () => {
   return (
     <>
       <Global />
-      <div className="container my-5">
-        <div className="row g-4">
-          <div className={cart.length ? 'col-md-6' : ''}>
-            <div className="d-flex align-items-center pb-3 mb-4 border-bottom">
-              <h3 className="title fs-2 mb-0 me-2">Your Cart</h3>
-              <small className="mt-2">購物車</small>
+      <div className="container p-0 my-5">
+        <div className="row bg-white g-0">
+          <div className={`p-4 p-lg-5 ${cart.length ? 'col-md-7' : ''}`}>
+            <div className="d-flex align-items-center pb-3 mb-4">
+              <h3 className="title fs-2 mb-0 me-3">Your Cart</h3>
+              <small className="mt-2">購｜物｜車</small>
             </div>
             {
               cart.length
@@ -79,46 +83,40 @@ const Cart = () => {
           </div>
           {
             cart.length
-              ? <div className="col-md-6">
-                  <div className="d-flex align-items-center pb-3 mb-4 border-bottom">
-                    <h3 className="title fs-2 mb-0 me-2">Checkout</h3>
-                    <small className="mt-2">結帳</small>
+              ? <CartWrap className=" p-4 p-lg-5 col-md-5">
+                  <div className="d-flex align-items-center pb-3 mb-4">
+                    <h3 className="title fs-2 mb-0 me-3">Checkout</h3>
+                    <small className="mt-2">結｜帳</small>
                   </div>
-                  <div className="card border-0 rounded-0">
-                    <div className="card-body p-4">
-                      <CheckoutForm />
-                    </div>
-                  </div>
-                </div>
+                  <CheckoutForm />
+                </CartWrap>
                 : ''
           }
-          <div>
-            <div className="bg-background text-center py-5">
-              <div className="d-flex flex-column align-items-center text-center">
-                <h5 className="title text-center fs-4 mb-2">＼ Recommendations ／</h5>
-                <small className="d-block">精選商品</small>
-              </div>
-              {
-                filterProducts.length
-                  ? <Swiper {...swiperConfig} className="py-4">
-                    {
-                      filterProducts.map(item => {
-                        return (
-                          <SwiperSlide className="align-self-center" key={item.id}>
-                            <ProductCard item={item}>
-                              <button type="button" className="btn btn-sm btn-secondary rounded-pill px-4 mt-3" onClick={(e) => addCart(e, item.id)}>
-                                加入購物車
-                              </button>
-                            </ProductCard>
-                          </SwiperSlide>
-                        )
-                      })
-                    }
-                  </Swiper>
-                  : ''
-              }
-            </div>
+        </div>
+        <div className="text-center py-5 mt-2">
+          <div className="d-flex flex-column align-items-center text-center">
+            <h5 className="title text-center fs-4 mb-2">＼ Recommendations ／</h5>
+            <small className="d-block">精選商品</small>
           </div>
+          {
+            filterProducts.length
+              ? <Swiper {...swiperConfig} className="py-4">
+                {
+                  filterProducts.map(item => {
+                    return (
+                      <SwiperSlide className="align-self-center" key={item.id}>
+                        <ProductCard item={item}>
+                          <button type="button" className="btn btn-sm btn-secondary rounded-pill px-4 mt-3" onClick={(e) => addCart(e, item.id)}>
+                            加入購物車
+                          </button>
+                        </ProductCard>
+                      </SwiperSlide>
+                    )
+                  })
+                }
+              </Swiper>
+              : ''
+          }
         </div>
       </div>
     </>

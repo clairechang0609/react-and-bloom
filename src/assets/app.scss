@@ -3,8 +3,8 @@
 
 // 2. Include any default variable overrides here
 $primary: #222;
-$secondary: #566160;
-$tertiary: #cbb48d;
+$secondary: #566158;
+$tertiary: #cbbca3;
 $success: #42b983;
 $danger: #e53e3e;
 $light: #fbfcf8;
@@ -23,8 +23,8 @@ $border-color: rgba(0, 0, 0, 0.3);
 
 :root {
   --primary: #222;
-  --secondary: #566160;
-  --tertiary: #cbb48d;
+  --secondary: #566158;
+  --tertiary: #cbbca3;
   --success: #42b983;
   --danger: #e53e3e;
   --light: #fbfcf8;
@@ -220,6 +220,25 @@ html.has-scroll-dragging {
 
 .page-link.disabled, .disabled > .page-link {
   color: rgba(0,0,0,0.3);
+}
+
+.form-floating .form-control {
+  box-shadow: none !important;
+}
+.form-floating > label {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  color: rgba(0,0,0,0.5);
+}
+.form-floating > .form-control:focus ~ label {
+  color: rgba(0,0,0,0.5);
+}
+.form-floating > .form-control:focus ~ label::after {
+  display: none;
+}
+
+.outline-0 {
+  outline: none !important;
 }
 
 $grid-breakpoint-map: (

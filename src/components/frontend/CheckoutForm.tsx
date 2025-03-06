@@ -8,7 +8,31 @@ import { useAppDispatch } from '../../store';
 import Button from '../Button';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
+import styled from 'styled-components';
+import FloatLabelField from '../form/FloatLabelField';
+import FloatLabelInput from '../form/FloatLabelInput';
+import FloatLabelTextarea from '../form/FloatLabelTextarea';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+
+const Form = styled("form")`
+  .form-control {
+    // border-radius: 0;
+    // border: 0;
+    // border-bottom: 1px solid currentColor;
+    // background-color: transparent !important;
+    // box-shadow: none !important;
+    // outline: none !important;
+    // padding: 1rem 0;
+
+    // &::placeholder {
+    //   font-size: 0.875rem;
+    // }
+
+    // &.is-invalid {
+    //   border-color: var(--danger);
+    // }
+  }
+`;
 
 const defaultValues = {
   name: '',
@@ -59,17 +83,17 @@ const CheckoutForm: FC = memo(() => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
         <div className="mb-3">
-          <FormInput id="name" label="收件人" type="text" placeholder="請輸入收件人姓名"
+          <FloatLabelInput id="name" label="收件人" type="text" placeholder="收件人姓名"
             register={register} errors={errors}
             rules={{
               required: '姓名必填'
             }} />
         </div>
         <div className="mb-3">
-          <FormInput id="tel" label="收件人電話" type="tel" placeholder="請輸入收件人電話"
+          <FloatLabelInput id="tel" label="收件人電話" type="tel" placeholder="收件人電話"
             register={register} errors={errors}
             rules={{
               required: '電話必填',
@@ -88,14 +112,14 @@ const CheckoutForm: FC = memo(() => {
             }} />
         </div>
         <div className="mb-3">
-          <FormInput id="address" label="收件人地址" type="text" placeholder="請輸入收件人地址"
+          <FloatLabelInput id="address" label="收件人地址" type="text" placeholder="收件人地址"
             register={register} errors={errors}
             rules={{
               required: '收件人地址必填'
             }} />
         </div>
         <div className="mb-3">
-          <FormInput id="email" label="Email" type="email" placeholder="請輸入 Email"
+          <FloatLabelInput id="email" label="Email" type="email" placeholder=" Email"
             register={register} errors={errors}
             rules={{
               required: 'Email 必填',
@@ -106,12 +130,12 @@ const CheckoutForm: FC = memo(() => {
             }} />
         </div>
         <div className="">
-          <FormTextarea id="message" label="備註" placeholder="請輸入備註"
+          <FloatLabelTextarea id="message" label="備註" placeholder="備註"
             register={register} errors={errors} />
         </div>
       </div>
-      <Button type="submit" btnStyle="btn btn-secondary w-100 mt-4">送出訂單</Button>
-    </form>
+      <Button type="submit" btnStyle="btn btn-secondary w-100 mt-5">結帳</Button>
+    </Form>
   )
 });
 
