@@ -241,6 +241,10 @@ html.has-scroll-dragging {
   outline: none !important;
 }
 
+.fs-tiny {
+  font-size: 0.75rem;
+}
+
 $grid-breakpoint-map: (
 	sm: 576px,
 	md: 768px,

@@ -22,7 +22,7 @@ const Coupon = () => {
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
 
-  // 取得訂單列表
+  // 取得列表
   const getCoupons = useCallback(async () => {
     try {
       dispatch(setIsFullPageLoading(true));

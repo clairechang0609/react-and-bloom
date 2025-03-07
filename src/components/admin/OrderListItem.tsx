@@ -40,7 +40,7 @@ const OrderListItem: FC<AdminOrderListItemProps> = memo(({ showModal, order, set
                 return (
                   <small className={`d-flex py-1 my-1 border-bottom ${index === 0 && 'border-top'}`} key={`${id}-${item.id}`}>
                     {item.product.title} * {item.qty}
-                    <span className="ms-auto">${item.total}</span>
+                    <span className="ms-auto">${item.final_total}</span>
                   </small>
                 )
               })

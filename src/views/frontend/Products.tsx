@@ -16,8 +16,11 @@ const Products = () => {
 
   return (
     <div className="container my-5">
-      <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-        <h4 className="mb-0">產品列表</h4>
+      <div className="d-flex justify-content-between align-items-center pb-3 mb-5 border-bottom">
+        <div className="d-flex align-items-center">
+          <h3 className="title fs-2 mb-0 me-3">All Plants</h3>
+          <small className="mt-2">產｜品｜列｜表</small>
+        </div>
         <select name="category" id="category" className="form-select form-select-sm w-auto" value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">所有商品</option>
           <option value="大型植栽">大型植栽</option>
@@ -26,7 +29,7 @@ const Products = () => {
           <option value="多肉植物">多肉植物</option>
         </select>
       </div>
-      <div className="row row-cols-1 row-cols-md-2">
+      <div className="row row-cols-1 row-cols-md-2 gx-4">
         {products.map((item) => (
             <ProductCard item={item} key={item.id}>
               <div className="w-100 d-flex align-items-center justify-content-end pt-4 mt-auto">

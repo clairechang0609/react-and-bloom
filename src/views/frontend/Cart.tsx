@@ -1,16 +1,17 @@
 import 'bootstrap';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CartListItem from '../../components/frontend/CartListItem';
 import CheckoutForm from '../../components/frontend/CheckoutForm';
 import ProductCard from '../../components/frontend/ProductCard';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
-import { asyncAddCart, cartData } from '../../slice/cartSlice';
+import { asyncAddCart, asyncGetCart, cartData } from '../../slice/cartSlice';
 import { useAppDispatch } from "../../store";
 import type { CartItem } from '../../types/cart';
+import axios, { AxiosError } from 'axios';
+const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Global = createGlobalStyle`
   .swiper-slide.swiper-slide-active .image-wrap {
@@ -29,11 +30,14 @@ const CartWrap = styled("div")`
 
 const Cart = () => {
   const dispatch = useAppDispatch();
-  const { cart, total } = useSelector(cartData);
+  const { cart, total, final_total, coupon } = useSelector(cartData);
   const { products } = useGetProducts();
   const filterProducts = useMemo(() => {
     return products?.slice(0, 3);
   }, [products]);
+  const [tempCoupon, setTempCoupon] = useState('');
+  const [couponMsg, setCouponMsg] = useState({ type: '', msg: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const swiperConfig = {
     spaceBetween: 16,
@@ -57,6 +61,31 @@ const Cart = () => {
     dispatch(asyncAddCart({ productId: id }))
   }
 
+  // 送出優惠券
+  const submitCoupon = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/coupon`, {
+        data: { code: tempCoupon }
+      });
+      setCouponMsg({
+        type: 'success',
+        msg: res?.data.message
+      });
+      dispatch(asyncGetCart({ isShowLoading: false }));
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.message);
+        setCouponMsg({
+          type: 'danger',
+          msg: err?.response?.data.message
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dispatch, tempCoupon]);
+
   return (
     <>
       <Global />
@@ -69,21 +98,44 @@ const Cart = () => {
             </div>
             {
               cart.length
-                ? (<div className="list-group mb-4">
+                ? (<div className="mb-4">
                   {cart.map((item: CartItem) => (
                     <CartListItem item={item} key={item.id} />
                   ))}
-                  <div className="list-group-item border-0 rounded-0 px-4 d-flex align-items-center justify-content-between p-3">
-                    <strong>總金額</strong>
-                    <strong>${total}</strong>
-                  </div>
+
+                  <div className="text-end mt-5 mb-3">
+                        <div className="input-group">
+                          <input type="text" className="form-control form-control-sm w-auto" placeholder="請輸入優惠券代碼" value={tempCoupon} onChange={(e) => setTempCoupon(e.target.value)} />
+                          <button className="btn btn-sm btn-secondary" type="button" onClick={submitCoupon}>
+                            使用優惠券
+                            {isLoading && <span className="spinner-grow spinner-grow-sm ms-2"></span>}
+                          </button>
+                        </div>
+                        { couponMsg.type ? <small className={`ms-auto fs-tiny mt-1 text-${couponMsg.type}`}>{couponMsg.msg}</small> : '' }
+                      </div>
+                    <div className="card">
+                      <div className="card-body p-2">
+                        <div className="border-bottom mb-2 pb-2 d-flex align-items-center justify-content-between">
+                          <small>小計</small>
+                          <small>${total}</small>
+                        </div>
+                        <div className="border-bottom mb-2 pb-2 d-flex align-items-start justify-content-between">
+                          <small>優惠券折扣{ coupon ? `（${coupon.title} ${coupon.percent} 折）`: '' }</small>
+                          <small className="text-danger">{ total - Math.round(final_total) > 0 ? `-${total - Math.round(final_total)}` : '' }</small>
+                        </div>
+                        <div className="d-flex align-items-center justify-content-between">
+                          <strong>總金額</strong>
+                          <strong>${Math.round(final_total)}</strong>
+                        </div>
+                      </div>
+                    </div>
                 </div>)
                 : <p className="text-center opacity-75 mt-5">購物車目前是空的，看看以下推薦商品 ↓</p>
             }
           </div>
           {
             cart.length
-              ? <CartWrap className=" p-4 p-lg-5 col-md-5">
+              ? <CartWrap className="p-4 p-lg-5 col-md-5">
                   <div className="d-flex align-items-center pb-3 mb-4">
                     <h3 className="title fs-2 mb-0 me-3">Checkout</h3>
                     <small className="mt-2">結｜帳</small>

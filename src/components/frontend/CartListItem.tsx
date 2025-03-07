@@ -42,7 +42,7 @@ const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
   }
 
   return (<>
-    <div className="list-group-item border-0 border-bottom rounded-0 p-4">
+    <div className="border-bottom px-0 py-4">
       <div className="d-flex">
         <ImageContainer className="image-container rounded-circle overflow-hidden border me-3">
           <img src={product.imageUrl} alt={product.title} className="w-100 h-100 object-fit-cover" />
@@ -54,8 +54,8 @@ const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
             </NavLink>
             <i className="bi bi-x-lg opacity-75 cursor-pointer" onClick={() => editQty(id, 0, product.id)} />
           </div>
-          <p className="mb-0 d-flex align-items-center text-muted">
-            <span className="badge rounded-pill text-bg-info me-2">單價</span>
+          <p className="mb-0 d-flex align-items-center">
+            <span className="badge rounded-pill text-bg-secondary me-2">單價</span>
             <span>${product.price}</span>
           </p>
           <div className="d-flex align-items-center mt-2">
