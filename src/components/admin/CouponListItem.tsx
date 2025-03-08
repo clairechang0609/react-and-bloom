@@ -61,7 +61,7 @@ const CouponListItem: FC<AdminCouponListItemProps> = memo(({ showModal, coupon, 
             <p className="mb-0">{timeFormat()}</p>
           </div>
           <div className="col-md d-flex justify-content-center">
-            <StatusIcon isEnabled={is_enabled} labels={['停用', '啟用']} />
+            <StatusIcon isEnabled={is_enabled} />
           </div>
           <div className="col-md d-flex align-items-center justify-content-end">
             <Button btnStyle="btn-sm btn-secondary" handleClick={() => editForm(coupon)}>編輯</Button>

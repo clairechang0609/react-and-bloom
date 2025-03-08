@@ -35,10 +35,7 @@ const defaultValues = {
   floriography: ''
 }
 
-const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
-    selectedProduct,
-    getProducts
-  }, ref) => {
+const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({ selectedProduct, getProducts }, ref) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState('');
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -92,12 +89,12 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
       } else {
         setValue('imagesUrl', [...imagesUrl, res.data.imageUrl], { shouldValidate: true });
       }
-      setLoading('');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
+    } finally {
       setLoading('');
     }
   };

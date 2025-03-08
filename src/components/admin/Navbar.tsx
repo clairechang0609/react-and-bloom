@@ -92,6 +92,9 @@ const Navbar = () => {
           <NavLink to="/admin/coupons" className="px-4">
             <Link>優惠券管理</Link>
           </NavLink>
+          <NavLink to="/admin/articles" className="px-4">
+            <Link>文章管理</Link>
+          </NavLink>
           <i className="bi bi-box-arrow-right fs-4 cursor-pointer px-4" onClick={showAlertModal} />
         </div>
       </Nav>

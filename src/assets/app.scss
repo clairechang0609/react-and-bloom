@@ -272,3 +272,17 @@ $grid-breakpoint-map: (
     }
   }
 }
+
+@media print {
+	body {
+		margin: 0 !important;
+	}
+}
+
+.editor-container_classic-editor .editor-container__editor {
+	width: 100%;
+
+  .ck-content {
+    min-height: 300px;
+  }
+}
