@@ -127,8 +127,8 @@ const categories = [
 
 const CategoryCard: FC<CategoryCardProps> = ({ icon, title, description, plants }) => {
   return (
-    <div className="category-card py-5" data-scroll data-scroll-repeat>
-      <img src={icon} alt={title} className="plant-icon mb-4" />
+    <div className="category-card py-5" data-scroll>
+      <img src={icon} alt={title} className="plant-icon text-light mb-4" />
       <h6 className="fs-4 fw-light text-tertiary">{title}</h6>
       <Line className="mx-auto my-3"></Line>
       <p className="text-gray">{description}</p>

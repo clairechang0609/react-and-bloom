@@ -9,16 +9,16 @@ import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
-import type { Order } from '../../types/order';
+import type { OrderWithCoupon } from '../../types/order';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Orders = () => {
   const dispatch = useAppDispatch();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderWithCoupon[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderWithCoupon | null>(null);
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
 

@@ -55,7 +55,7 @@ const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
             <i className="bi bi-x-lg opacity-75 cursor-pointer" onClick={() => editQty(id, 0, product.id)} />
           </div>
           <p className="mb-0 d-flex align-items-center">
-            <span className="badge rounded-pill text-bg-secondary me-2">單價</span>
+            <span className="badge rounded-pill fw-normal text-bg-secondary me-2">單價</span>
             <span>${product.price}</span>
           </p>
           <div className="d-flex align-items-center mt-2">

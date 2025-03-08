@@ -10,11 +10,10 @@ import { asyncAddCart } from '../../slice/cartSlice';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { useAppDispatch } from '../../store';
 import type { Product } from '../../types/product';
-const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
 import { Swiper as SwiperClass } from 'swiper/types';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Global = createGlobalStyle`
   .main-swiper-side {
@@ -110,6 +109,13 @@ const Product = () => {
     className: 'thumb'
   };
 
+  const categories: { [key: string]: string } = {
+    "觀花植物": "./icon-dark-03.svg",
+    "多肉植物": "./icon-dark-02.svg",
+    "大型植栽": "./icon-dark-04.svg",
+    "觀葉植物": "./icon-dark-01.svg"
+  };
+
   return (
     <>
       <Global />
@@ -148,23 +154,34 @@ const Product = () => {
             }
           </div>
           <div className="col-md-7 col-lg-8 d-flex flex-column">
-            <span className="badge rounded-pill bg-primary mb-3 align-self-start">{product?.category}</span>
-            <h2 className="fs-3 fw-light border-bottom pb-3 mb-4">{product?.title}</h2>
-            <div className="card-text mb-3">
-              <h6 className="fw-bold d-block">商品描述：</h6>
-              <p>{product?.description}</p>
+            <div>
+              <span className="badge rounded-pill bg-primary mb-3 align-self-start">
+                {product?.category}
+              </span>
+              <img src={product?.category ? categories[product?.category] : ''} alt={`${product?.category}-icon`} className="ms-2" style={{ maxWidth: '30px', maxHeight: '30px' }} />
             </div>
-            <div className="card-text mb-3">
-              <h6 className="fw-bold d-block">注意事項：</h6>
-              <p>{product?.content}</p>
+            <h2 className="fs-3 fw-light">{product?.title}</h2>
+            <div className="my-4">
+              <div className="card-text border-top border-bottom d-flex align-items-stretch">
+                <div className="flex-shrink-0 d-flex align-items-center border-end pe-3 me-3">
+                  <h6 className="my-3">商品描述</h6>
+                </div>
+                <p className="my-3">{product?.description}</p>
+              </div>
+              <div className="card-text border-bottom d-flex align-items-stretch">
+                <div className="flex-shrink-0 d-flex align-items-center border-end pe-3 me-3">
+                  <h6 className="my-3">注意事項</h6>
+                </div>
+                <p className="my-3">{product?.content}</p>
+              </div>
             </div>
             <div className="mb-4">
               <div className="text-muted d-flex align-items-center mb-2">
-                <h6 className="text-decoration-line-through mb-0">$ {product?.origin_price}</h6>
+                <h6 className="text-decoration-line-through fw-light mb-0">$ {product?.origin_price}</h6>
               </div>
               <div className="d-flex align-items-center">
-                <h4 className="mb-0 text-danger">$ {product?.price}</h4>
-                <span className="badge rounded-pill text-bg-danger ms-2">sale</span>
+                <h4 className="mb-0 fst-italic fw-normal text-danger">$ {product?.price}</h4>
+                <span className="badge rounded-pill fst-italic fw-light text-bg-danger ms-2">sale</span>
               </div>
             </div>
             <div className="d-flex align-items-center mt-auto">

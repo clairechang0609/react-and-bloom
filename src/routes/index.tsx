@@ -10,6 +10,7 @@ import Products from '../views/frontend/Products';
 import Login from '../views/Login';
 import NotFound from '../views/NotFound';
 import Coupons from '../views/admin/Coupons';
+import Checkout from '../views/frontend/Checkout';
 
 const routes = createHashRouter([
   {
@@ -31,6 +32,10 @@ const routes = createHashRouter([
       {
         path: 'cart',
         element: <Cart />
+      },
+      {
+        path: 'checkout/:id',
+        element: <Checkout />
       }
     ]
   },

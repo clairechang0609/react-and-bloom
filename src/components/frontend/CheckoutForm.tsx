@@ -1,38 +1,15 @@
 import axios, { AxiosError } from 'axios';
-import { FC, memo } from 'react';
+import { FC, memo, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { asyncGetCart } from '../../slice/cartSlice';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
 import Button from '../Button';
-import FormInput from '../form/FormInput';
-import FormTextarea from '../form/FormTextarea';
-import styled from 'styled-components';
-import FloatLabelField from '../form/FloatLabelField';
 import FloatLabelInput from '../form/FloatLabelInput';
 import FloatLabelTextarea from '../form/FloatLabelTextarea';
+import { useNavigate } from 'react-router';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
-const Form = styled("form")`
-  .form-control {
-    // border-radius: 0;
-    // border: 0;
-    // border-bottom: 1px solid currentColor;
-    // background-color: transparent !important;
-    // box-shadow: none !important;
-    // outline: none !important;
-    // padding: 1rem 0;
-
-    // &::placeholder {
-    //   font-size: 0.875rem;
-    // }
-
-    // &.is-invalid {
-    //   border-color: var(--danger);
-    // }
-  }
-`;
 
 const defaultValues = {
   name: '',
@@ -44,6 +21,7 @@ const defaultValues = {
 
 const CheckoutForm: FC = memo(() => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -70,8 +48,8 @@ const CheckoutForm: FC = memo(() => {
         }
       );
       await dispatch(asyncGetCart());
-      dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       reset(defaultValues);
+      navigate(`/checkout/${res.data.orderId}`);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
@@ -83,7 +61,7 @@ const CheckoutForm: FC = memo(() => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
         <div className="mb-3">
           <FloatLabelInput id="name" label="收件人" type="text" placeholder="收件人姓名"
@@ -135,7 +113,7 @@ const CheckoutForm: FC = memo(() => {
         </div>
       </div>
       <Button type="submit" btnStyle="btn btn-secondary w-100 mt-5">結帳</Button>
-    </Form>
+    </form>
   )
 });
 

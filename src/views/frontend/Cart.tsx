@@ -1,7 +1,7 @@
 import 'bootstrap';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CartListItem from '../../components/frontend/CartListItem';
 import CheckoutForm from '../../components/frontend/CheckoutForm';
@@ -12,21 +12,6 @@ import { useAppDispatch } from "../../store";
 import type { CartItem } from '../../types/cart';
 import axios, { AxiosError } from 'axios';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
-const Global = createGlobalStyle`
-  .swiper-slide.swiper-slide-active .image-wrap {
-    aspect-ratio: 3 / 4;
-    transition: aspect-ratio 0.5s ease-out;
-  }
-
-  .swiper-slide .image-wrap {
-    transition: 0.25s ease-in 0.5s;
-  }
-`;
-
-const CartWrap = styled("div")`
-  background-color: var(--tertiary);
-`;
 
 const Cart = () => {
   const dispatch = useAppDispatch();
@@ -88,7 +73,6 @@ const Cart = () => {
 
   return (
     <>
-      <Global />
       <div className="container p-0 my-5">
         <div className="row bg-white g-0">
           <div className={`p-4 p-lg-5 ${cart.length ? 'col-md-7' : ''}`}>
@@ -99,20 +83,19 @@ const Cart = () => {
             {
               cart.length
                 ? (<div className="mb-4">
-                  {cart.map((item: CartItem) => (
-                    <CartListItem item={item} key={item.id} />
-                  ))}
-
-                  <div className="text-end mt-5 mb-3">
-                        <div className="input-group">
-                          <input type="text" className="form-control form-control-sm w-auto" placeholder="請輸入優惠券代碼" value={tempCoupon} onChange={(e) => setTempCoupon(e.target.value)} />
-                          <button className="btn btn-sm btn-secondary" type="button" onClick={submitCoupon}>
-                            使用優惠券
-                            {isLoading && <span className="spinner-grow spinner-grow-sm ms-2"></span>}
-                          </button>
-                        </div>
-                        { couponMsg.type ? <small className={`ms-auto fs-tiny mt-1 text-${couponMsg.type}`}>{couponMsg.msg}</small> : '' }
+                    {cart.map((item: CartItem) => (
+                      <CartListItem item={item} key={item.id} />
+                    ))}
+                    <div className="text-end mt-5 mb-3">
+                      <div className="input-group">
+                        <input type="text" className="form-control form-control-sm w-auto" placeholder="請輸入優惠券代碼" value={tempCoupon} onChange={(e) => setTempCoupon(e.target.value)} />
+                        <button className="btn btn-sm btn-secondary" type="button" onClick={submitCoupon} disabled={!tempCoupon}>
+                          使用優惠券
+                          {isLoading && <span className="spinner-grow spinner-grow-sm ms-2"></span>}
+                        </button>
                       </div>
+                      { couponMsg.type ? <small className={`ms-auto fs-tiny mt-1 text-${couponMsg.type}`}>{couponMsg.msg}</small> : '' }
+                    </div>
                     <div className="card">
                       <div className="card-body p-2">
                         <div className="border-bottom mb-2 pb-2 d-flex align-items-center justify-content-between">
@@ -135,13 +118,13 @@ const Cart = () => {
           </div>
           {
             cart.length
-              ? <CartWrap className="p-4 p-lg-5 col-md-5">
+              ? <div className="p-4 p-lg-5 col-md-5" style={{ backgroundColor: 'var(--tertiary)' }}>
                   <div className="d-flex align-items-center pb-3 mb-4">
                     <h3 className="title fs-2 mb-0 me-3">Checkout</h3>
                     <small className="mt-2">結｜帳</small>
                   </div>
                   <CheckoutForm />
-                </CartWrap>
+                </div>
                 : ''
           }
         </div>
@@ -157,7 +140,7 @@ const Cart = () => {
                   filterProducts.map(item => {
                     return (
                       <SwiperSlide className="align-self-center" key={item.id}>
-                        <ProductCard item={item}>
+                        <ProductCard isLink={true} item={item}>
                           <button type="button" className="btn btn-sm btn-secondary rounded-pill px-4 mt-3" onClick={(e) => addCart(e, item.id)}>
                             加入購物車
                           </button>
