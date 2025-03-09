@@ -1,20 +1,13 @@
 import 'bootstrap';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router';
-import styled, { createGlobalStyle } from 'styled-components';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import CartListItem from '../../components/frontend/CartListItem';
-import CheckoutForm from '../../components/frontend/CheckoutForm';
-import ProductCard from '../../components/frontend/ProductCard';
-import useGetProducts from '../../hooks/frontend/useGetProducts';
-import { asyncAddCart, cartData } from '../../slice/cartSlice';
+import styled from 'styled-components';
 import { useAppDispatch } from "../../store";
-import type { CartItem } from '../../types/cart';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import axios, { AxiosError } from 'axios';
 import { Order } from '../../types/order';
 import Button from '../../components/Button';
+import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Message = styled("p")`
@@ -98,11 +91,6 @@ const Checkout = () => {
     } finally {
       dispatch(setIsFullPageLoading(false));
     }
-  }
-
-  // 轉換時間戳記
-  const formatDateFromTimestamp = (date: number) => {
-    return new Date(date * 1000).toISOString().split('T')[0];
   }
 
   return (

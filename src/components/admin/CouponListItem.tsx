@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Button from '../Button';
 import StatusIcon from '../StatusIcon';
 import { AdminCouponListItemProps, CouponItem } from '../../types/coupon';
+import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 
 const CouponWrap = styled("li")`
   margin-top: -1px;
@@ -26,21 +27,6 @@ const CouponListItem: FC<AdminCouponListItemProps> = memo(({ showModal, coupon, 
     showAlertModal();
   }, [showAlertModal, setSelectedCoupon]);
 
-  const timeFormat = () => {
-    const date = new Date(due_date * 1000); // 轉換為毫秒
-
-    // 轉換為台灣時區 (UTC+8)
-    const taiwanDate = new Intl.DateTimeFormat('zh-TW', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      timeZone: 'Asia/Taipei'
-    }).format(date);
-
-    // 轉換為 yyyy-mm-dd 格式
-    return taiwanDate.replace(/\//g, '-');
-  }
-
   return (
     <CouponWrap className="card mb-3">
       <div className="card-body">
@@ -58,7 +44,7 @@ const CouponListItem: FC<AdminCouponListItemProps> = memo(({ showModal, coupon, 
           </div>
           <div className="col-md-2">
             <span className="badge rounded-pill bg-primary fs-sm mb-1">到期日</span>
-            <p className="mb-0">{timeFormat()}</p>
+            <p className="mb-0">{formatDateFromTimestamp(due_date)}</p>
           </div>
           <div className="col-md d-flex justify-content-center">
             <StatusIcon isEnabled={is_enabled} />

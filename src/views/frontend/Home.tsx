@@ -11,6 +11,7 @@ import NewProducts from '../../components/frontend/home/NewProducts';
 import PlantCategories from '../../components/frontend/home/PlantCategories';
 import Navbar from '../../components/frontend/Navbar';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
+import useGetArticles from '../../hooks/frontend/useGetArticles';
 
 const Global = createGlobalStyle`
   body {
@@ -28,6 +29,11 @@ const Home = () => {
   const filterProducts = useMemo(() => {
     return products?.slice(0, 5);
   }, [products]);
+
+  const { articles } = useGetArticles({ isShowLoading: false});
+  const filterArticles = useMemo(() => {
+    return articles?.slice(0, 2);
+  }, [articles]);
 
   useEffect(() => {
     if (container.current) {
@@ -71,7 +77,7 @@ const Home = () => {
         <Intro />
         <NewProducts filterProducts={filterProducts} />
         <PlantCategories />
-        <Articles />
+        <Articles filterArticles={filterArticles} />
         <Contact />
         <Footer />
       </div>

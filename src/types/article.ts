@@ -7,6 +7,7 @@ export interface Article {
   isPublic: boolean;
   tag: string[];
   title: string;
+  content?: string;
 }
 
 export interface AdminArticleListItemProps {

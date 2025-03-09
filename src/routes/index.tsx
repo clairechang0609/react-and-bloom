@@ -11,7 +11,8 @@ import Login from '../views/Login';
 import NotFound from '../views/NotFound';
 import Coupons from '../views/admin/Coupons';
 import Checkout from '../views/frontend/Checkout';
-import Articles from '../views/admin/Articles';
+import Articles from '../views/frontend/Articles';
+import Article from '../views/frontend/Article';
 
 const routes = createHashRouter([
   {
@@ -37,6 +38,14 @@ const routes = createHashRouter([
       {
         path: 'checkout/:id',
         element: <Checkout />
+      },
+      {
+        path: 'articles',
+        element: <Articles />
+      },
+      {
+        path: 'article/:id',
+        element: <Article />
       }
     ]
   },

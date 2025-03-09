@@ -2,7 +2,6 @@ import axios, { AxiosError } from 'axios';
 import { Modal } from 'bootstrap';
 import { ChangeEvent, forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FieldValues, useForm, useWatch } from 'react-hook-form';
-import styled from 'styled-components';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
@@ -12,7 +11,8 @@ import Field from '../form/Field';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
 import { AdminArticleModalProps } from '../../types/article';
-import Ckeditor from './Ckeditor';
+import TheCkeditor from './TheCkeditor';
+import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -132,7 +132,7 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
           reset({
             ...selectedArticle,
             content: res.data.article?.content,
-            create_at: new Date(selectedArticle.create_at * 1000).toISOString().split('T')[0]
+            create_at: formatDateFromTimestamp(selectedArticle.create_at)
           });
         } catch (err) {
           if (err instanceof AxiosError) {
@@ -197,7 +197,7 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
                       required: '作者必填'
                     }} />
                 </div>
-                <div className="col-md-6 mb-3">
+                <div className="col-lg-6 mb-3">
                   <Field id="tag" label="文章標籤" errors={errors}>
                     <div className={`d-block ${errors.is_enabled && "is-invalid"}`}>
                       <div className="input-group">
@@ -217,7 +217,7 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
                     </div>
                   </Field>
                 </div>
-                <div className="col-md-6 mb-3">
+                <div className="col-lg-6 mb-3">
                   <FormInput id="create_at" label="文章日期" type="date" placeholder="請輸入文章日期"
                     register={register} errors={errors}
                     rules={{
@@ -270,9 +270,7 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
                 </div>
                 <div className="mb-3">
                   <Field id="content" label="內文" errors={errors} isRequired={true}>
-                    <Ckeditor content={content} setContent={setContent} {...register('content', {
-                      required: '內文必填'
-                    })} />
+                    <TheCkeditor content={content} setContent={setContent} />
                   </Field>
                 </div>
               </div>

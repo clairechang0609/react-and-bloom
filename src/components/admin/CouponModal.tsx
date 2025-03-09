@@ -2,7 +2,6 @@ import axios, { AxiosError } from 'axios';
 import { Modal } from 'bootstrap';
 import { ChangeEvent, forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FieldValues, useForm, useWatch } from 'react-hook-form';
-import styled from 'styled-components';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
@@ -10,8 +9,8 @@ import type { ModalRef } from '../../types/modal';
 import Button from '../Button';
 import Field from '../form/Field';
 import FormInput from '../form/FormInput';
-import FormTextarea from '../form/FormTextarea';
 import { AdminCouponModalProps } from '../../types/coupon';
+import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -92,7 +91,7 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
       if (selectedCoupon) {
         reset({
           ...selectedCoupon,
-          due_date: new Date(selectedCoupon.due_date * 1000).toISOString().split('T')[0]
+          due_date: formatDateFromTimestamp(selectedCoupon.due_date)
         });
       }
     };

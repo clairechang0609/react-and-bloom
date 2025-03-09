@@ -42,7 +42,8 @@ import {
 	TableToolbar,
 	TextTransformation,
 	TodoList,
-	Underline
+	Underline,
+  HeadingOption
 } from 'ckeditor5';
 
 import 'ckeditor5/ckeditor5.css';
@@ -186,7 +187,7 @@ const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> =
 							title: 'Heading 6',
 							class: 'ck-heading_heading6'
 						}
-					]
+					] as HeadingOption[]
 				},
 				image: {
 					toolbar: [
@@ -207,7 +208,7 @@ const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> =
 					defaultProtocol: 'https://',
 					decorators: {
 						toggleDownloadable: {
-							mode: 'manual',
+							mode: 'manual' as "manual",
 							label: 'Downloadable',
 							attributes: {
 								download: 'file'
@@ -232,7 +233,7 @@ const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> =
 						}
 					]
 				},
-				placeholder: 'Type or paste your content here!',
+				placeholder: '請輸入內文',
 				table: {
 					contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
 				}
@@ -251,4 +252,4 @@ const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> =
 	);
 }
 
-export default Ckeditor
+export default Ckeditor;

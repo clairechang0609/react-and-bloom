@@ -147,6 +147,9 @@ const MenuItems = () => {
       <NavLink to="/products" className="my-5 my-lg-0 px-4">
         <Link>PLANTS・所有植栽</Link>
       </NavLink>
+      <NavLink to="/articles" className="my-5 my-lg-0 px-4">
+        <Link>Articles・植物專欄</Link>
+      </NavLink>
       <NavLink to="/cart" className="my-5 my-lg-0 px-4">
         <Link className="position-relative">
           CART・購物車

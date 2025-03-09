@@ -52,7 +52,7 @@ const ProductListItem: FC<AdminArticleListItemProps> = memo(({ showModal, articl
             <p className="mb-0">{tag.join(', ')}</p>
           </div>
           <div className="col-md d-flex justify-content-center">
-            <StatusIcon isEnabled={isPublic} labels={['公開', '隱藏']} />
+            <StatusIcon isEnabled={isPublic} labels={['隱藏', '公開']} />
           </div>
           <div className="col-md d-flex align-items-center justify-content-end">
             <Button btnStyle="btn-sm btn-secondary" handleClick={() => editForm(article)}>編輯</Button>
