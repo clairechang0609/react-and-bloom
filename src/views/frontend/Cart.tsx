@@ -128,7 +128,7 @@ const Cart = () => {
                 : ''
           }
         </div>
-        <div className="text-center py-5 mt-2">
+        <div className="py-5 mt-2">
           <div className="d-flex flex-column align-items-center text-center">
             <h5 className="title text-center fs-4 mb-2">＼ Recommendations ／</h5>
             <small className="d-block">精選商品</small>

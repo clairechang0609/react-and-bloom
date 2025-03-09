@@ -215,7 +215,7 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({ selectedPro
                         message: '價格需大於 0'
                       },
                       valueAsNumber: true,
-                      validate: (value: string) => Number(value) < Number(getValues().origin_price) || '售價必須小於原價'
+                      validate: (value: string) => Number(value) <= Number(getValues().origin_price) || '售價必須小於等於原價'
                     }} />
                 </div>
                 <div className="mb-3">

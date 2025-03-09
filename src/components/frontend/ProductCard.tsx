@@ -82,8 +82,12 @@ const CardBody: FC<{ item: Product; children: ReactNode; isVerical: boolean; has
         <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
         <h5 className="mb-3 fw-light">{title}</h5>
         <div className="d-flex align-items-center">
-          <h5 className="text-danger mb-0 me-3">$ {price}</h5>
-          <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
+          <h5 className={`mb-0 me-3 ${(price && origin_price && price < origin_price) && 'text-danger'}`}>$ {price}</h5>
+          {
+            price && origin_price && price < origin_price
+            ? <small className="text-muted text-decoration-line-through">$ {origin_price}</small>
+            : ''
+          }
         </div>
         {children}
       </div>

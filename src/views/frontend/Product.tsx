@@ -121,7 +121,7 @@ const Product = () => {
       <Global />
       <div className="container my-5">
         <div className="row">
-          <div className="col-md-5 col-lg-4 mb-3 mb-lg-0">
+          <div className="col-md-5 col-lg-4 mb-3 mb-md-0">
             {
               products.length
                 ? <>
@@ -162,44 +162,76 @@ const Product = () => {
             </div>
             <h2 className="fs-3 fw-light">{product?.title}</h2>
             <div className="my-4">
-              <div className="card-text border-top border-bottom d-flex align-items-stretch">
-                <div className="flex-shrink-0 d-flex align-items-center border-end pe-3 me-3">
-                  <h6 className="my-3">商品描述</h6>
+              <div className="border-top border-bottom d-flex align-items-stretch">
+                <div className="row w-100">
+                  <div className="col-3 col-lg-2 d-flex align-items-center border-end">
+                    <h6 className="my-3 fs-sm">商品描述</h6>
+                  </div>
+                  <div className="col-9 col-lg-10 my-3">
+                    <p className="mb-0">{product?.description}</p>
+                  </div>
                 </div>
-                <p className="my-3">{product?.description}</p>
               </div>
-              <div className="card-text border-bottom d-flex align-items-stretch">
-                <div className="flex-shrink-0 d-flex align-items-center border-end pe-3 me-3">
-                  <h6 className="my-3">注意事項</h6>
+              <div className="border-bottom d-flex align-items-stretch">
+                <div className="row w-100">
+                  <div className="col-3 col-lg-2 d-flex align-items-center border-end">
+                    <h6 className="my-3 fs-sm">適合溫度</h6>
+                  </div>
+                  <div className="col-9 col-lg-10 my-3">
+                    <p className="mb-0">{product?.content}</p>
+                  </div>
                 </div>
-                <p className="my-3">{product?.content}</p>
+              </div>
+              <div className="border-bottom d-flex align-items-stretch">
+                <div className="row w-100">
+                  <div className="col-3 col-lg-2 d-flex align-items-center border-end">
+                    <h6 className="my-3 fs-sm">寵物注意</h6>
+                  </div>
+                  <div className="col-9 col-lg-10 my-3">
+                    <p className="mb-0">{product?.petCareNotes}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="border-bottom d-flex align-items-stretch">
+                <div className="row w-100">
+                  <div className="col-3 col-lg-2 d-flex align-items-center border-end">
+                    <h6 className="my-3 fs-sm">花語</h6>
+                  </div>
+                  <div className="col-9 col-lg-10 my-3">
+                    <p className="mb-0">{product?.floriography}</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mb-4">
-              <div className="text-muted d-flex align-items-center mb-2">
-                <h6 className="text-decoration-line-through fw-light mb-0">$ {product?.origin_price}</h6>
-              </div>
-              <div className="d-flex align-items-center">
-                <h4 className="mb-0 fst-italic fw-normal text-danger">$ {product?.price}</h4>
-                <span className="badge rounded-pill fst-italic fw-light text-bg-danger ms-2">sale</span>
-              </div>
+            <div className="d-flex align-items-center mb-4">
+              <h4 className={`mb-0 fst-italic fw-normal ${(product?.price ?? 0) < (product?.origin_price ?? 0) && 'text-danger'}`}>$ {product?.price}</h4>
+              {
+                (product?.price ?? 0) < (product?.origin_price ?? 0)
+                ? <>
+                    <span className="badge rounded-pill fst-italic fw-light text-bg-danger ms-2 me-3">sale</span>
+                    <h6 className="text-decoration-line-through fw-light mb-0">$ {product?.origin_price}</h6>
+                  </>
+                : ''
+              }
             </div>
-            <div className="d-flex align-items-center mt-auto">
-              <i className={`bi bi-dash-square-fill fs-3 ${qty === 1 ? 'cursor-default opacity-50' : 'cursor-pointer'}`} onClick={() => qty > 1 && setQty(qty - 1)} />
-              <input type="number" className="form-control w-auto mx-2" value={qty} onChange={(e) => setQty(toPositiveInteger(e.target.value))} />
-              <i className="bi bi-plus-square-fill fs-3 cursor-pointer" onClick={() => setQty(qty + 1)} />
-              <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-3" handleClick={() => { dispatch(asyncAddCart({ productId: product?.id, qty })) }}>加入購物車</Button>
+            <div className="d-flex flex-column flex-md-row align-items-md-center mt-auto">
+              <div className="d-flex align-items-center mb-3 mb-md-0">
+                <i className={`bi bi-dash-square-fill fs-3 ${qty === 1 ? 'cursor-default opacity-50' : 'cursor-pointer'}`} onClick={() => qty > 1 && setQty(qty - 1)} />
+                <input type="number" className="form-control w-auto mx-2" value={qty} onChange={(e) => setQty(toPositiveInteger(e.target.value))} />
+                <i className="bi bi-plus-square-fill fs-3 cursor-pointer" onClick={() => setQty(qty + 1)} />
+              </div>
+              <Button type="submit" btnStyle="btn btn-secondary flex-shrink-0 ms-md-3" handleClick={() => { dispatch(asyncAddCart({ productId: product?.id, qty })) }}>加入購物車</Button>
             </div>
           </div>
           {
             filterProducts.length
               ? <div className="mt-5">
-                  <div className="border-top p-5">
+                  <div className="border-top py-5 px-2 px-md-4 px-lg-5">
                     <div className="d-flex flex-column align-items-center text-center">
                       <h5 className="title text-center fs-2 mb-3">＼ Recommendations ／</h5>
                       <p className="d-block">精選商品</p>
                     </div>
-                    <div className="row row-cols-1 row-cols-md-2 gx-lg-5 my-5">
+                    <div className="row row-cols-1 row-cols-md-2 gx-lg-5 my-4 my-lg-5">
                       {
                         filterProducts.map(item => {
                           return <ProductCard item={item} isLink={true} key={item.id} />
