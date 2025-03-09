@@ -245,6 +245,17 @@ html.has-scroll-dragging {
   font-size: 10px;
 }
 
+.text-ellipsis {
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  box-sizing: border-box;
+}
+
 $grid-breakpoint-map: (
 	sm: 576px,
 	md: 768px,

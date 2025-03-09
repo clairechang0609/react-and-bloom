@@ -3,7 +3,7 @@ import LocomotiveScroll from 'locomotive-scroll';
 import { useEffect, useMemo, useRef } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Footer from '../../components/frontend/Footer';
-import Articles from '../../components/frontend/home/Articles';
+import NewArticles from '../../components/frontend/home/NewArticles';
 import Banner from '../../components/frontend/home/Banner';
 import Contact from '../../components/frontend/home/Contact';
 import Intro from '../../components/frontend/home/Intro';
@@ -77,7 +77,7 @@ const Home = () => {
         <Intro />
         <NewProducts filterProducts={filterProducts} />
         <PlantCategories />
-        <Articles filterArticles={filterArticles} />
+        <NewArticles filterArticles={filterArticles} />
         <Contact />
         <Footer />
       </div>

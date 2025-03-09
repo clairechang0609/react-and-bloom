@@ -39,8 +39,8 @@ const ArticlePage = () => {
 
   return (
     <>
-      <div className="image-wrap position-relative" style={{ height: '250px', background: 'linear-gradient(135deg, #42b983, #ffed6e)', marginTop: '-70px' }}>
-        <img src={article?.image} alt={article?.title} className="object-fit-cover h-100 w-100 opacity-50" />
+      <div className="overflow-hidden" style={{ aspectRatio: '4 / 1', background: 'linear-gradient(135deg, #42b983, #ffed6e)', marginTop: '-70px' }}>
+        <img src={article?.image} alt={article?.title} className="object-fit-cover h-100 w-100 opacity-50" style={{ filter: 'grayscale(50%)' }} />
       </div>
       <div className="container my-5">
         <div className="mb-3">
@@ -54,7 +54,7 @@ const ArticlePage = () => {
           <h2 className="fw-light mb-0">{article?.title}</h2>
           <p className="mb-0">{article?.create_at && formatDateFromTimestamp(article.create_at)}</p>
         </div>
-        <p className="mb-5">Author_ {article?.author}</p>
+        <p className="mb-5"><small>Posted by_</small> {article?.author}</p>
         { article?.content ? <div className="ck-content" dangerouslySetInnerHTML={{ __html: article.content }} /> : '' }
       </div>
     </>
