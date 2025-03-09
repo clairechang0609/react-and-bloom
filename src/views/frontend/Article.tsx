@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { setIsFullPageLoading } from "../../slice/loadingSlice";
 import axios, { AxiosError } from "axios";
 import { Article } from "../../types/article";
+import { create } from "domain";
+import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const ArticlePage = () => {
@@ -37,15 +39,23 @@ const ArticlePage = () => {
 
   return (
     <>
-      <div className="image-wrap position-relative" style={{ height: '250px' }}>
-        <img src={article?.image} alt={article?.title} className="object-fit-cover h-100 w-100" />
+      <div className="image-wrap position-relative" style={{ height: '250px', background: 'linear-gradient(135deg, #42b983, #ffed6e)', marginTop: '-70px' }}>
+        <img src={article?.image} alt={article?.title} className="object-fit-cover h-100 w-100 opacity-50" />
       </div>
       <div className="container my-5">
-        <div className="pb-3 mb-3 d-flex align-items-center justify-content-between border-bottom">
-          <h2 className="fs-4 mb-0">{article?.title}</h2>
-          <p className="mb-0">Author｜{article?.author}</p>
+        <div className="mb-3">
+          {
+            article?.tag?.map((item, index) => {
+              return <span className="badge rounded-pill bg-primary fs-sm mb-1 me-1" key={`tag-${index}`}>{item}</span>
+            })
+          }
         </div>
-        <div>{article?.content}</div>
+        <div className="pb-3 mb-3 d-flex align-items-end justify-content-between border-bottom">
+          <h2 className="fw-light mb-0">{article?.title}</h2>
+          <p className="mb-0">{article?.create_at && formatDateFromTimestamp(article.create_at)}</p>
+        </div>
+        <p className="mb-5">Author_ {article?.author}</p>
+        { article?.content ? <div className="ck-content" dangerouslySetInnerHTML={{ __html: article.content }} /> : '' }
       </div>
     </>
   )

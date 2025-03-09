@@ -38,6 +38,21 @@ const CardWrap = styled("div")`
     position: absolute;
     left: 0;
   }
+
+  &.bg-none {
+    .card {
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      background-color: transparent;
+      box-shadow: none;
+      padding-bottom: 20px !important;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
 `;
 
 const ImageWrap = styled("div")`
@@ -54,7 +69,7 @@ const ImageWrap = styled("div")`
   }
 `;
 
-const CardBody: FC<{ item: Product; children?: ReactNode; isVerical?: boolean }> = ({ item, children, isVerical }) => {
+const CardBody: FC<{ item: Product; children: ReactNode; isVerical: boolean; hasBg: boolean }> = ({ item, children, isVerical, hasBg }) => {
   const { category, title, price, origin_price, imageUrl, imagesUrl } = item;
 
   return (
@@ -63,7 +78,7 @@ const CardBody: FC<{ item: Product; children?: ReactNode; isVerical?: boolean }>
         <img src={imageUrl} alt={`${title} image`} className="main" />
         <img src={imagesUrl[0]} alt={`${title} image`} className="sub" />
       </ImageWrap>
-      <div className="d-flex flex-column align-items-start flex-fill p-4">
+      <div className={`d-flex flex-column align-items-start flex-fill ${hasBg ? 'p-4' : 'px-4 pt-1'}`}>
         <span className="badge rounded-pill bg-primary fs-sm mb-2">{category}</span>
         <h5 className="mb-3 fw-light">{title}</h5>
         <div className="d-flex align-items-center">
@@ -76,18 +91,18 @@ const CardBody: FC<{ item: Product; children?: ReactNode; isVerical?: boolean }>
   )
 }
 
-const ProductCard: FC<{ item: Product; children?: ReactNode; isLink?: boolean; isVerical?: boolean }> = ({ item, children, isLink = false, isVerical = false }) => {
+const ProductCard: FC<{ item: Product; children?: ReactNode; isLink?: boolean; isVerical?: boolean; hasBg?: boolean }> = ({ item, children, isLink = false, isVerical = false, hasBg = true }) => {
   const { id } = item;
 
   return (
-    <CardWrap className="product-card mb-4" key={id}>
+    <CardWrap className={`product-card mb-4 ${!hasBg && 'bg-none'}`} key={id}>
       {
         isLink
           ? <NavLink to={`/product/${id}`} className="card">
-              <CardBody item={item} children={children} isVerical={isVerical} />
+              <CardBody item={item} children={children} isVerical={isVerical} hasBg={hasBg} />
             </NavLink>
           : <div className="card">
-              <CardBody item={item} children={children} isVerical={isVerical} />
+              <CardBody item={item} children={children} isVerical={isVerical} hasBg={hasBg} />
             </div>
       }
     </CardWrap>

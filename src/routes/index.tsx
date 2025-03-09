@@ -13,6 +13,7 @@ import Coupons from '../views/admin/Coupons';
 import Checkout from '../views/frontend/Checkout';
 import Articles from '../views/frontend/Articles';
 import Article from '../views/frontend/Article';
+import AdminArticles from '../views/admin/Articles';
 
 const routes = createHashRouter([
   {
@@ -75,7 +76,7 @@ const routes = createHashRouter([
       },
       {
         path: 'articles',
-        element: <Articles />
+        element: <AdminArticles />
       }
     ]
   },

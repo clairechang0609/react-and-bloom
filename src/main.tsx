@@ -6,6 +6,7 @@ import 'swiper/css';
 import App from './App.tsx';
 import './assets/app.scss';
 import { store } from './store';
+import 'ckeditor5/ckeditor5.css';
 
 createRoot(document.getElementById('root')!).render(
   <>

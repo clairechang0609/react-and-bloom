@@ -281,8 +281,10 @@ $grid-breakpoint-map: (
 
 .editor-container_classic-editor .editor-container__editor {
 	width: 100%;
-
-  .ck-content {
-    min-height: 300px;
-  }
+}
+.ck-content {
+  min-height: 300px;
+}
+.ck-body-wrapper{
+  z-index: 10000;
 }
