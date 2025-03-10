@@ -3,15 +3,15 @@ import LocomotiveScroll from 'locomotive-scroll';
 import { useEffect, useMemo, useRef } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Footer from '../../components/frontend/Footer';
-import NewArticles from '../../components/frontend/home/NewArticles';
 import Banner from '../../components/frontend/home/Banner';
 import Contact from '../../components/frontend/home/Contact';
 import Intro from '../../components/frontend/home/Intro';
+import NewArticles from '../../components/frontend/home/NewArticles';
 import NewProducts from '../../components/frontend/home/NewProducts';
 import PlantCategories from '../../components/frontend/home/PlantCategories';
 import Navbar from '../../components/frontend/Navbar';
-import useGetProducts from '../../hooks/frontend/useGetProducts';
 import useGetArticles from '../../hooks/frontend/useGetArticles';
+import useGetProducts from '../../hooks/frontend/useGetProducts';
 
 const Global = createGlobalStyle`
   body {

@@ -1,8 +1,16 @@
-import { useMemo } from "react";
+import { NavLink } from "react-router";
+import styled from "styled-components";
+import Pagination from '../../components/Pagination';
 import useGetArticles from "../../hooks/frontend/useGetArticles";
 import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
-import { NavLink } from "react-router";
-import Pagination from '../../components/Pagination';
+
+const MainImageWrap = styled("div")`
+  aspect-ratio: 4 / 3;
+
+  @media screen and (min-width: 768px) {
+    aspect-ratio: 5 / 2;
+  }
+`;
 
 const Articles = () => {
   const { articles, currentPage, setCurrentPage, totalPages } = useGetArticles();
@@ -10,9 +18,9 @@ const Articles = () => {
   return (
     <div className="container my-5">
       <div className="row mb-5">
-        <div className="col-md-7" style={{ aspectRatio: '5 / 2' }}>
+        <MainImageWrap className="col-md-7 mb-3 mb-md-0">
           <img src={articles[0]?.image} alt={articles[0]?.title} className="object-fit-cover h-100 w-100" />
-        </div>
+        </MainImageWrap>
         <div className="col-md-5">
           <div className="mb-3">
             {
@@ -37,7 +45,7 @@ const Articles = () => {
         {
           articles?.slice(1)?.map(item => {
             return (
-              <NavLink to={`/article/${item.id}`} key={item.id}>
+              <NavLink to={`/article/${item.id}`} key={item.id} className="mb-4">
                 <div className="position-relative mb-3" style={{ aspectRatio: '4 / 3' }}>
                   <img src={item.image} alt={item.title} className="object-fit-cover h-100 w-100" />
                   <div className="position-absolute bg-white bg-opacity-50" style={{ bottom: 0, left: 0, right: 0 }}>

@@ -1,13 +1,12 @@
-import { useState, useEffect, useRef, useMemo, FC } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import {
-  ClassicEditor,
   Alignment,
   Autoformat,
   AutoImage,
   Autosave,
   BlockQuote,
   Bold,
+  ClassicEditor,
   CloudServices,
   Essentials,
   FontBackgroundColor,
@@ -15,6 +14,7 @@ import {
   FontFamily,
   FontSize,
   Heading,
+  HeadingOption,
   ImageBlock,
   ImageCaption,
   ImageInline,
@@ -43,11 +43,59 @@ import {
   TableToolbar,
   TextTransformation,
   TodoList,
-  Underline,
-  HeadingOption
+  Underline
 } from 'ckeditor5';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 const LICENSE_KEY = 'GPL';
+
+const colorTheme = {
+  colors: [
+    {
+      color: '#222',
+      label: 'primary'
+    },
+    {
+      color: '#47564a',
+      label: 'secondary'
+    },
+    {
+      color: '#cbc6a3',
+      label: 'tertiary'
+    },
+    {
+      color: '#42b983',
+      label: 'success'
+    },
+    {
+      color: '#e53e3e',
+      label: 'danger'
+    },
+    {
+      color: '#fbfcf8',
+      label: 'light'
+    },
+    {
+      color: '#757779',
+      label: 'dark'
+    },
+    {
+      color: '#308760',
+      label: 'info'
+    },
+    {
+      color: '#cccccc',
+      label: 'gray'
+    },
+    {
+      color: '#dfdbcf',
+      label: 'background'
+    }
+  ],
+  columns: 5,
+  documentColors: 10
+};
+
 
 const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> = ({ content, setContent }) => {
   const editorContainerRef = useRef(null);
@@ -233,20 +281,12 @@ const Ckeditor: FC<{ content: string; setContent: (content: string) => void }> =
             reversed: true
           }
         },
-        mention: {
-          feeds: [
-            {
-              marker: '@',
-              feed: [
-                /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
-              ]
-            }
-          ]
-        },
         placeholder: '請輸入內文',
         table: {
           contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
-        }
+        },
+        fontColor: colorTheme,
+        fontBackgroundColor: colorTheme
       }
     };
   }, [isLayoutReady]);

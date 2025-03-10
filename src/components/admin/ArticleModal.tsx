@@ -5,14 +5,14 @@ import { FieldValues, useForm, useWatch } from 'react-hook-form';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
+import { AdminArticleModalProps } from '../../types/article';
 import type { ModalRef } from '../../types/modal';
+import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
 import Button from '../Button';
 import Field from '../form/Field';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
-import { AdminArticleModalProps } from '../../types/article';
 import TheCkeditor from './TheCkeditor';
-import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -22,7 +22,8 @@ const defaultValues = {
   isPublic: true,
   tag: [],
   title: '',
-  content: ''
+  content: '',
+  create_at: ''
 }
 
 const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArticle, getList }, ref) => {
@@ -173,7 +174,7 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
   }
 
   return (
-    <div className="modal fade" data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
+    <div className="modal fade" data-bs-focus={false} data-bs-keyboard={false} data-bs-backdrop="static" tabIndex={-1} ref={modalRef}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
@@ -226,9 +227,9 @@ const ArticleModal = forwardRef<ModalRef, AdminArticleModalProps>(({ selectedArt
                     }} />
                 </div>
                 <div className="mb-3">
-                  <Field id="is_enabled" label="是否公開" errors={errors}>
-                    <div className={`d-block ${errors.is_enabled && "is-invalid"}`} role="group">
-                      <input type="checkbox" className="btn-check" id="enabled" {...register('is_enabled')} />
+                  <Field id="isPublic" label="是否公開" errors={errors}>
+                    <div className={`d-block ${errors.isPublic && "is-invalid"}`} role="group">
+                      <input type="checkbox" className="btn-check" id="enabled" {...register('isPublic')} />
                       <label className={`btn px-4 ${isPublic ? 'btn-success' : 'btn-danger'}`} htmlFor="enabled">
                         {isPublic ? '公開' : '隱藏'}
                       </label>

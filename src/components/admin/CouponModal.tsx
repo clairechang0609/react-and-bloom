@@ -1,16 +1,16 @@
 import axios, { AxiosError } from 'axios';
 import { Modal } from 'bootstrap';
-import { ChangeEvent, forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import { FieldValues, useForm, useWatch } from 'react-hook-form';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
+import { AdminCouponModalProps } from '../../types/coupon';
 import type { ModalRef } from '../../types/modal';
+import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 import Button from '../Button';
 import Field from '../form/Field';
 import FormInput from '../form/FormInput';
-import { AdminCouponModalProps } from '../../types/coupon';
-import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -52,14 +52,19 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
   });
 
   // 送出表單
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = async (data: FieldValues) => {
     try {
       dispatch(setIsFullPageLoading(true));
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)andBloom\s*=\s*([^;]*).*$)|^.*$/,"$1",);
       axios.defaults.headers.common.Authorization = token;
       const res = await axios[!selectedCoupon ? 'post' : 'put'](
         `${VITE_API_BASE}/api/${VITE_API_PATH}/admin/coupon${selectedCoupon ? `/${selectedCoupon.id}` : ''}`,
-        { data }
+        {
+          data: {
+            ...data,
+            is_enabled: data.is_enabled ? 1 : 0
+          }
+        }
       );
       getCoupons();
       modal.current?.hide();
@@ -161,7 +166,9 @@ const CouponModal = forwardRef<ModalRef, AdminCouponModalProps>(({ selectedCoupo
                 <div className="mb-3">
                   <Field id="is_enabled" label="是否啟用" errors={errors}>
                     <div className={`d-block ${errors.is_enabled && "is-invalid"}`} role="group">
-                      <input type="checkbox" className="btn-check" id="enabled" {...register('is_enabled')} />
+                      <input type="checkbox" className="btn-check" id="enabled"
+                        {...register('is_enabled')}
+                      />
                       <label className={`btn px-4 ${isEnabled ? 'btn-success' : 'btn-danger'}`} htmlFor="enabled">
                         {isEnabled ? '啟用' : '停用'}
                       </label>

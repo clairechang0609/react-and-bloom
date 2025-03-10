@@ -1,7 +1,7 @@
+import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CartListItem from '../../components/frontend/CartListItem';
 import CheckoutForm from '../../components/frontend/CheckoutForm';
@@ -10,7 +10,6 @@ import useGetProducts from '../../hooks/frontend/useGetProducts';
 import { asyncAddCart, asyncGetCart, cartData } from '../../slice/cartSlice';
 import { useAppDispatch } from "../../store";
 import type { CartItem } from '../../types/cart';
-import axios, { AxiosError } from 'axios';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Cart = () => {
@@ -73,7 +72,7 @@ const Cart = () => {
 
   return (
     <>
-      <div className="container p-0 my-5">
+      <div className="container my-5">
         <div className="row bg-white g-0">
           <div className={`p-4 p-lg-5 ${cart.length ? 'col-md-7' : ''}`}>
             <div className="d-flex align-items-center pb-3 mb-4">
@@ -94,7 +93,10 @@ const Cart = () => {
                           {isLoading && <span className="spinner-grow spinner-grow-sm ms-2"></span>}
                         </button>
                       </div>
-                      { couponMsg.type ? <small className={`ms-auto fs-tiny mt-1 text-${couponMsg.type}`}>{couponMsg.msg}</small> : '' }
+                      <div className="d-flex align-items-center justify-content-between mt-1">
+                        <span className="fs-tiny">* 加入商品需重新套用優惠券</span>
+                        { couponMsg.type ? <small className={`ms-auto fs-tiny text-${couponMsg.type}`}>{couponMsg.msg}</small> : '' }
+                      </div>
                     </div>
                     <div className="card">
                       <div className="card-body p-2">

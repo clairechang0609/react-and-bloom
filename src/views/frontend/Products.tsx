@@ -31,8 +31,8 @@ const Products = () => {
       <div className="row row-cols-1 row-cols-md-2 gx-4">
         {products.map((item) => (
             <ProductCard item={item} key={item.id} hasBg={false}>
-              <div className="w-100 d-flex align-items-center justify-content-end pt-4 mt-auto">
-                <NavLink to={`/product/${item.id}`} className="btn btn-sm btn-outline-primary rounded-pill me-2 px-4">查看更多</NavLink>
+              <div className="w-100 d-flex flex-column flex-sm-row align-items-sm-center justify-content-end pt-4 mt-auto">
+                <NavLink to={`/product/${item.id}`} className="btn btn-sm btn-outline-primary rounded-pill mb-2 mb-sm-0 me-sm-2 px-4">查看更多</NavLink>
                 <Button btnStyle="btn-sm btn-secondary" handleClick={() => dispatch(asyncAddCart({ productId: item.id })) }>加入購物車</Button>
               </div>
             </ProductCard>

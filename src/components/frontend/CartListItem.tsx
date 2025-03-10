@@ -1,17 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { FC } from "react";
 import { NavLink } from "react-router";
-import styled from 'styled-components';
 import { asyncGetCart } from "../../slice/cartSlice";
 import { setIsFullPageLoading } from "../../slice/loadingSlice";
 import { useAppDispatch } from "../../store";
 import type { CartItem } from "../../types/cart";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
-const ImageContainer = styled.div`
-  width: 50px;
-  height: 50px;
-`;
 
 const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
   const dispatch = useAppDispatch();
@@ -44,9 +38,9 @@ const CartListItem: FC<{ item: CartItem }> = ({ item }) => {
   return (<>
     <div className="border-bottom px-0 py-4">
       <div className="d-flex">
-        <ImageContainer className="image-container rounded-circle overflow-hidden border me-3">
+        <div className="image-container rounded-circle overflow-hidden border me-3" style={{ width: '50px', height: '50px' }}>
           <img src={product.imageUrl} alt={product.title} className="w-100 h-100 object-fit-cover" />
-        </ImageContainer>
+        </div>
         <div className="flex-grow-1 flex-shrink-0 ">
           <div className="d-flex justify-content-between">
             <NavLink to={`/product/${product?.id}`}>

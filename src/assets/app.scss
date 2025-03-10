@@ -37,6 +37,10 @@ $border-color: rgba(0, 0, 0, 0.2);
   --bg-danger: rgba(229, 62, 62, 0.1);
   --hover-bg-success: rgba(66, 185, 131, 0.2);
   --hover-bg-danger: rgba(229, 62, 62, 0.2);
+
+  // configure the z-index of the editor, so when inside a bootstrap modal, it will be rendered over the modal.
+  --ck-z-default: 100 !important;
+  --ck-z-modal: calc( var(--ck-z-default) + 2000 ) !important;
 }
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
@@ -245,7 +249,7 @@ html.has-scroll-dragging {
   font-size: 0.875rem;
 }
 .fs-tiny {
-  font-size: 10px;
+  font-size: 0.75rem;
 }
 
 .text-ellipsis {
@@ -287,12 +291,7 @@ $grid-breakpoint-map: (
   }
 }
 
-@media print {
-	body {
-		margin: 0 !important;
-	}
-}
-
+// CKEditor
 .editor-container_classic-editor .editor-container__editor {
 	width: 100%;
 }

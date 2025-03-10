@@ -8,7 +8,7 @@ const FormInput: FC<InputProps> = memo(({ id, label, type = 'text', placeholder 
     : errors?.[id];
   return (
     <>
-      <FloatLabelField id={id} label={label} isRequired={!!rules} errors={errors}>
+      <FloatLabelField id={id} label={label} errors={errors}>
         <input
           id={id}
           type={type}

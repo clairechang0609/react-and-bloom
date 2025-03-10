@@ -35,25 +35,12 @@ const BannerWrap = styled("div")`
   }
 `;
 
-const Title = styled("div")`
-  color: white;
-  text-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.75);
-
-  h2 {
-    font-size: 1em;
-  }
-
-  p {
-    font-size: 0.925rem;
-  }
-`;
-
 const Banner = () => {
   return (
     <BannerWrap className="d-flex align-items-center justify-content-center" data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
-      <Title className="text-center">
-        <h2 className="title" data-scroll data-scroll-speed="3" data-scroll-position="top">&<em>Bloom</em></h2>
-        <p>
+      <div className="text-center text-white" style={{ textShadow: '0 0 0.75rem rgba(0, 0, 0, 0.75)' }}>
+        <h2 className="title" style={{ fontSize: '1em' }} data-scroll data-scroll-speed="3" data-scroll-position="top">&<em>Bloom</em></h2>
+        <p style={{ fontSize: '0.925rem' }}>
           {
             Array.from('植｜物｜販｜賣｜所').map((char, index) => {
               return (
@@ -63,7 +50,7 @@ const Banner = () => {
             })
           }
         </p>
-      </Title>
+      </div>
     </BannerWrap>
   )
 };

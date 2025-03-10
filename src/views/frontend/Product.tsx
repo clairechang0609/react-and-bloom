@@ -3,6 +3,9 @@ import 'bootstrap';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper/types';
 import Button from '../../components/Button';
 import ProductCard from '../../components/frontend/ProductCard';
 import useGetProducts from '../../hooks/frontend/useGetProducts';
@@ -10,9 +13,6 @@ import { asyncAddCart } from '../../slice/cartSlice';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { useAppDispatch } from '../../store';
 import type { Product } from '../../types/product';
-import { Swiper as SwiperClass } from 'swiper/types';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Global = createGlobalStyle`

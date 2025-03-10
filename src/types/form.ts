@@ -14,7 +14,7 @@ export interface InputProps extends FormItemBase {
   placeholder?: string;
 }
 
-export interface TextAreaProps extends FormItemBase {
+export interface TextareaProps extends FormItemBase {
   rows?: number;
   placeholder?: string;
 }

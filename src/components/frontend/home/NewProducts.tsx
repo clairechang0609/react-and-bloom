@@ -23,10 +23,6 @@ const ProductCardWrap = styled("div")`
   }
 `;
 
-const FixedWrap = styled("div")`
-  margin-top: 100px;
-`;
-
 const FixedContent = styled("div")`
   left: 0;
   position: absolute;
@@ -52,7 +48,7 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
               </small>
             </div>
           </div>
-          <FixedWrap className="col-md-5 position-relative overflow-hidden d-none d-lg-block">
+          <div className="col-md-5 position-relative overflow-hidden d-none d-lg-block" style={{ marginTop: '100px' }}>
             <FixedTarget id="fixed-target"></FixedTarget>
             <FixedContent className="d-flex flex-column align-items-center text-center" data-scroll data-scroll-sticky data-scroll-target="#fixed-target">
               <h3 className="title fs-2 mb-3">＼ New Items ／</h3>
@@ -66,24 +62,24 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
                 </g>
               </svg>
             </FixedContent>
-          </FixedWrap>
+          </div>
           <ProductList className="col-md-7" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
             <ProductCardWrap className="text-center px-4 ps-lg-0 pe-lg-5">
               <div className="row">
                 {
                   filterProducts.length
                     ? <>
-                      {
-                        filterProducts.map(item => {
-                          return (
-                            <ProductCard item={item} isLink={true} key={item.id}>
-                              <small className="d-block mt-3 pt-3 border-top text-start text-dark">
-                                <small>{item.description}</small>
-                              </small>
-                            </ProductCard>
-                          )
-                        })
-                      }
+                        {
+                          filterProducts.map(item => {
+                            return (
+                              <ProductCard item={item} isLink={true} key={item.id}>
+                                <small className="d-block mt-3 pt-3 border-top text-start text-dark">
+                                  <small>{item.description}</small>
+                                </small>
+                              </ProductCard>
+                            )
+                          })
+                        }
                       </>
                     : ''
                 }

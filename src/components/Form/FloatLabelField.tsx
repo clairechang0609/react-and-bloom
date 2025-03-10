@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import type { FieldProps } from '../../types/form';
 
-const Field: FC<FieldProps> = memo(({ id, label, children, isRequired = false, errors }) => {
+const FloatLabelField: FC<FieldProps> = memo(({ id, label, children, errors }) => {
   const error = id.includes('.')
     ? id.split('.').reduce((obj, key) => obj?.[key], errors as Record<string, never>)
     : errors?.[id];
@@ -18,4 +18,4 @@ const Field: FC<FieldProps> = memo(({ id, label, children, isRequired = false, e
   )
 });
 
-export default Field;
+export default FloatLabelField;

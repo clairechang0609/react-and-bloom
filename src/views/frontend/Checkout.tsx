@@ -1,12 +1,12 @@
+import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useParams } from 'react-router';
 import styled from 'styled-components';
-import { useAppDispatch } from "../../store";
-import { setIsFullPageLoading } from '../../slice/loadingSlice';
-import axios, { AxiosError } from 'axios';
-import { Order } from '../../types/order';
 import Button from '../../components/Button';
+import { setIsFullPageLoading } from '../../slice/loadingSlice';
+import { useAppDispatch } from "../../store";
+import { Order } from '../../types/order';
 import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
@@ -113,16 +113,16 @@ const Checkout = () => {
                     </div>
                   : <>
                       <div className="row">
-                        <div className="mb-4 d-flex align-items-center">
+                        <div className="mb-4 d-flex flex-column flex-md-row align-items-start align-items-md-center">
                           <span className="badge rounded-pill bg-primary me-3">訂單成立時間</span>
-                          <p className="mb-0 me-4">{order.create_at && formatDateFromTimestamp(order?.create_at)}</p>
+                          <p className="mb-md-0 me-4">{order.create_at && formatDateFromTimestamp(order?.create_at)}</p>
                           <span className="badge rounded-pill bg-primary me-3">付款狀態</span>
-                          <p className={`mb-0 me-4 ${order.is_paid ? 'text-success' : 'text-danger'}`}>{order.is_paid ? '已付款' : '待付款'}</p>
+                          <p className={`mb-md-0 me-4 ${order.is_paid ? 'text-success' : 'text-danger'}`}>{order.is_paid ? '已付款' : '待付款'}</p>
                           {
                             order.is_paid
                               ? <>
                                   <span className="badge rounded-pill bg-primary me-3">付款時間</span>
-                                  <p className="mb-0 me-4">{order.paid_date && formatDateFromTimestamp(order.paid_date)}</p>
+                                  <p className="mb-md-0 me-4">{order.paid_date && formatDateFromTimestamp(order.paid_date)}</p>
                                 </>
                               : ''
                           }
@@ -181,9 +181,9 @@ const Checkout = () => {
               }
             </div>
           : <div className="container text-center py-5 my-5">
-              <img src="./plant.svg" alt="plant-icon" className="mb-4" style={{ width: '70px' }} />
+              <img src="./plant-01.svg" alt="plant-icon" className="mb-4" style={{ width: '70px' }} />
               <h3 className="title text-info fst-italic mb-3" style={{ fontSize: '64px' }}>Thank You!</h3>
-              <Message>已收到您的訂單，我們將儘速為您處理</Message>
+              <Message>已收到您的訂單，<br className="d-sm-none" />我們將儘速為您處理</Message>
             </div>
       }
     </>

@@ -1,9 +1,5 @@
 import styled from "styled-components";
 
-const ContactWrap = styled("div")`
-  height: 350px;
-`;
-
 const ContactItem = styled("a")`
   position: relative;
   padding: 1rem;
@@ -35,7 +31,7 @@ const ContactItem = styled("a")`
 const Contact = () => {
   return (
     <div className="bg-light" style={{ marginTop: '2rem', marginBottom: '4rem' }} data-scroll data-scroll-speed="-1">
-      <ContactWrap className="row">
+      <div className="row" style={{ height: '350px' }}>
         <div className="d-none d-md-block col-md-6 position-relative">
           <img src="./banner-04.jpg" alt="banner-04" className="opacity-75 position-absolute object-fit-cover w-100 h-100" />
         </div>
@@ -54,7 +50,7 @@ const Contact = () => {
             <span>Follow &Bloom on Instagram</span>
           </ContactItem>
         </div>
-      </ContactWrap>
+      </div>
     </div>
   )
 }

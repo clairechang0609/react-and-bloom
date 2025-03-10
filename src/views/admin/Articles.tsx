@@ -1,17 +1,16 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ProductListItem from '../../components/admin/ProductListItem';
+import ArticleListItem from '../../components/admin/ArticleListItem';
+import ArticleModal from '../../components/admin/ArticleModal';
 import AlertModal from '../../components/AlertModal';
 import Button from '../../components/Button';
 import Pagination from '../../components/Pagination';
 import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
-import type { ModalRef } from '../../types/modal';
 import { Article } from '../../types/article';
-import ArticleListItem from '../../components/admin/ArticleListItem';
-import ArticleModal from '../../components/admin/ArticleModal';
+import type { ModalRef } from '../../types/modal';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const AdminArticles = () => {
@@ -56,19 +55,19 @@ const AdminArticles = () => {
     alertModalRef.current?.show();
   }, []);
 
-  // 新增產品
+  // 新增
   const addArticle = useCallback(() => {
     setSelectedArticle(null);
     showModal();
   }, [showModal]);
 
-  // 刪除商品
+  // 刪除
   const deleteArticle = useCallback(async (id: string) => {
     if (!id) return;
 
     try {
       dispatch(setIsFullPageLoading(true));
-      const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/product/${id}`);
+      const res = await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/admin/article/${id}`);
       dispatch(asyncSetMessage({ text: res?.data.message, type: 'success' }));
       getList();
       alertModalRef.current?.hide();

@@ -1,16 +1,12 @@
 import { FC, memo, useCallback } from 'react';
 import styled from 'styled-components';
+import { AdminArticleListItemProps, Article } from '../../types/article';
 import Button from '../Button';
 import StatusIcon from '../StatusIcon';
-import { AdminArticleListItemProps, Article } from '../../types/article';
-
-const ImageContainer = styled.div`
-  width: 80px;
-  height: 80px;
-`;
 
 const ListItem = styled("li")`
   margin-top: -1px;
+
   &:hover {
     background-color: #f8f9fa;
     z-index: 1000;
@@ -19,7 +15,7 @@ const ListItem = styled("li")`
 `;
 
 const ProductListItem: FC<AdminArticleListItemProps> = memo(({ showModal, article, setSelectedArticle, showAlertModal }) => {
-  const { id, author, description, image, isPublic, tag, title } = article;
+  const { author, image, isPublic, tag, title } = article;
 
   const editForm = useCallback((article: Article) => {
     setSelectedArticle(article);
@@ -36,9 +32,9 @@ const ProductListItem: FC<AdminArticleListItemProps> = memo(({ showModal, articl
       <div className="card-body">
         <div className="row w-100 justify-content-between align-items-center">
           <div className="col-auto">
-            <ImageContainer className="image-container rounded-circle overflow-hidden border">
+            <div className="image-container rounded-circle overflow-hidden border" style={{ width: '80px', height: '80px' }}>
               <img src={image} alt={title} className="w-100 h-100 object-fit-cover" />
-            </ImageContainer>
+            </div>
           </div>
           <div className="col-md">
             <h6 className="mb-0">{title}</h6>

@@ -19,7 +19,7 @@ const ProductItem = styled("li")`
 `;
 
 const ProductListItem: FC<AdminProductListItemProps> = memo(({ showModal, product, setSelectedProduct, showAlertModal }) => {
-  const { id, title, price, origin_price, is_enabled, category } = product;
+  const { title, price, origin_price, is_enabled, category } = product;
 
   const editForm = useCallback((product: Product) => {
     setSelectedProduct(product);

@@ -1,17 +1,16 @@
+import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
+import AlertModal from '../../components/AlertModal';
+import Button from "../../components/Button";
+import Pagination from '../../components/Pagination';
+import CouponListItem from "../../components/admin/CouponListItem";
+import CouponModal from "../../components/admin/CouponModal";
+import { setIsFullPageLoading } from "../../slice/loadingSlice";
+import { asyncSetMessage } from "../../slice/toastSlice";
 import { useAppDispatch } from "../../store";
 import { CouponItem } from "../../types/coupon";
-import AlertModal from '../../components/AlertModal';
-import Pagination from '../../components/Pagination';
 import { ModalRef } from "../../types/modal";
-import { setIsFullPageLoading } from "../../slice/loadingSlice";
-import axios, { AxiosError } from "axios";
-import CouponListItem from "../../components/admin/CouponListItem";
-import { asyncSetMessage } from "../../slice/toastSlice";
-import Button from "../../components/Button";
-import CouponModal from "../../components/admin/CouponModal";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-
 
 const Coupon = () => {
   const dispatch = useAppDispatch();

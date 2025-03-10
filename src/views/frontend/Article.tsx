@@ -1,12 +1,22 @@
-import { useNavigate, useParams } from "react-router";
-import { useAppDispatch } from "../../store";
-import { useEffect, useState } from "react";
-import { setIsFullPageLoading } from "../../slice/loadingSlice";
 import axios, { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import styled from "styled-components";
+import { setIsFullPageLoading } from "../../slice/loadingSlice";
+import { useAppDispatch } from "../../store";
 import { Article } from "../../types/article";
-import { create } from "domain";
 import { formatDateFromTimestamp } from "../../utils/formatDateFromTimestamp";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+
+const ImageWrap = styled("div")`
+  aspect-ratio: 2 / 1;
+  background: linear-gradient(135deg, #42b983, #ffed6e);
+  margin-top: -70px;
+
+  @media screen and (min-width: 768px) {
+    aspect-ratio: 4 / 1;
+  }
+`;
 
 const ArticlePage = () => {
   const dispatch = useAppDispatch();
@@ -39,9 +49,9 @@ const ArticlePage = () => {
 
   return (
     <>
-      <div className="overflow-hidden" style={{ aspectRatio: '4 / 1', background: 'linear-gradient(135deg, #42b983, #ffed6e)', marginTop: '-70px' }}>
+      <ImageWrap className="overflow-hidden">
         <img src={article?.image} alt={article?.title} className="object-fit-cover h-100 w-100 opacity-50" style={{ filter: 'grayscale(50%)' }} />
-      </div>
+      </ImageWrap>
       <div className="container my-5">
         <div className="mb-3">
           {
@@ -50,9 +60,9 @@ const ArticlePage = () => {
             })
           }
         </div>
-        <div className="pb-3 mb-3 d-flex align-items-end justify-content-between border-bottom">
-          <h2 className="fw-light mb-0">{article?.title}</h2>
-          <p className="mb-0">{article?.create_at && formatDateFromTimestamp(article.create_at)}</p>
+        <div className="pb-3 mb-3 d-flex flex-column flex-lg-row align-items-lg-end justify-content-between border-bottom">
+          <h2 className="fw-light mb-0 order-2 order-lg-1">{article?.title}</h2>
+          <p className="mb-lg-0 order-1 order-lg-2">{article?.create_at && formatDateFromTimestamp(article.create_at)}</p>
         </div>
         <p className="mb-5"><small>Posted by_</small> {article?.author}</p>
         { article?.content ? <div className="ck-content" dangerouslySetInnerHTML={{ __html: article.content }} /> : '' }

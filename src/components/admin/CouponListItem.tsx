@@ -1,9 +1,9 @@
 import { FC, memo, useCallback } from 'react';
 import styled from 'styled-components';
-import Button from '../Button';
-import StatusIcon from '../StatusIcon';
 import { AdminCouponListItemProps, CouponItem } from '../../types/coupon';
 import { formatDateFromTimestamp } from '../../utils/formatDateFromTimestamp';
+import Button from '../Button';
+import StatusIcon from '../StatusIcon';
 
 const CouponWrap = styled("li")`
   margin-top: -1px;
@@ -15,7 +15,7 @@ const CouponWrap = styled("li")`
 `;
 
 const CouponListItem: FC<AdminCouponListItemProps> = memo(({ showModal, coupon, setSelectedCoupon, showAlertModal }) => {
-  const { id, title, is_enabled, percent, due_date, code } = coupon;
+  const { title, is_enabled, percent, due_date, code } = coupon;
 
   const editForm = useCallback((coupon: CouponItem) => {
     setSelectedCoupon(coupon);
