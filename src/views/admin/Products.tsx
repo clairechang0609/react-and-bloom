@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import '../../assets/home.scss';
 import ProductListItem from '../../components/admin/ProductListItem';
 import ProductModal from '../../components/admin/ProductModal';
 import AlertModal from '../../components/AlertModal';
@@ -42,7 +41,6 @@ const AdminProducts = () => {
     }
   }, [currentPage, dispatch]);
 
-  // 取得商品列表
   useEffect(() => {
     getProducts();
   }, [getProducts]);
@@ -50,12 +48,12 @@ const AdminProducts = () => {
   // 顯示 Modal
   const showModal = useCallback(() => {
     modalRef.current?.show();
-  }, [])
+  }, []);
 
   // 顯示 Alert Modal
   const showAlertModal = useCallback(() => {
     alertModalRef.current?.show();
-  }, [])
+  }, []);
 
   // 新增產品
   const addProduct = useCallback(() => {

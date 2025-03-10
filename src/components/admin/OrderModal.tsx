@@ -8,9 +8,9 @@ import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { AdminOrderModalProps, OrderProductDetail } from '../../types/order';
 import Button from '../Button';
-import Field from '../Form/Field';
-import FormInput from '../Form/FormInput';
-import FormTextarea from '../Form/FormTextarea';
+import Field from '../form/Field';
+import FormInput from '../form/FormInput';
+import FormTextarea from '../form/FormTextarea';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const defaultValues = {
@@ -51,7 +51,7 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
     defaultValues
   });
 
-  const [id, products, user, total, message, isPaid] = watch(['id', 'products', 'user', 'total', 'message', 'is_paid']);
+  const [id, products, user, total, message, isPaid, coupon, discount] = watch(['id', 'products', 'user', 'total', 'message', 'is_paid', 'coupon', 'discount']);
 
   // Modal 實體
   useEffect(() => {
@@ -196,12 +196,24 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
                       )
                     })
                   }
+                  {
+                    coupon
+                      ? <div className="row gx-2">
+                          <div className="col-9">
+                            <div className="d-block p-1 my-1 border-bottom">優惠券折扣{`（${coupon.title} ${coupon.percent} 折）`}</div>
+                          </div>
+                          <div className="col-3">
+                            <div className="d-block p-1 my-1 border-bottom text-danger">-${discount}</div>
+                          </div>
+                        </div>
+                      : ''
+                  }
                   <div className="row gx-2 fw-bold">
                     <div className="col-9">
                       <div className="d-block p-1 my-1 border-bottom">總金額</div>
                     </div>
                     <div className="col-3">
-                      <div className="d-block p-1 my-1 border-bottom text-danger">${total}</div>
+                      <div className="d-block p-1 my-1 border-bottom">${total}</div>
                     </div>
                   </div>
                 </div>
@@ -226,8 +238,8 @@ const OrderModal = forwardRef<ModalRef, AdminOrderModalProps>(({
               </div>
             </div>
             <div className="modal-footer">
-              <Button btnStyle="btn btn-outline-secondary" data-bs-dismiss="modal">取消</Button>
-              <Button type="submit" btnStyle="btn btn-secondary">儲存</Button>
+              <Button btnStyle="btn btn-outline-secondary px-4" data-bs-dismiss="modal">取消</Button>
+              <Button type="submit" btnStyle="btn btn-secondary px-4">儲存</Button>
             </div>
           </form>
         </div>

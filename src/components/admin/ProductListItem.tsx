@@ -19,7 +19,7 @@ const ProductItem = styled("li")`
 `;
 
 const ProductListItem: FC<AdminProductListItemProps> = memo(({ showModal, product, setSelectedProduct, showAlertModal }) => {
-  const { id, title, price, origin_price, is_enabled, category } = product;
+  const { title, price, origin_price, is_enabled, category } = product;
 
   const editForm = useCallback((product: Product) => {
     setSelectedProduct(product);
@@ -32,7 +32,7 @@ const ProductListItem: FC<AdminProductListItemProps> = memo(({ showModal, produc
   }, [showAlertModal, setSelectedProduct]);
 
   return (
-    <ProductItem className="product-list-item card mb-3">
+    <ProductItem className="card mb-3">
       <div className="card-body">
         <div className="row w-100 justify-content-between align-items-center">
           <div className="col-auto">

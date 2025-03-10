@@ -1,8 +1,5 @@
-
-export type ToastType = 'success' | 'danger';
-
 export interface Toast {
   text: string;
-  type: ToastType;
+  type: 'success' | 'danger';
   id?: string;
 }

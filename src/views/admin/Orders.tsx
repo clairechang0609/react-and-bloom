@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import 'bootstrap';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import '../../assets/home.scss';
 import OrderListItem from '../../components/admin/OrderListItem';
 import OrderModal from '../../components/admin/OrderModal';
 import AlertModal from '../../components/AlertModal';
@@ -10,20 +9,20 @@ import { setIsFullPageLoading } from '../../slice/loadingSlice';
 import { asyncSetMessage } from '../../slice/toastSlice';
 import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
-import type { Order } from '../../types/order';
+import type { OrderWithCoupon } from '../../types/order';
 
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const Orders = () => {
   const dispatch = useAppDispatch();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderWithCoupon[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [TotalPages, setTotalPages] = useState(1);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderWithCoupon | null>(null);
   const modalRef = useRef<ModalRef | null>(null);
   const alertModalRef = useRef<ModalRef | null>(null);
 
-  // 取得產品資料
+  // 取得訂單列表
   const getOrders = useCallback(async () => {
     try {
       dispatch(setIsFullPageLoading(true));
@@ -42,7 +41,6 @@ const Orders = () => {
     }
   }, [currentPage, dispatch]);
 
-  // 取得訂單列表
   useEffect(() => {
     getOrders();
   }, [getOrders]);

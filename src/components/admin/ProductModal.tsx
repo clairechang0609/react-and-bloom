@@ -9,9 +9,9 @@ import { useAppDispatch } from '../../store';
 import type { ModalRef } from '../../types/modal';
 import type { AdminProductModalProps } from '../../types/product';
 import Button from '../Button';
-import Field from '../Form/Field';
-import FormInput from '../Form/FormInput';
-import FormTextarea from '../Form/FormTextarea';
+import Field from '../form/Field';
+import FormInput from '../form/FormInput';
+import FormTextarea from '../form/FormTextarea';
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 const DeleteBtn = styled("div")`
@@ -28,17 +28,14 @@ const defaultValues = {
   price: null,
   description: '',
   content: '',
-  is_enabled: true,
+  is_enabled: 1,
   imageUrl: '',
   imagesUrl: [],
   petCareNotes: '',
   floriography: ''
 }
 
-const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
-    selectedProduct,
-    getProducts
-  }, ref) => {
+const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({ selectedProduct, getProducts }, ref) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState('');
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -92,12 +89,12 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
       } else {
         setValue('imagesUrl', [...imagesUrl, res.data.imageUrl], { shouldValidate: true });
       }
-      setLoading('');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
         dispatch(asyncSetMessage({ text: err?.response?.data.message, type: 'danger' }));
       }
+    } finally {
       setLoading('');
     }
   };
@@ -218,7 +215,7 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
                         message: '價格需大於 0'
                       },
                       valueAsNumber: true,
-                      validate: (value: string) => Number(value) < Number(getValues().origin_price) || '售價必須小於原價'
+                      validate: (value: string) => Number(value) <= Number(getValues().origin_price) || '售價必須小於等於原價'
                     }} />
                 </div>
                 <div className="mb-3">
@@ -304,8 +301,8 @@ const ProductModal = forwardRef<ModalRef, AdminProductModalProps>(({
               </div>
             </div>
             <div className="modal-footer">
-              <Button btnStyle="btn btn-outline-secondary" data-bs-dismiss="modal">取消</Button>
-              <Button type="submit" btnStyle="btn btn-secondary">儲存</Button>
+              <Button btnStyle="btn btn-outline-secondary px-4" data-bs-dismiss="modal">取消</Button>
+              <Button type="submit" btnStyle="btn btn-secondary px-4">儲存</Button>
             </div>
           </form>
         </div>

@@ -1,3 +1,4 @@
+import { CouponItem } from "./coupon";
 import { Product } from "./product";
 
 export interface OrderProductDetail {
@@ -7,10 +8,11 @@ export interface OrderProductDetail {
   qty: number;
   total: number;
   final_total: number;
+  coupon?: CouponItem;
 }
 
 export interface Order {
-  create_at: number | string;
+  create_at: number;
   id: string;
   is_paid: boolean;
   message: string;
@@ -26,16 +28,24 @@ export interface Order {
   num: number;
   total: number;
   remark?: string;
+  paid_date?: number;
+}
+
+export interface OrderWithCoupon extends Order {
+  discount?: number;
+  coupon?: CouponItem
 }
 
 export interface AdminOrderListItemProps {
   showModal: () => void;
-  order: Order;
+  order: OrderWithCoupon;
   showAlertModal: () => void;
-  setSelectedOrder: (value: Order | null) => void;
+  setSelectedOrder: (value: (Order & {
+    discount?: number;
+    coupon?: CouponItem}) | null) => void;
 }
 
 export interface AdminOrderModalProps {
-  selectedOrder: Order | null;
+  selectedOrder: OrderWithCoupon | null;
   getOrders: () => void;
 }

@@ -4,8 +4,7 @@ import { useSelector } from 'react-redux';
 import { toastData } from '../slice/toastSlice';
 import type { Toast } from '../types/toast';
 
-// forwardRef 用於轉發 ref
-const Toast: FC = (() => {
+const Toast: FC = memo(() => {
   const toastRef = useRef<HTMLDivElement | null>(null);
   const toast = useRef<BootstrapToast | null>(null);
   const { text, type, id } = useSelector(toastData);
@@ -39,4 +38,4 @@ const Toast: FC = (() => {
   )
 });
 
-export default memo(Toast);
+export default Toast;

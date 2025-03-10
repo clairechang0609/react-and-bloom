@@ -9,16 +9,21 @@ import Product from '../views/frontend/Product';
 import Products from '../views/frontend/Products';
 import Login from '../views/Login';
 import NotFound from '../views/NotFound';
+import Coupons from '../views/admin/Coupons';
+import Checkout from '../views/frontend/Checkout';
+import Articles from '../views/frontend/Articles';
+import Article from '../views/frontend/Article';
+import AdminArticles from '../views/admin/Articles';
 
 const routes = createHashRouter([
+  {
+    path: '',
+    element: <Home />
+  },
   {
     path: '/',
     element: <FrontendLayout />,
     children: [
-      {
-        path: '',
-        element: <Home />
-      },
       {
         path: 'products',
         element: <Products />
@@ -30,6 +35,18 @@ const routes = createHashRouter([
       {
         path: 'cart',
         element: <Cart />
+      },
+      {
+        path: 'checkout/:id',
+        element: <Checkout />
+      },
+      {
+        path: 'articles',
+        element: <Articles />
+      },
+      {
+        path: 'article/:id',
+        element: <Article />
       }
     ]
   },
@@ -52,6 +69,14 @@ const routes = createHashRouter([
       {
         path: 'orders',
         element: <Orders />
+      },
+      {
+        path: 'coupons',
+        element: <Coupons />
+      },
+      {
+        path: 'articles',
+        element: <AdminArticles />
       }
     ]
   },

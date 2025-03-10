@@ -2,14 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { setIsFullPageLoading } from '../slice/loadingSlice';
 import { CartItem } from "../types/cart";
+
 import { asyncSetMessage } from "./toastSlice";
+import { CouponItem } from "../types/coupon";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    cart: [],
-    total: 0
+    cart: <CartItem[]>[],
+    coupon: <CouponItem | null>null,
+    total: 0,
+    final_total: 0
   },
   reducers: {
     setCart(state, action) {
@@ -17,18 +21,30 @@ export const cartSlice = createSlice({
     },
     setTotal(state, action) {
       state.total = action.payload;
+    },
+    setFinalTotal(state, action) {
+      state.final_total = action.payload;
+    },
+    setCoupon(state, action) {
+      state.coupon = action.payload;
     }
   }
 })
 
-export const asyncGetCart = createAsyncThunk(
+export const asyncGetCart = createAsyncThunk<void, void | { isShowLoading?: boolean }>(
   'cart/asyncGetCart',
-  async (payload, { dispatch, requestId }) => {
+  async ({ isShowLoading = true } = {}, { dispatch, requestId: _requestId }) => {
     try {
-      dispatch(setIsFullPageLoading(true));
+      if (isShowLoading) {
+        dispatch(setIsFullPageLoading(true));
+      }
       const res = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
       dispatch(setCart(res.data.data?.carts));
       dispatch(setTotal(res.data.data?.total));
+      dispatch(setFinalTotal(res.data.data?.final_total));
+      if (res.data.data?.carts.length) {
+        dispatch(setCoupon(res.data.data?.carts[0].coupon));
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err?.response?.data.message);
@@ -41,7 +57,7 @@ export const asyncGetCart = createAsyncThunk(
 
 export const asyncAddCart = createAsyncThunk(
   'cart/asyncAddCart',
-  async (payload: { productId?: string, qty?: number }, { dispatch, requestId }) => {
+  async (payload: { productId?: string, qty?: number }, { dispatch, requestId: _requestId }) => {
     try {
       dispatch(setIsFullPageLoading(true));
       const res = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`, {
@@ -63,6 +79,6 @@ export const asyncAddCart = createAsyncThunk(
   }
 )
 
-export const { setCart, setTotal } = cartSlice.actions;
-export const cartData = (state: { cart: { cart: CartItem[], total: number } }) => state.cart;
+export const { setCart, setTotal, setFinalTotal, setCoupon } = cartSlice.actions;
+export const cartData = (state: { cart: ReturnType<typeof cartSlice.getInitialState> }) => state.cart;
 export default cartSlice.reducer;
