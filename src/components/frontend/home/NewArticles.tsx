@@ -7,11 +7,15 @@ import { formatDateFromTimestamp } from "../../../utils/formatDateFromTimestamp"
 const ArticleWrap = styled("div")`
   max-width: 1000px;
   margin: 5rem auto;
+  padding-left: env(safe-area-inset-left);
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
 
   .tags-wrap {
     margin-bottom: 2.5rem;
-    padding-bottom: 2.5rem;
     border-bottom: 2px solid black;
+    padding-bottom: max(env(safe-area-inset-bottom), 2.5rem);
   }
 `;
 

@@ -11,6 +11,15 @@ const Nav = styled("nav")`
   background-color: rgba(255,255,255,0.5);
   transform: translateY(0);
   transition: 0.5s cubic-bezier(.77,0,.18,1) 0.15s;
+  padding-top: max(env(safe-area-inset-top), 1rem);
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  padding-left: max(env(safe-area-inset-left), 1.5rem);
+  padding-right: max(env(safe-area-inset-right), 1.5rem);
+
+  @media (min-width: 1200px) {
+    padding-left: max(env(safe-area-inset-left), 3rem);
+    padding-right: max(env(safe-area-inset-right), 3rem);
+  }
 
   @supports (animation-timeline: scroll()) {
     background-color: rgba(255,255,255,0.1);
@@ -119,6 +128,7 @@ const Menu = styled('div')`
   transform: translateY(100%);
   transition: transform 0.5s cubic-bezier(.77,0,.18,1) 0.15s;
   trasition-origin: bottom;
+  overflow-y: auto;
   z-index: 990;
 
   a {
@@ -189,7 +199,7 @@ const Navbar = forwardRef<HTMLDivElement>((_props, ref) => {
 
   return (
     <>
-      <Nav ref={ref} className={`py-3 px-4 px-xl-5 fixed-top d-flex align-items-center ${isActive ? 'active' : ''}`}>
+      <Nav ref={ref} className={`fixed-top d-flex align-items-center ${isActive ? 'active' : ''}`}>
         <NavLink to="/" className="d-flex align-items-center px-lg-4">
           <Heading>&<em>Bloom</em></Heading>
         </NavLink>

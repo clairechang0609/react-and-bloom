@@ -106,6 +106,10 @@ $utilities: map-merge(
 // 8. Add additional custom code here
 .container {
   max-width: 1000px;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: max(env(safe-area-inset-left), 0.75rem);
+  padding-right: max(env(safe-area-inset-right), 0.75rem);
 }
 .page-link {
   cursor: pointer;
