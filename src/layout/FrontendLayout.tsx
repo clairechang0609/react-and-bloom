@@ -31,7 +31,7 @@ const FrontendLayout = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY.current) {
+      if (window.scrollY > lastScrollY.current && window.scrollY > 100) {
         navbarRef.current?.classList.add('hidden');
       } else {
         navbarRef.current?.classList.remove('hidden');

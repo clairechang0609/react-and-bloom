@@ -5,6 +5,10 @@ const IntroWrap = styled("div")`
   width: 1000px;
   margin-left: auto;
   margin-right: auto;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: max(env(safe-area-inset-left), 1rem);
+  padding-right: max(env(safe-area-inset-right), 1rem);
 `;
 
 const IntroWrapWide = styled(IntroWrap)`
@@ -106,9 +110,9 @@ const GuideContent = styled("div")`
 const Intro = () => {
   return (
     <>
-      <IntroWrap className="d-flex align-items-center justify-content-center px-3">
+      <IntroWrap className="d-flex align-items-center justify-content-center">
         <div className="w-50">
-          <GuideTitle className="title mb-5" data-scroll>
+          <GuideTitle className="title mb-4 mb-lg-5" data-scroll>
             <span>Meet your </span>
             <span><strong className="fw-bold">plant</strong>, <em>bring</em> </span>
             <span>nature home</span>
@@ -126,14 +130,14 @@ const Intro = () => {
           </div>
         </ImageWrap>
       </IntroWrap>
-      <IntroWrapWide className="d-flex align-items-center justify-content-center px-3 px-lg-5 mt-5 mt-lg-0">
+      <IntroWrapWide className="d-flex align-items-center justify-content-center px-lg-5 mt-5 mt-lg-0">
         <ImageWrap className="w-40 w-lg-30 mb-5" data-scroll data-scroll-speed="2">
           <div className="image-outer" data-scroll data-scroll-speed="-2">
             <img src="./plant-06.jpg" alt="plant-06" />
           </div>
         </ImageWrap>
         <div className="w-50 ms-auto" style={{ verticalAlign: 'bottom' }}>
-          <GuideTitle className="title mb-5" data-scroll data-scroll-speed="1">
+          <GuideTitle className="title mb-4 mb-lg-5" data-scroll data-scroll-speed="1">
             <span>Every <strong className="fw-bold">plant</strong> </span>
             <span><em>whispers</em> a story </span>
             <span> of life</span>

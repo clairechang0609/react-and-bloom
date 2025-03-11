@@ -3,6 +3,13 @@ import { NavLink } from "react-router";
 import styled from "styled-components";
 import { CategoryCardProps } from "../../../types/home";
 
+const Container = styled("div")`
+  padding-top: max(env(safe-area-inset-top), 5rem);
+  padding-bottom: max(env(safe-area-inset-bottom), 5rem);
+  padding-left: max(env(safe-area-inset-left), 1.5rem);
+  padding-right: max(env(safe-area-inset-right), 1.5rem);
+`;
+
 const CategoryCardStyle = styled("div")`
   transition: 0.5s cubic-bezier(0,.85,.45,1) 0.5s;
   transform: translateY(100%);
@@ -129,7 +136,7 @@ const CategoryCard: FC<CategoryCardProps> = ({ icon, title, description, plants 
 
 const PlantCategories = () => {
   return (
-    <div className="text-white row align-items-center bg-secondary px-4" style={{ padding: '5rem 0' }}>
+    <Container className="text-white row align-items-center bg-secondary">
       <div className="col-12 text-center mb-5">
         <h3 className="title fs-2 mb-3">＼ Plant Categories ／</h3>
         <small className="d-block">
@@ -162,7 +169,7 @@ const PlantCategories = () => {
           })
         }
       </div>
-    </div>
+    </Container>
   )
 }
 

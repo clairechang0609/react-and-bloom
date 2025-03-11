@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 
 const BannerWrap = styled("div")`
@@ -37,7 +38,7 @@ const BannerWrap = styled("div")`
 
 const Banner = () => {
   return (
-    <BannerWrap className="d-flex align-items-center justify-content-center" data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
+    <BannerWrap className={`d-flex align-items-center justify-content-center  ${isMobile && 'mb-5'}`} data-scroll data-scroll-offset="120%" data-scroll-repeat="true">
       <div className="text-center text-white" style={{ textShadow: '0 0 0.75rem rgba(0, 0, 0, 0.75)' }}>
         <h2 className="title" style={{ fontSize: '1em' }} data-scroll data-scroll-speed="3" data-scroll-position="top">&<em>Bloom</em></h2>
         <p style={{ fontSize: '0.925rem' }}>

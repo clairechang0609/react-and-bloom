@@ -45,7 +45,7 @@ const Home = () => {
       });
 
       containerInstance.current.on("scroll", ({ scroll }) => {
-        if (scroll.y > lastScrollY.current) {
+        if (scroll.y > lastScrollY.current && scroll.y > 75) {
           navbarRef.current?.classList.add("hidden");
         } else {
           navbarRef.current?.classList.remove("hidden");
@@ -72,7 +72,7 @@ const Home = () => {
     <>
       <Global />
       <Navbar ref={navbarRef} />
-      <div className="overflow-hidden" ref={container}>
+      <div className="overflow-hidden position-relative" ref={container}>
         <Banner />
         <Intro />
         <NewProducts filterProducts={filterProducts} />
