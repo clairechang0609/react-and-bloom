@@ -59,7 +59,7 @@ const Product = () => {
   const [qty, setQty] = useState<number>(1);
   const { products, getProducts } = useGetProducts({ category: product?.category, immediate: false });
   const filterProducts = useMemo(() => {
-    return products?.filter((item: Product) => item.id !== product?.id).slice(0, 2);
+    return products?.filter((item: Product) => item.id !== product?.id).slice(0, 2) || [];
   }, [product?.id, products]);
 
   // 取得產品資料

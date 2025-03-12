@@ -27,12 +27,12 @@ const Home = () => {
 
   const { products } = useGetProducts({ isShowLoading: false});
   const filterProducts = useMemo(() => {
-    return products?.slice(0, 5);
+    return products?.slice(0, 5) || [];
   }, [products]);
 
   const { articles } = useGetArticles({ isShowLoading: false});
   const filterArticles = useMemo(() => {
-    return articles?.slice(0, 2);
+    return articles?.slice(0, 2) || [];
   }, [articles]);
 
   useEffect(() => {

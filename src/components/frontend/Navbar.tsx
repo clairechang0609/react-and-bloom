@@ -150,7 +150,7 @@ const Menu = styled('div')`
 
 const MenuItems = () => {
   const { cart } = useSelector(cartData);
-  const qty = useMemo(() => cart.reduce((acc, cur) => acc + cur.qty, 0), [cart]);
+  const qty = useMemo(() => cart?.reduce((acc, cur) => acc + cur.qty, 0), [cart]);
 
   return (
     <>

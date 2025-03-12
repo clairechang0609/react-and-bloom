@@ -17,7 +17,7 @@ const Cart = () => {
   const { cart, total, final_total, coupon } = useSelector(cartData);
   const { products } = useGetProducts();
   const filterProducts = useMemo(() => {
-    return products?.slice(0, 3);
+    return products?.slice(0, 3) || [];
   }, [products]);
   const [tempCoupon, setTempCoupon] = useState('');
   const [couponMsg, setCouponMsg] = useState({ type: '', msg: '' });
