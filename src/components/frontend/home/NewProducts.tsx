@@ -61,7 +61,7 @@ const NewProducts: FC<{ filterProducts: Product[] }> = ({ filterProducts }) => {
             </svg>
           </FixedContent>
         </div>
-        <ProductList className="col-md-7 mb-5 mb-lg-0">
+        <ProductList className="col-md-7 mb-5 mb-lg-0" data-scroll data-scroll-delay="0.04" data-scroll-speed="5">
           <ProductCardWrap className="text-center px-4 ps-lg-0 pe-lg-5">
             <div className="row">
               {
